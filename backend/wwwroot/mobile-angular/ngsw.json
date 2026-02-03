@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1769460441785,
+  "timestamp": 1770153717025,
   "index": "/mobile-angular/index.html",
   "assetGroups": [
     {
@@ -22,7 +22,7 @@
         "/mobile-angular/chunk-ZMXIAUIH.js",
         "/mobile-angular/favicon.ico",
         "/mobile-angular/index.html",
-        "/mobile-angular/main-2I6SSPVM.js",
+        "/mobile-angular/main-JZPLNHZQ.js",
         "/mobile-angular/manifest.webmanifest",
         "/mobile-angular/styles-YU5U2UJ3.css"
       ],
@@ -68,8 +68,8 @@
     "/mobile-angular/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/mobile-angular/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/mobile-angular/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/mobile-angular/index.html": "5c66f19383b9344f72ac2e9d0d229f93cc94a150",
-    "/mobile-angular/main-2I6SSPVM.js": "5ec7fb4b5fb2ae0979cb57c6775f34953a3080d4",
+    "/mobile-angular/index.html": "c4145df53548649362f052915f75cbae0d807f0b",
+    "/mobile-angular/main-JZPLNHZQ.js": "0efc8c409081caad68eb6585f9697730c489626c",
     "/mobile-angular/manifest.webmanifest": "ef1a840bd20dc673238df0c00366fc1f1db2aafa",
     "/mobile-angular/styles-YU5U2UJ3.css": "40fa2d1bbf46209bc70238cc7e600d64fe190035"
   },
