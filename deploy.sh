@@ -1,68 +1,91 @@
 #!/bin/bash
 set -e
 
-# Aura Project Deployment Script
-# This script fetches the latest code from GitHub and rebuilds Docker containers
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT"
 
-REPO_URL="https://github.com/davids1z/my-project.git"
-APP_DIR="/opt/aura"
-BACKUP_DIR="/opt/aura-backups"
+SERVER_DEPLOY='cd /opt/aura && sudo git fetch origin && sudo git reset --hard origin/main && sudo docker compose down && sudo docker compose build --no-cache && sudo docker compose up -d'
 
-echo "=== Aura Deployment Script ==="
-echo "Started at: $(date)"
+usage() {
+    echo "Usage: ./deploy.sh [project]"
+    echo ""
+    echo "Projects:"
+    echo "  mobile-angular   Deploy Angular mobile app"
+    echo "  mobile           Deploy Flutter mobile app"
+    echo "  backend          Deploy backend changes"
+    echo "  admin            Deploy admin panel"
+    echo "  all              Deploy everything"
+    exit 1
+}
 
-# Create directories if they don't exist
-sudo mkdir -p $APP_DIR $BACKUP_DIR
+build_mobile_angular() {
+    echo "=== Building mobile-angular ==="
+    cd "$ROOT/mobile-angular"
+    npx ng build --configuration production
+    rm -rf "$ROOT/backend/wwwroot/mobile-angular/"*
+    cp -r dist/mobile-angular/browser/* "$ROOT/backend/wwwroot/mobile-angular/"
+    cd "$ROOT"
+    git add backend/wwwroot/mobile-angular/
+}
 
-# Check if this is first run or update
-if [ -d "$APP_DIR/.git" ]; then
-    echo "Updating existing installation..."
-    cd $APP_DIR
+build_mobile() {
+    echo "=== Building mobile (Flutter) ==="
+    cd "$ROOT/mobile"
+    flutter build web --base-href "/mobile/"
+    rm -rf "$ROOT/backend/wwwroot/mobile/"*
+    cp -r build/web/* "$ROOT/backend/wwwroot/mobile/"
+    cd "$ROOT"
+    git add backend/wwwroot/mobile/
+}
 
-    # Backup current state
-    BACKUP_NAME="backup-$(date +%Y%m%d-%H%M%S)"
-    echo "Creating backup: $BACKUP_NAME"
-    sudo tar -czf "$BACKUP_DIR/$BACKUP_NAME.tar.gz" --exclude='.git' --exclude='postgres_data' .
+build_admin() {
+    echo "=== Copying admin ==="
+    cp "$ROOT/admin/index.html" "$ROOT/backend/wwwroot/admin.html"
+    git add backend/wwwroot/admin.html
+}
 
-    # Pull latest changes
-    sudo git fetch origin
-    sudo git reset --hard origin/main
-else
-    echo "Fresh installation..."
-    cd /opt
-    sudo rm -rf aura
-    sudo git clone $REPO_URL $APP_DIR
-    cd $APP_DIR
-fi
+build_backend() {
+    echo "=== Backend ==="
+    git add backend/
+}
 
-# Load environment variables if .env exists
-if [ -f "$APP_DIR/.env" ]; then
-    echo "Loading environment variables..."
-    export $(grep -v '^#' $APP_DIR/.env | xargs)
-fi
+push_and_deploy() {
+    echo "=== Committing and pushing ==="
+    git commit -m "Deploy: $1"
+    git push origin main
 
-# Stop existing containers
-echo "Stopping existing containers..."
-sudo docker compose down --remove-orphans 2>/dev/null || true
+    echo "=== Deploying to server ==="
+    ssh aura "$SERVER_DEPLOY"
 
-# Build and start containers
-echo "Building and starting containers..."
-sudo docker compose build --no-cache
-sudo docker compose up -d
+    echo ""
+    echo "=== Done! $1 is live ==="
+}
 
-# Wait for services to be healthy
-echo "Waiting for services to start..."
-sleep 10
-
-# Check container status
-echo "Container status:"
-sudo docker compose ps
-
-# Show logs
-echo "Recent logs:"
-sudo docker compose logs --tail=20
-
-echo ""
-echo "=== Deployment completed at $(date) ==="
-echo "Backend running on: http://127.0.0.1:8080"
-echo "PostgreSQL running on: 127.0.0.1:5432"
+case "${1}" in
+    mobile-angular)
+        build_mobile_angular
+        push_and_deploy "mobile-angular"
+        ;;
+    mobile)
+        build_mobile
+        push_and_deploy "mobile (Flutter)"
+        ;;
+    admin)
+        build_admin
+        push_and_deploy "admin"
+        ;;
+    backend)
+        build_backend
+        push_and_deploy "backend"
+        ;;
+    all)
+        build_mobile_angular
+        build_mobile
+        build_admin
+        build_backend
+        push_and_deploy "all projects"
+        ;;
+    *)
+        usage
+        ;;
+esac

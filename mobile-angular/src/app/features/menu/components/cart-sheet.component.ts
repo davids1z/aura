@@ -14,11 +14,9 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
   imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatDialogModule],
   template: `
     <div class="cart-sheet">
-      <!-- Header -->
-      <div class="sheet-header">
-        <button class="back-btn" (click)="close()">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
+      <!-- Drag Handle -->
+      <div class="drag-handle-area">
+        <div class="drag-handle"></div>
       </div>
 
       <!-- Title -->
@@ -76,27 +74,26 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       background: white;
       border-top-left-radius: 32px;
       border-top-right-radius: 32px;
-      max-height: 85vh;
+      min-height: 75vh;
+      max-height: 92vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
     }
 
-    .sheet-header {
-      padding: 20px 20px 8px;
-    }
-
-    .back-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #f5f5f4;
-      border: none;
+    .drag-handle-area {
       display: flex;
-      align-items: center;
       justify-content: center;
-      color: #78716c;
-      cursor: pointer;
+      padding: 12px 0 8px;
+      cursor: grab;
+    }
+
+    .drag-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: #d6d3d1;
     }
 
     .sheet-title {
@@ -150,7 +147,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       flex: 1;
       overflow-y: auto;
       padding: 0 20px;
-      max-height: 40vh;
+      max-height: 55vh;
     }
 
     .cart-item {
@@ -282,10 +279,6 @@ export class CartSheetComponent {
   cartService = inject(CartService);
   private bottomSheetRef = inject(MatBottomSheetRef<CartSheetComponent>);
   private dialog = inject(MatDialog);
-
-  close() {
-    this.bottomSheetRef.dismiss();
-  }
 
   updateQuantity(id: number, delta: number) {
     this.cartService.updateQuantity(id, delta);

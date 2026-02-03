@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Overlay } from '@angular/cdk/overlay';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -419,6 +420,7 @@ export class MenuComponent implements OnInit {
   private apiService = inject(ApiService);
   cartService = inject(CartService);
   private bottomSheet = inject(MatBottomSheet);
+  private overlay = inject(Overlay);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
@@ -483,6 +485,10 @@ export class MenuComponent implements OnInit {
   }
 
   openCart() {
-    this.bottomSheet.open(CartSheetComponent);
+    this.bottomSheet.open(CartSheetComponent, {
+      backdropClass: 'cart-sheet-backdrop',
+      panelClass: 'cart-sheet-container',
+      scrollStrategy: this.overlay.scrollStrategies.noop()
+    });
   }
 }

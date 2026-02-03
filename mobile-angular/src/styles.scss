@@ -16,6 +16,9 @@ html {
     typography: Roboto,
     density: 0,
   ));
+
+  // Transparent bottom sheet container so menu is visible behind cart
+  --mat-bottom-sheet-container-background-color: transparent;
 }
 
 body {
@@ -61,8 +64,12 @@ body {
 // Bottom sheet styling
 .mat-bottom-sheet-container {
   padding: 0 !important;
-  border-top-left-radius: 32px !important;
-  border-top-right-radius: 32px !important;
+  box-shadow: none !important;
+}
+
+// Cart sheet semi-transparent backdrop
+.cart-sheet-backdrop {
+  background: rgba(0, 0, 0, 0.35) !important;
 }
 
 // Hide scrollbar but allow scrolling

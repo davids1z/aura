@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectorRef, NgZone } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,7 +29,7 @@ interface CalendarDay {
   ],
   template: `
     <div class="reservation-page">
-      @if (!success) {
+      @if (authService.currentUser && !success) {
         <!-- Header -->
         <header class="res-header">
           <h1>Aura</h1>
@@ -190,7 +190,7 @@ interface CalendarDay {
         </button>
       }
 
-      @if (success) {
+      @if (authService.currentUser && success) {
         <!-- Success Screen -->
         <div class="success-screen">
           <div class="success-divider"></div>
@@ -202,6 +202,12 @@ interface CalendarDay {
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      overflow: hidden;
+      background: white;
+    }
+
     .reservation-page {
       background: white;
       min-height: 100vh;
@@ -750,6 +756,7 @@ export class ReservationComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
+  private location = inject(Location);
   readonly i18n = inject(I18nService);
 
   // Calendar
@@ -797,18 +804,18 @@ export class ReservationComponent implements OnInit {
     this.today.setHours(0, 0, 0, 0);
     this.buildCalendar();
 
-    // Show auth dialog immediately if not logged in
-    if (!this.authService.currentUser) {
-      setTimeout(() => this.showAuthDialog(), 100);
-    }
-
-    // Auto-select today and load slots first
+    // Auto-select today
     const todayStr = this.formatDate(this.today);
     this.selectedDate = todayStr;
-    this.loadSlots(todayStr);
 
-    // Load month availability after a delay to not overwhelm the API on cold start
-    setTimeout(() => this.loadMonthAvailability(), 2000);
+    if (!this.authService.currentUser) {
+      // Show auth dialog immediately — no data loading until authenticated
+      this.showAuthDialog();
+    } else {
+      // Already logged in — load data right away
+      this.loadSlots(todayStr);
+      setTimeout(() => this.loadMonthAvailability(), 2000);
+    }
   }
 
   showAuthDialog() {
@@ -820,6 +827,16 @@ export class ReservationComponent implements OnInit {
       panelClass: 'fullscreen-dialog',
       disableClose: false
     }).afterClosed().subscribe(result => {
+      if (result === true) {
+        // Successful login — now load reservation data
+        const todayStr = this.formatDate(this.today);
+        this.selectedDate = todayStr;
+        this.loadSlots(todayStr);
+        setTimeout(() => this.loadMonthAvailability(), 2000);
+      } else {
+        // Dismissed without login — navigate back
+        this.location.back();
+      }
       this.cdr.detectChanges();
     });
   }

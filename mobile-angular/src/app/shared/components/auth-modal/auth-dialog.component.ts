@@ -95,6 +95,7 @@ import { I18nService } from '../../../core/services/i18n.service';
       padding-bottom: env(safe-area-inset-bottom, 20px);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: none;
     }
 
     .dialog-header {
