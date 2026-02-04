@@ -219,6 +219,29 @@ import { I18nService } from '../../../core/services/i18n.service';
         cursor: pointer;
       }
     }
+
+    @media (min-width: 768px) {
+      .auth-dialog {
+        min-height: auto;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .dialog-header {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .form-title h2 {
+        font-size: 22px;
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: #292524;
+      }
+    }
   `]
 })
 export class AuthDialogComponent {

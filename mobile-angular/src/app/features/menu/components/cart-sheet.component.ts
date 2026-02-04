@@ -51,7 +51,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
           @for (item of cartService.cartItems$ | async; track item.id) {
             <div class="cart-item">
               <div class="item-info">
-                <h4>{{ item.name }}</h4>
+                <h4>{{ i18n.getItemName(item.id, item.name) }}</h4>
                 <p>{{ item.price.toFixed(2) }} €</p>
               </div>
               <div class="item-controls">
@@ -296,6 +296,28 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
         background: #292524;
       }
     }
+
+    @media (min-width: 768px) {
+      .cart-sheet {
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 32px 32px 0 0;
+        min-height: 60vh;
+      }
+
+      .checkout-btn:hover {
+        background: #292524;
+      }
+
+      .qty-btn:hover {
+        background: #e5e5e5;
+      }
+
+      .remove-btn:hover {
+        color: #ef4444;
+        background: #fef2f2;
+      }
+    }
   `]
 })
 export class CartSheetComponent {
@@ -365,12 +387,13 @@ export class CartSheetComponent {
 
   checkout() {
     this.bottomSheetRef.dismiss();
+    const isMobile = window.innerWidth < 768;
     this.dialog.open(CheckoutDialogComponent, {
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      width: '100%',
-      height: '100%',
-      panelClass: 'fullscreen-dialog'
+      maxWidth: isMobile ? '100vw' : '480px',
+      maxHeight: isMobile ? '100vh' : '90vh',
+      width: isMobile ? '100%' : '480px',
+      height: isMobile ? '100%' : 'auto',
+      panelClass: isMobile ? 'fullscreen-dialog' : ''
     });
   }
 }

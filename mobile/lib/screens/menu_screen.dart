@@ -147,6 +147,8 @@ class _MenuItemCard extends StatelessWidget {
     final cart = context.watch<CartProvider>();
     final i18n = context.watch<I18nService>();
     final quantity = cart.getQuantity(item.id);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final imageSize = (screenWidth * 0.25).clamp(80.0, 120.0);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -171,14 +173,14 @@ class _MenuItemCard extends StatelessWidget {
             child: item.imageUrl.isNotEmpty
                 ? Image.network(
                     item.imageUrl,
-                    width: 100,
-                    height: 100,
+                    width: imageSize,
+                    height: imageSize,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Container(
-                        width: 100,
-                        height: 100,
+                        width: imageSize,
+                        height: imageSize,
                         color: Colors.grey[200],
                         child: const Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
@@ -187,16 +189,16 @@ class _MenuItemCard extends StatelessWidget {
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        width: 100,
-                        height: 100,
+                        width: imageSize,
+                        height: imageSize,
                         color: Colors.grey[200],
                         child: Icon(Icons.restaurant, color: Colors.grey[400], size: 40),
                       );
                     },
                   )
                 : Container(
-                    width: 100,
-                    height: 100,
+                    width: imageSize,
+                    height: imageSize,
                     color: Colors.grey[200],
                     child: Icon(Icons.restaurant, color: Colors.grey[400], size: 40),
                   ),
@@ -209,7 +211,7 @@ class _MenuItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.category.toUpperCase(),
+                    i18n.translateMenuItemCategory(item.id, item.category).toUpperCase(),
                     style: TextStyle(
                       fontSize: 9,
                       letterSpacing: 2,
@@ -218,7 +220,7 @@ class _MenuItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.name,
+                    i18n.translateMenuItemName(item.id, item.name),
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -226,7 +228,7 @@ class _MenuItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.description,
+                    i18n.translateMenuItemDescription(item.id, item.description),
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey[600],
@@ -277,7 +279,7 @@ class _MenuItemCard extends StatelessWidget {
                                         const SizedBox(width: 12),
                                         Expanded(
                                           child: Text(
-                                            '${item.name} ${i18n.t('menu.added')}',
+                                            '${i18n.translateMenuItemName(item.id, item.name)} ${i18n.t('menu.added')}',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -399,11 +401,13 @@ class _CartBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
     final i18n = context.watch<I18nService>();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final totalFontSize = (screenWidth * 0.07).clamp(20.0, 28.0);
 
     return GestureDetector(
       onTap: () => _showCartBottomSheet(context),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(screenWidth < 360 ? 16 : 24),
         decoration: BoxDecoration(
           color: const Color(0xFF1C1917),
           borderRadius: const BorderRadius.vertical(
@@ -420,35 +424,39 @@ class _CartBottomBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  i18n.t('menu.cart'),
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.6),
-                    fontSize: 10,
-                    letterSpacing: 2,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    i18n.t('menu.cart'),
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      fontSize: 10,
+                      letterSpacing: 2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  cart.isEmpty
-                      ? i18n.t('menu.cartEmpty')
-                      : i18n.getItemText(cart.itemCount),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                  const SizedBox(height: 4),
+                  Text(
+                    cart.isEmpty
+                        ? i18n.t('menu.cartEmpty')
+                        : i18n.getItemText(cart.itemCount),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            const SizedBox(width: 12),
             Text(
               cart.isEmpty ? '0 EUR' : cart.formattedTotal,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 28,
+                fontSize: totalFontSize,
                 fontWeight: FontWeight.w300,
               ),
             ),
@@ -905,7 +913,7 @@ class _CartBottomSheetState extends State<_CartBottomSheet> with SingleTickerPro
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  _i18n.translateMenuItemName(item.id, item.name),
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,

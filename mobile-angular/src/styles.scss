@@ -23,7 +23,7 @@ html {
 
 body {
   color-scheme: light;
-  background-color: #fafaf9;
+  background-color: #000;
   color: #1C1917;
   font-family: 'Inter', sans-serif;
   font-weight: 400;
@@ -92,5 +92,24 @@ input, textarea, select {
 @supports (height: 100dvh) {
   html, body, app-root {
     min-height: 100dvh;
+  }
+}
+
+// Responsive: constrain dialogs on tablet/desktop
+@media (min-width: 768px) {
+  .fullscreen-dialog {
+    .mat-mdc-dialog-container {
+      border-radius: 24px !important;
+
+      .mdc-dialog__surface {
+        border-radius: 24px !important;
+      }
+    }
+  }
+
+  .mat-mdc-dialog-container {
+    max-width: 480px !important;
+    max-height: 90vh !important;
+    margin: auto !important;
   }
 }

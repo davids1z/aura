@@ -158,16 +158,21 @@ class _ReservationScreenState extends State<ReservationScreen>
         actions: [
           if (_isLoggedIn)
             Padding(
-              padding: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.only(right: 8),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.45,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1C1917),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
                           radius: 12,
@@ -181,22 +186,26 @@ class _ReservationScreenState extends State<ReservationScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _userName ?? '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            _userName ?? '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.logout, size: 20),
                     onPressed: _logout,
                     tooltip: _i18n.t('reservation.logout'),
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(),
                   ),
                 ],
               ),
@@ -643,78 +652,95 @@ class _ReservationScreenState extends State<ReservationScreen>
           const SizedBox(height: 32),
 
           // Cijena rezervacije
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1C1917),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final totalFontSize = (constraints.maxWidth * 0.08).clamp(20.0, 28.0);
+              final priceFontSize = (constraints.maxWidth * 0.05).clamp(14.0, 18.0);
+
+              return Container(
+                padding: EdgeInsets.all(constraints.maxWidth < 300 ? 16 : 24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1917),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          _i18n.t('reservation.pricePerPerson'),
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            fontSize: 10,
-                            letterSpacing: 2,
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _i18n.t('reservation.pricePerPerson'),
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                  fontSize: 10,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '95,00 EUR',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: priceFontSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        const Text(
-                          '95,00 EUR',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Container(
+                            width: 1,
+                            height: 40,
+                            color: Colors.white.withValues(alpha: 0.2),
                           ),
                         ),
-                      ],
-                    ),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: Colors.white.withValues(alpha: 0.2),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          _i18n.t('menu.total'),
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            fontSize: 10,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '${(_guests * 95).toStringAsFixed(2).replaceAll('.', ',')} EUR',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            letterSpacing: 1,
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                _i18n.t('menu.total'),
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                  fontSize: 10,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  '${(_guests * 95).toStringAsFixed(2).replaceAll('.', ',')} EUR',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: totalFontSize,
+                                    fontWeight: FontWeight.w300,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
 
           const SizedBox(height: 24),
@@ -843,10 +869,16 @@ class _ReservationScreenState extends State<ReservationScreen>
             ),
           ),
         // Slots grid - prikazi SVE slotove u 3 stupca kao web verzija
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: _allSlots.map((slot) {
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final columns = constraints.maxWidth < 280 ? 2 : 3;
+            final spacing = 10.0;
+            final slotWidth = (constraints.maxWidth - spacing * (columns - 1)) / columns;
+
+            return Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              children: _allSlots.map((slot) {
             final time = slot['time'] as String;
             final available = slot['available'] as int;
             final isAvailable = available > 0;
@@ -855,7 +887,7 @@ class _ReservationScreenState extends State<ReservationScreen>
             return GestureDetector(
               onTap: isAvailable ? () => setState(() => _selectedSlotTime = time) : null,
               child: Container(
-                width: (MediaQuery.of(context).size.width - 72) / 3 - 7,
+                width: slotWidth,
                 padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                 decoration: BoxDecoration(
                   color: isSelected
@@ -930,6 +962,8 @@ class _ReservationScreenState extends State<ReservationScreen>
               ),
             );
           }).toList(),
+            );
+          },
         ),
       ],
     );

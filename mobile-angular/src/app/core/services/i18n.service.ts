@@ -43,10 +43,15 @@ export interface Translations {
     yourOrder: string;
     orderDelivery: string;
     categories: {
-      predjelo: string;
-      glavnoJelo: string;
-      desert: string;
-      pice: string;
+      appetizer: string;
+      soup: string;
+      salad: string;
+      pasta: string;
+      fish: string;
+      meat: string;
+      dessert: string;
+      beverage: string;
+      special: string;
     };
   };
   // Reservation page
@@ -145,7 +150,7 @@ const translations: Record<Language, Translations> = {
       joinUs: 'Pridružite nam se',
       secureSpot: 'Osigurajte termin',
       address: 'Trg Kralja Tomislava 1, Zagreb',
-      hours: 'Utorak - Subota, 18:00 - 00:00',
+      hours: 'Svaki dan, 12:00 - 21:00',
       copyright: '© 2026 Aura Fine Dining'
     },
     menu: {
@@ -166,10 +171,15 @@ const translations: Record<Language, Translations> = {
       yourOrder: 'Vaša narudžba',
       orderDelivery: 'Naruči dostavu',
       categories: {
-        predjelo: 'Predjela',
-        glavnoJelo: 'Glavna jela',
-        desert: 'Deserti',
-        pice: 'Pića'
+        appetizer: 'Predjela',
+        soup: 'Juhe',
+        salad: 'Salate',
+        pasta: 'Tjestenine',
+        fish: 'Riba',
+        meat: 'Meso',
+        dessert: 'Deserti',
+        beverage: 'Pića',
+        special: 'Specijaliteti'
       }
     },
     reservation: {
@@ -262,7 +272,7 @@ const translations: Record<Language, Translations> = {
       joinUs: 'Join us',
       secureSpot: 'Secure your spot',
       address: 'King Tomislav Square 1, Zagreb',
-      hours: 'Tuesday - Saturday, 6:00 PM - 12:00 AM',
+      hours: 'Every day, 12:00 PM - 9:00 PM',
       copyright: '© 2026 Aura Fine Dining'
     },
     menu: {
@@ -283,10 +293,15 @@ const translations: Record<Language, Translations> = {
       yourOrder: 'Your order',
       orderDelivery: 'Order delivery',
       categories: {
-        predjelo: 'Starters',
-        glavnoJelo: 'Main courses',
-        desert: 'Desserts',
-        pice: 'Drinks'
+        appetizer: 'Starters',
+        soup: 'Soups',
+        salad: 'Salads',
+        pasta: 'Pasta',
+        fish: 'Fish',
+        meat: 'Meat',
+        dessert: 'Desserts',
+        beverage: 'Beverages',
+        special: 'Specials'
       }
     },
     reservation: {
@@ -379,7 +394,7 @@ const translations: Record<Language, Translations> = {
       joinUs: 'Besuchen Sie uns',
       secureSpot: 'Sichern Sie sich Ihren Platz',
       address: 'König-Tomislav-Platz 1, Zagreb',
-      hours: 'Dienstag - Samstag, 18:00 - 00:00',
+      hours: 'Jeden Tag, 12:00 - 21:00',
       copyright: '© 2026 Aura Fine Dining'
     },
     menu: {
@@ -400,10 +415,15 @@ const translations: Record<Language, Translations> = {
       yourOrder: 'Ihre Bestellung',
       orderDelivery: 'Lieferung bestellen',
       categories: {
-        predjelo: 'Vorspeisen',
-        glavnoJelo: 'Hauptgerichte',
-        desert: 'Desserts',
-        pice: 'Getränke'
+        appetizer: 'Vorspeisen',
+        soup: 'Suppen',
+        salad: 'Salate',
+        pasta: 'Nudeln',
+        fish: 'Fisch',
+        meat: 'Fleisch',
+        dessert: 'Desserts',
+        beverage: 'Getränke',
+        special: 'Spezialitäten'
       }
     },
     reservation: {
@@ -481,6 +501,83 @@ const translations: Record<Language, Translations> = {
   }
 };
 
+interface MenuItemTranslation {
+  name: string;
+  description: string;
+}
+
+const menuItemTranslations: Record<Language, Record<number, MenuItemTranslation>> = {
+  hr: {}, // Croatian is the API default, no overrides needed
+  en: {
+    33: { name: 'Tuna Carpaccio', description: 'Fresh tuna with arugula, capers and parmesan' },
+    34: { name: 'Bruschetta', description: 'Crispy bread with cherry tomatoes, basil and balsamic cream' },
+    35: { name: 'Prosciutto & Cheese', description: 'Dalmatian prosciutto with local cheese and olives' },
+    36: { name: 'Salmon Tartare', description: 'Fresh salmon with avocado and sesame' },
+    37: { name: 'Tomato Soup', description: 'Creamy roasted tomato soup with basil' },
+    38: { name: 'Fish Soup', description: 'Traditional Dalmatian fish soup' },
+    39: { name: 'Beef Soup', description: 'Homemade beef soup with noodles' },
+    40: { name: 'Caesar Salad', description: 'Romaine lettuce, chicken, parmesan, croutons and Caesar dressing' },
+    41: { name: 'Greek Salad', description: 'Tomatoes, cucumbers, peppers, onion, olives and feta cheese' },
+    42: { name: 'Goat Cheese Salad', description: 'Mixed salad with warm goat cheese and walnuts' },
+    43: { name: 'Spaghetti Carbonara', description: 'Spaghetti with guanciale, eggs and pecorino cheese' },
+    44: { name: 'Penne Arrabbiata', description: 'Penne with spicy tomato sauce' },
+    45: { name: 'Black Risotto', description: 'Risotto with cuttlefish ink and seafood' },
+    46: { name: 'Tagliatelle with Truffles', description: 'Homemade pasta with black truffles' },
+    47: { name: 'Grilled Sea Bass', description: 'Fresh sea bass with grilled vegetables and chard' },
+    48: { name: 'Octopus Under the Bell', description: 'Octopus with potatoes under the bell' },
+    49: { name: 'Scampi Buzara', description: 'Scampi in white wine and garlic sauce' },
+    50: { name: 'Tuna Steak', description: 'Medium-rare tuna steak with wakame salad' },
+    51: { name: 'Grilled Steak', description: '300g steak with roasted vegetables and wine sauce' },
+    52: { name: 'Lamb Under the Bell', description: 'Lamb with potatoes under the bell' },
+    53: { name: 'Turkey Schnitzel', description: 'Turkey schnitzel with mashed potatoes and mushroom sauce' },
+    54: { name: 'Ćevapi', description: '10 ćevapi with flatbread, onion and kaymak' },
+    55: { name: 'Tiramisu', description: 'Classic Italian dessert with espresso and mascarpone' },
+    56: { name: 'Panna Cotta', description: 'Italian cream dessert with fruit sauce' },
+    57: { name: 'Chocolate Lava Cake', description: 'Warm chocolate cake with liquid center' },
+    58: { name: 'Fruit Salad', description: 'Fresh seasonal fruits with mint' },
+    59: { name: 'Espresso', description: 'Italian coffee' },
+    60: { name: 'Cappuccino', description: 'Espresso with milk and milk foam' },
+    61: { name: 'Fresh Squeezed Juice', description: 'Orange, apple or grapefruit' },
+    62: { name: 'Mineral Water', description: '0.75l' },
+    63: { name: 'Homemade Lemonade', description: 'Fresh lemonade with mint' },
+    64: { name: 'Daily Special', description: 'Ask your waiter about today\'s special' },
+  },
+  de: {
+    33: { name: 'Thunfisch-Carpaccio', description: 'Frischer Thunfisch mit Rucola, Kapern und Parmesan' },
+    34: { name: 'Bruschetta', description: 'Knuspriges Brot mit Kirschtomaten, Basilikum und Balsamico-Creme' },
+    35: { name: 'Pršut und Käse', description: 'Dalmatinischer Pršut mit einheimischem Käse und Oliven' },
+    36: { name: 'Lachs-Tartare', description: 'Frischer Lachs mit Avocado und Sesam' },
+    37: { name: 'Tomatensuppe', description: 'Cremige geröstete Tomatensuppe mit Basilikum' },
+    38: { name: 'Fischsuppe', description: 'Traditionelle dalmatinische Fischsuppe' },
+    39: { name: 'Rindersuppe', description: 'Hausgemachte Rindersuppe mit Nudeln' },
+    40: { name: 'Caesar Salat', description: 'Romana-Salat, Hähnchen, Parmesan, Croutons und Caesar-Dressing' },
+    41: { name: 'Griechischer Salat', description: 'Tomaten, Gurken, Paprika, Zwiebeln, Oliven und Feta-Käse' },
+    42: { name: 'Ziegenkäse-Salat', description: 'Gemischter Salat mit warmem Ziegenkäse und Walnüssen' },
+    43: { name: 'Spaghetti Carbonara', description: 'Spaghetti mit Guanciale, Eiern und Pecorino-Käse' },
+    44: { name: 'Penne Arrabbiata', description: 'Penne mit scharfer Tomatensauce' },
+    45: { name: 'Schwarzes Risotto', description: 'Risotto mit Tintenfischtinte und Meeresfrüchten' },
+    46: { name: 'Tagliatelle mit Trüffeln', description: 'Hausgemachte Pasta mit schwarzen Trüffeln' },
+    47: { name: 'Gegrillter Wolfsbarsch', description: 'Frischer Wolfsbarsch mit gegrilltem Gemüse und Mangold' },
+    48: { name: 'Oktopus unter der Glocke', description: 'Oktopus mit Kartoffeln unter der Glocke' },
+    49: { name: 'Scampi Buzara', description: 'Scampi in Weißwein-Knoblauch-Sauce' },
+    50: { name: 'Thunfischsteak', description: 'Medium-rare Thunfischsteak mit Wakame-Salat' },
+    51: { name: 'Gegrilltes Steak', description: '300g Steak mit geröstetem Gemüse und Weinsauce' },
+    52: { name: 'Lamm unter der Glocke', description: 'Lamm mit Kartoffeln unter der Glocke' },
+    53: { name: 'Putenschnitzel', description: 'Putenschnitzel mit Kartoffelpüree und Pilzsauce' },
+    54: { name: 'Ćevapi', description: '10 Ćevapi mit Fladenbrot, Zwiebeln und Kajmak' },
+    55: { name: 'Tiramisu', description: 'Klassisches italienisches Dessert mit Espresso und Mascarpone' },
+    56: { name: 'Panna Cotta', description: 'Italienisches Creme-Dessert mit Fruchtsauce' },
+    57: { name: 'Schokoladen-Lavakuchen', description: 'Warmer Schokoladenkuchen mit flüssigem Kern' },
+    58: { name: 'Obstsalat', description: 'Frisches saisonales Obst mit Minze' },
+    59: { name: 'Espresso', description: 'Italienischer Kaffee' },
+    60: { name: 'Cappuccino', description: 'Espresso mit Milch und Milchschaum' },
+    61: { name: 'Frisch gepresster Saft', description: 'Orange, Apfel oder Grapefruit' },
+    62: { name: 'Mineralwasser', description: '0,75l' },
+    63: { name: 'Hausgemachte Limonade', description: 'Frische Limonade mit Minze' },
+    64: { name: 'Tagesspezialität', description: 'Fragen Sie Ihren Kellner nach dem heutigen Spezial' },
+  }
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -542,5 +639,15 @@ export class I18nService {
   // Helper to get current translations (for non-signal contexts)
   get translations(): Translations {
     return translations[this.currentLang()];
+  }
+
+  getItemName(id: number, fallback: string): string {
+    const lang = this.currentLang();
+    return menuItemTranslations[lang][id]?.name || fallback;
+  }
+
+  getItemDescription(id: number, fallback: string): string {
+    const lang = this.currentLang();
+    return menuItemTranslations[lang][id]?.description || fallback;
   }
 }

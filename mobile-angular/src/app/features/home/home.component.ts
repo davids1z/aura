@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { I18nService, Language } from '../../core/services/i18n.service';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, ScrollRevealDirective],
   template: `
     <div class="home-page">
       <!-- Language Selector -->
@@ -28,7 +29,7 @@ import { I18nService, Language } from '../../core/services/i18n.service';
         <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070"
              alt="Restaurant" class="hero-bg">
         <div class="hero-overlay"></div>
-        <div class="hero-content">
+        <div class="hero-content" appReveal>
           <p class="season">{{ i18n.t().home.season }}</p>
           <h1>{{ i18n.t().home.heroTitle }}</h1>
           <a routerLink="/reservation" class="cta-button">
@@ -38,27 +39,27 @@ import { I18nService, Language } from '../../core/services/i18n.service';
       </section>
 
       <!-- Philosophy Section -->
-      <section class="philosophy">
+      <section class="philosophy" appReveal [revealDelay]="100">
         <p class="label">{{ i18n.t().home.philosophy }}</p>
         <h2 [innerHTML]="i18n.t().home.philosophyTitle.replace('\\n', '<br>')"></h2>
         <p class="description">{{ i18n.t().home.philosophyText }}</p>
       </section>
 
       <!-- Image Section -->
-      <section class="image-section">
+      <section class="image-section" appReveal [revealDelay]="120">
         <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1974"
              alt="Fine Dining" class="feature-image">
       </section>
 
       <!-- Quote Section -->
-      <section class="quote-section">
+      <section class="quote-section" appReveal [revealDelay]="80">
         <div class="quote-card">
           <p>{{ i18n.t().home.quote }}</p>
         </div>
       </section>
 
       <!-- CTA Section -->
-      <section class="cta-section">
+      <section class="cta-section" appReveal [revealDelay]="100">
         <h3>{{ i18n.t().home.joinUs }}</h3>
         <a routerLink="/reservation" class="cta-button-dark">
           {{ i18n.t().home.secureSpot }}
@@ -66,10 +67,10 @@ import { I18nService, Language } from '../../core/services/i18n.service';
       </section>
 
       <!-- Info Section -->
-      <section class="info-section">
+      <section class="info-section" appReveal [revealDelay]="80">
         <div class="info-item">
           <mat-icon>place</mat-icon>
-          <p>{{ i18n.t().home.address }}</p>
+          <p>Trg Kralja Tomislava 1, Zagreb</p>
         </div>
         <div class="info-item">
           <mat-icon>schedule</mat-icon>
@@ -78,7 +79,7 @@ import { I18nService, Language } from '../../core/services/i18n.service';
       </section>
 
       <!-- Footer -->
-      <footer class="footer">
+      <footer class="footer" appReveal>
         <p class="logo">AURA</p>
         <p class="copyright">{{ i18n.t().home.copyright }}</p>
       </footer>
@@ -91,7 +92,7 @@ import { I18nService, Language } from '../../core/services/i18n.service';
 
     .language-selector {
       position: absolute;
-      top: 16px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
       right: 16px;
       z-index: 100;
       display: flex;
@@ -129,6 +130,8 @@ import { I18nService, Language } from '../../core/services/i18n.service';
     .hero {
       position: relative;
       height: 85vh;
+      margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -324,6 +327,142 @@ import { I18nService, Language } from '../../core/services/i18n.service';
       text-transform: uppercase;
       letter-spacing: 0.2em;
       color: #a8a29e;
+    }
+
+    @media (min-width: 768px) {
+      .hero-content {
+        padding: 0 48px;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      .season {
+        font-size: 12px;
+      }
+
+      .cta-button {
+        padding: 18px 40px;
+        font-size: 12px;
+
+        &:hover {
+          background: white;
+          color: black;
+        }
+      }
+
+      .philosophy {
+        padding: 80px 48px;
+      }
+
+      h2 {
+        font-size: 30px;
+      }
+
+      .description {
+        font-size: 16px;
+        max-width: 560px;
+      }
+
+      .image-section {
+        padding: 0 48px 64px;
+      }
+
+      .feature-image {
+        height: 400px;
+        border-radius: 24px;
+      }
+
+      .quote-section {
+        padding: 0 48px 64px;
+      }
+
+      .quote-card {
+        padding: 48px 40px;
+
+        p {
+          font-size: 22px;
+        }
+      }
+
+      .cta-section {
+        padding: 64px 48px;
+
+        h3 {
+          font-size: 24px;
+        }
+      }
+
+      .cta-button-dark {
+        padding: 22px 56px;
+        font-size: 12px;
+
+        &:hover {
+          background: #292524;
+          box-shadow: 0 14px 40px rgba(28, 25, 23, 0.3);
+        }
+      }
+
+      .info-section {
+        flex-direction: row;
+        justify-content: center;
+        gap: 48px;
+        padding: 40px 48px;
+      }
+
+      .info-item p {
+        font-size: 13px;
+      }
+
+      .footer {
+        padding: 64px 48px 100px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      h1 {
+        font-size: 56px;
+      }
+
+      .philosophy {
+        padding: 100px 64px;
+      }
+
+      h2 {
+        font-size: 36px;
+      }
+
+      .description {
+        font-size: 17px;
+        max-width: 640px;
+      }
+
+      .image-section {
+        padding: 0 64px 80px;
+      }
+
+      .feature-image {
+        height: 480px;
+      }
+
+      .quote-section {
+        padding: 0 64px 80px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .quote-card p {
+        font-size: 26px;
+      }
+
+      .cta-section {
+        padding: 80px 64px;
+      }
+
+      .info-section {
+        gap: 64px;
+      }
     }
   `]
 })

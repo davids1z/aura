@@ -81,7 +81,7 @@ class I18nService extends ChangeNotifier {
       'home.philosophyTitle': 'Minimalizam na tanjuru,\nmaksimalizam u okusu.',
       'home.philosophyText': 'Aura nije samo restoran, već putovanje kroz osjetila. Svaka namirnica u sezoni 2026. pažljivo je odabrana s lokalnih OPG-ova, tretirana s poštovanjem i pretvorena u umjetnost.',
       'home.hours': 'Radno vrijeme',
-      'home.hoursValue': 'Uto - Sub\n18:00 - 00:00',
+      'home.hoursValue': 'Svaki dan\n12:00 - 21:00',
       'home.location': 'Lokacija',
       'home.locationValue': 'Trg Kralja\nTomislava 1',
 
@@ -213,9 +213,9 @@ class I18nService extends ChangeNotifier {
       'home.philosophyTitle': 'Minimalism on the plate,\nmaximalism in taste.',
       'home.philosophyText': 'Aura is not just a restaurant, but a journey through the senses. Every ingredient in season 2026 is carefully selected from local farms, treated with respect and transformed into art.',
       'home.hours': 'Opening hours',
-      'home.hoursValue': 'Tue - Sat\n18:00 - 00:00',
+      'home.hoursValue': 'Every day\n12:00 - 21:00',
       'home.location': 'Location',
-      'home.locationValue': 'King Tomislav\nSquare 1',
+      'home.locationValue': 'Trg Kralja\nTomislava 1',
 
       // Menu screen
       'menu.title': 'MENU',
@@ -345,9 +345,9 @@ class I18nService extends ChangeNotifier {
       'home.philosophyTitle': 'Minimalismus auf dem Teller,\nMaximalismus im Geschmack.',
       'home.philosophyText': 'Aura ist nicht nur ein Restaurant, sondern eine Reise durch die Sinne. Jede Zutat in der Saison 2026 wird sorgfältig von lokalen Bauernhöfen ausgewählt, mit Respekt behandelt und in Kunst verwandelt.',
       'home.hours': 'Öffnungszeiten',
-      'home.hoursValue': 'Di - Sa\n18:00 - 00:00',
+      'home.hoursValue': 'Jeden Tag\n12:00 - 21:00',
       'home.location': 'Standort',
-      'home.locationValue': 'König-Tomislav-\nPlatz 1',
+      'home.locationValue': 'Trg Kralja\nTomislava 1',
 
       // Menu screen
       'menu.title': 'MENÜ',
@@ -464,6 +464,98 @@ class I18nService extends ChangeNotifier {
       'month.december': 'Dezember',
     },
   };
+
+  // ============================================
+  // PRIJEVODI JELA (jer API vraća samo na HR)
+  // ============================================
+  static final Map<Language, Map<String, Map<String, String>>> _menuTranslations = {
+    Language.en: {
+      '33': {'name': 'Tuna Carpaccio', 'description': 'Fresh tuna with arugula, capers and parmesan', 'category': 'Appetizer'},
+      '34': {'name': 'Bruschetta', 'description': 'Crispy bread with cherry tomatoes, basil and balsamic cream', 'category': 'Appetizer'},
+      '35': {'name': 'Prosciutto & Cheese', 'description': 'Dalmatian prosciutto with homemade cheese and olives', 'category': 'Appetizer'},
+      '36': {'name': 'Salmon Tartare', 'description': 'Fresh salmon with avocado and sesame', 'category': 'Appetizer'},
+      '37': {'name': 'Tomato Soup', 'description': 'Creamy roasted tomato soup with basil', 'category': 'Soup'},
+      '38': {'name': 'Fish Soup', 'description': 'Traditional Dalmatian fish soup', 'category': 'Soup'},
+      '39': {'name': 'Beef Soup', 'description': 'Homemade beef soup with noodles', 'category': 'Soup'},
+      '40': {'name': 'Caesar Salad', 'description': 'Romaine lettuce, chicken, parmesan, croutons and Caesar dressing', 'category': 'Salad'},
+      '41': {'name': 'Greek Salad', 'description': 'Tomatoes, cucumbers, peppers, onion, olives and feta cheese', 'category': 'Salad'},
+      '42': {'name': 'Goat Cheese Salad', 'description': 'Mixed salad with warm goat cheese and walnuts', 'category': 'Salad'},
+      '43': {'name': 'Spaghetti Carbonara', 'description': 'Spaghetti with guanciale, eggs and pecorino cheese', 'category': 'Pasta'},
+      '44': {'name': 'Penne Arrabiata', 'description': 'Penne with spicy tomato sauce', 'category': 'Pasta'},
+      '45': {'name': 'Black Risotto', 'description': 'Risotto with squid ink and seafood', 'category': 'Pasta'},
+      '46': {'name': 'Tagliatelle with Truffles', 'description': 'Homemade pasta with black truffles', 'category': 'Pasta'},
+      '47': {'name': 'Grilled Sea Bass', 'description': 'Fresh sea bass with grilled vegetables and chard', 'category': 'Fish'},
+      '48': {'name': 'Octopus Under the Bell', 'description': 'Octopus with potatoes baked under the bell', 'category': 'Fish'},
+      '49': {'name': 'Shrimp Buzara', 'description': 'Shrimp in white wine and garlic sauce', 'category': 'Fish'},
+      '50': {'name': 'Tuna Steak', 'description': 'Medium-rare tuna steak with wakame salad', 'category': 'Fish'},
+      '51': {'name': 'Grilled Steak', 'description': '300g steak with roasted vegetables and wine sauce', 'category': 'Meat'},
+      '52': {'name': 'Lamb Under the Bell', 'description': 'Lamb with potatoes baked under the bell', 'category': 'Meat'},
+      '53': {'name': 'Turkey Schnitzel', 'description': 'Turkey schnitzel with mashed potatoes and mushroom sauce', 'category': 'Meat'},
+      '54': {'name': 'Cevapcici', 'description': '10 cevapcici with flatbread, onion and kajmak', 'category': 'Meat'},
+      '55': {'name': 'Tiramisu', 'description': 'Classic Italian dessert with espresso and mascarpone', 'category': 'Dessert'},
+      '56': {'name': 'Panna Cotta', 'description': 'Italian creamy dessert with fruit sauce', 'category': 'Dessert'},
+      '57': {'name': 'Chocolate Lava Cake', 'description': 'Warm chocolate cake with a molten center', 'category': 'Dessert'},
+      '58': {'name': 'Fruit Salad', 'description': 'Fresh seasonal fruits with mint', 'category': 'Dessert'},
+      '59': {'name': 'Espresso', 'description': 'Italian coffee', 'category': 'Beverage'},
+      '60': {'name': 'Cappuccino', 'description': 'Espresso with milk and milk foam', 'category': 'Beverage'},
+      '61': {'name': 'Fresh Squeezed Juice', 'description': 'Orange, apple or grapefruit', 'category': 'Beverage'},
+      '62': {'name': 'Mineral Water', 'description': '0.75l', 'category': 'Beverage'},
+      '63': {'name': 'Homemade Lemonade', 'description': 'Fresh lemonade with mint', 'category': 'Beverage'},
+      '64': {'name': 'Daily Special', 'description': 'Ask your waiter for today\'s special', 'category': 'Special'},
+    },
+    Language.de: {
+      '33': {'name': 'Thunfisch-Carpaccio', 'description': 'Frischer Thunfisch mit Rucola, Kapern und Parmesan', 'category': 'Vorspeise'},
+      '34': {'name': 'Bruschetta', 'description': 'Knuspriges Brot mit Kirschtomaten, Basilikum und Balsamico-Creme', 'category': 'Vorspeise'},
+      '35': {'name': 'Pršut und Käse', 'description': 'Dalmatinischer Pršut mit hausgemachtem Käse und Oliven', 'category': 'Vorspeise'},
+      '36': {'name': 'Lachs-Tartare', 'description': 'Frischer Lachs mit Avocado und Sesam', 'category': 'Vorspeise'},
+      '37': {'name': 'Tomatensuppe', 'description': 'Cremige geröstete Tomatensuppe mit Basilikum', 'category': 'Suppe'},
+      '38': {'name': 'Fischsuppe', 'description': 'Traditionelle dalmatinische Fischsuppe', 'category': 'Suppe'},
+      '39': {'name': 'Rindfleischsuppe', 'description': 'Hausgemachte Rindfleischsuppe mit Nudeln', 'category': 'Suppe'},
+      '40': {'name': 'Caesar-Salat', 'description': 'Römersalat, Hähnchen, Parmesan, Croutons und Caesar-Dressing', 'category': 'Salat'},
+      '41': {'name': 'Griechischer Salat', 'description': 'Tomaten, Gurken, Paprika, Zwiebeln, Oliven und Feta-Käse', 'category': 'Salat'},
+      '42': {'name': 'Ziegenkäse-Salat', 'description': 'Gemischter Salat mit warmem Ziegenkäse und Walnüssen', 'category': 'Salat'},
+      '43': {'name': 'Spaghetti Carbonara', 'description': 'Spaghetti mit Guanciale, Eiern und Pecorino-Käse', 'category': 'Pasta'},
+      '44': {'name': 'Penne Arrabiata', 'description': 'Penne mit scharfer Tomatensauce', 'category': 'Pasta'},
+      '45': {'name': 'Schwarzes Risotto', 'description': 'Risotto mit Tintenfischtinte und Meeresfrüchten', 'category': 'Pasta'},
+      '46': {'name': 'Tagliatelle mit Trüffeln', 'description': 'Hausgemachte Pasta mit schwarzen Trüffeln', 'category': 'Pasta'},
+      '47': {'name': 'Gegrillter Wolfsbarsch', 'description': 'Frischer Wolfsbarsch mit gegrilltem Gemüse und Mangold', 'category': 'Fisch'},
+      '48': {'name': 'Oktopus unter der Glocke', 'description': 'Oktopus mit Kartoffeln unter der Glocke gebacken', 'category': 'Fisch'},
+      '49': {'name': 'Scampi Buzara', 'description': 'Scampi in Weißwein-Knoblauch-Sauce', 'category': 'Fisch'},
+      '50': {'name': 'Thunfisch-Steak', 'description': 'Medium gegartes Thunfisch-Steak mit Wakame-Salat', 'category': 'Fisch'},
+      '51': {'name': 'Gegrilltes Steak', 'description': '300g Steak mit geröstetem Gemüse und Weinsauce', 'category': 'Fleisch'},
+      '52': {'name': 'Lamm unter der Glocke', 'description': 'Lamm mit Kartoffeln unter der Glocke gebacken', 'category': 'Fleisch'},
+      '53': {'name': 'Putenschnitzel', 'description': 'Putenschnitzel mit Kartoffelpüree und Pilzsauce', 'category': 'Fleisch'},
+      '54': {'name': 'Ćevapčići', 'description': '10 Ćevapčići mit Fladenbrot, Zwiebeln und Kajmak', 'category': 'Fleisch'},
+      '55': {'name': 'Tiramisu', 'description': 'Klassisches italienisches Dessert mit Espresso und Mascarpone', 'category': 'Dessert'},
+      '56': {'name': 'Panna Cotta', 'description': 'Italienisches cremiges Dessert mit Fruchtsauce', 'category': 'Dessert'},
+      '57': {'name': 'Schokoladen-Lavakuchen', 'description': 'Warmer Schokoladenkuchen mit flüssigem Kern', 'category': 'Dessert'},
+      '58': {'name': 'Obstsalat', 'description': 'Frisches saisonales Obst mit Minze', 'category': 'Dessert'},
+      '59': {'name': 'Espresso', 'description': 'Italienischer Kaffee', 'category': 'Getränk'},
+      '60': {'name': 'Cappuccino', 'description': 'Espresso mit Milch und Milchschaum', 'category': 'Getränk'},
+      '61': {'name': 'Frisch gepresster Saft', 'description': 'Orange, Apfel oder Grapefruit', 'category': 'Getränk'},
+      '62': {'name': 'Mineralwasser', 'description': '0,75l', 'category': 'Getränk'},
+      '63': {'name': 'Hausgemachte Limonade', 'description': 'Frische Limonade mit Minze', 'category': 'Getränk'},
+      '64': {'name': 'Tagesspezialität', 'description': 'Fragen Sie den Kellner nach der heutigen Spezialität', 'category': 'Spezial'},
+    },
+  };
+
+  /// Prevedi naziv jela prema trenutnom jeziku
+  String translateMenuItemName(String id, String fallback) {
+    if (_currentLanguage == Language.hr) return fallback;
+    return _menuTranslations[_currentLanguage]?[id]?['name'] ?? fallback;
+  }
+
+  /// Prevedi opis jela prema trenutnom jeziku
+  String translateMenuItemDescription(String id, String fallback) {
+    if (_currentLanguage == Language.hr) return fallback;
+    return _menuTranslations[_currentLanguage]?[id]?['description'] ?? fallback;
+  }
+
+  /// Prevedi kategoriju jela prema trenutnom jeziku
+  String translateMenuItemCategory(String id, String fallback) {
+    if (_currentLanguage == Language.hr) return fallback;
+    return _menuTranslations[_currentLanguage]?[id]?['category'] ?? fallback;
+  }
 
   // Pomoćne metode za nazive dana i mjeseci
   String getDayName(int weekday) {

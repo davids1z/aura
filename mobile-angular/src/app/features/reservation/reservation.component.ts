@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { ScheduleResponse, TimeSlot, ReservationRequest } from '../../core/models/reservation.model';
 import { AuthDialogComponent } from '../../shared/components/auth-modal/auth-dialog.component';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
 interface CalendarDay {
   date: Date;
@@ -25,13 +26,13 @@ interface CalendarDay {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatButtonModule, MatIconModule,
-    MatDialogModule, MatSnackBarModule
+    MatDialogModule, MatSnackBarModule, ScrollRevealDirective
   ],
   template: `
     <div class="reservation-page">
       @if (authService.currentUser && !success) {
         <!-- Header -->
-        <header class="res-header">
+        <header class="res-header" appReveal [revealDelay]="50">
           <h1>Aura</h1>
           <div class="divider"></div>
           <p class="season">Sezona 2026.</p>
@@ -39,7 +40,7 @@ interface CalendarDay {
 
         <!-- User Bar -->
         @if (authService.currentUser) {
-          <div class="user-bar">
+          <div class="user-bar" appReveal [revealDelay]="180">
             <div class="user-info">
               <div class="user-avatar">{{ authService.currentUser.name.charAt(0) }}</div>
               <span>{{ authService.currentUser.name }}</span>
@@ -51,7 +52,7 @@ interface CalendarDay {
         }
 
         <!-- Calendar -->
-        <section class="calendar-section">
+        <section class="calendar-section" appReveal [revealDelay]="300">
           <label>Odaberite datum</label>
 
           <div class="calendar-nav">
@@ -106,7 +107,7 @@ interface CalendarDay {
         </section>
 
         <!-- Time Slots -->
-        <section class="slots-section">
+        <section class="slots-section" appReveal [revealDelay]="80">
           <label>Dostupni termini</label>
 
           @if (loadingSlots) {
@@ -153,7 +154,7 @@ interface CalendarDay {
         </section>
 
         <!-- Guest Count -->
-        <section class="guests-section">
+        <section class="guests-section" appReveal [revealDelay]="80">
           <label>Broj gostiju</label>
           <div class="guest-counter">
             <button class="counter-btn" (click)="updateGuests(-1)" [disabled]="guests <= 1">−</button>
@@ -163,13 +164,13 @@ interface CalendarDay {
         </section>
 
         <!-- Notes -->
-        <section class="notes-section">
+        <section class="notes-section" appReveal [revealDelay]="80">
           <label>Posebni zahtjevi (opcionalno)</label>
           <textarea [(ngModel)]="notes" placeholder="Alergije, posebne prigode..."></textarea>
         </section>
 
         <!-- Price -->
-        <section class="price-section">
+        <section class="price-section" appReveal [revealDelay]="100">
           <div class="price-row">
             <div>
               <p class="price-label">Cijena po osobi</p>
@@ -183,7 +184,7 @@ interface CalendarDay {
         </section>
 
         <!-- Submit -->
-        <button class="submit-btn"
+        <button class="submit-btn" appReveal [revealDelay]="150"
                 [disabled]="!canSubmit || loading"
                 (click)="submitReservation()">
           {{ loading ? 'Šaljem...' : (canSubmit ? 'Potvrdi rezervaciju' : 'Odaberite termin') }}
@@ -747,6 +748,78 @@ interface CalendarDay {
         }
       }
     }
+
+    @media (min-width: 768px) {
+      .reservation-page {
+        max-width: 600px;
+        margin: 16px auto;
+        padding: 40px 40px 120px;
+      }
+
+      .res-header h1 {
+        font-size: 32px;
+      }
+
+      .calendar-grid {
+        padding: 20px;
+      }
+
+      .cal-day {
+        font-size: 14px;
+      }
+
+      .slots-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .slot-btn {
+        padding: 14px 10px;
+      }
+
+      .guest-counter {
+        max-width: 300px;
+      }
+
+      textarea {
+        padding: 18px;
+      }
+
+      .total-value {
+        font-size: 28px;
+      }
+
+      .submit-btn {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        padding: 22px;
+      }
+
+      .success-screen {
+        padding: 100px 40px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .reservation-page {
+        max-width: 680px;
+        padding: 48px 48px 120px;
+      }
+
+      .res-header h1 {
+        font-size: 36px;
+      }
+
+      .slots-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .cal-day {
+        font-size: 15px;
+        border-radius: 12px;
+      }
+    }
   `]
 })
 export class ReservationComponent implements OnInit {
@@ -819,12 +892,13 @@ export class ReservationComponent implements OnInit {
   }
 
   showAuthDialog() {
+    const isMobile = window.innerWidth < 768;
     this.dialog.open(AuthDialogComponent, {
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      width: '100%',
-      height: '100%',
-      panelClass: 'fullscreen-dialog',
+      maxWidth: isMobile ? '100vw' : '480px',
+      maxHeight: isMobile ? '100vh' : '90vh',
+      width: isMobile ? '100%' : '480px',
+      height: isMobile ? '100%' : 'auto',
+      panelClass: isMobile ? 'fullscreen-dialog' : '',
       disableClose: false
     }).afterClosed().subscribe(result => {
       if (result === true) {
@@ -1013,12 +1087,13 @@ export class ReservationComponent implements OnInit {
 
   submitReservation() {
     if (!this.authService.currentUser) {
+      const isMobile = window.innerWidth < 768;
       this.dialog.open(AuthDialogComponent, {
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        width: '100%',
-        height: '100%',
-        panelClass: 'fullscreen-dialog'
+        maxWidth: isMobile ? '100vw' : '480px',
+        maxHeight: isMobile ? '100vh' : '90vh',
+        width: isMobile ? '100%' : '480px',
+        height: isMobile ? '100%' : 'auto',
+        panelClass: isMobile ? 'fullscreen-dialog' : ''
       }).afterClosed().subscribe(result => {
         if (result) {
           this.submitReservation();

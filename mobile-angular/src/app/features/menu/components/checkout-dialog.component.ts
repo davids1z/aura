@@ -61,7 +61,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
             <div class="summary-items">
               @for (item of cartService.cartItems$ | async; track item.id) {
                 <div class="summary-item">
-                  <span>{{ item.quantity }}× {{ item.name }}</span>
+                  <span>{{ item.quantity }}× {{ i18n.getItemName(item.id, item.name) }}</span>
                   <span>{{ (item.price * item.quantity).toFixed(2) }} €</span>
                 </div>
               }
@@ -303,6 +303,27 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       text-transform: uppercase;
       letter-spacing: 0.2em;
       cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .checkout-dialog {
+        min-height: auto;
+        padding: 32px;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .dialog-title h2 {
+        font-size: 20px;
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: #292524;
+      }
+
+      .ok-btn:hover {
+        background: #292524;
+      }
     }
   `]
 })

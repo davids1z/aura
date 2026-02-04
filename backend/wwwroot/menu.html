@@ -20,6 +20,18 @@
         @keyframes fadeIn { to { opacity: 1; } }
 
         .menu-item:hover .menu-image { transform: scale(1.05); }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-reveal.delay-1 { transition-delay: 0.25s; }
+        .scroll-reveal.delay-2 { transition-delay: 0.5s; }
+        .scroll-reveal.delay-3 { transition-delay: 0.75s; }
 
         /* Flying item animation - arc trajectory */
         .flying-item {
@@ -102,20 +114,35 @@
 <body class="bg-[#fafaf9] text-stone-800 antialiased">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 flex justify-between items-center px-8 py-6 bg-[#fafaf9]/95 backdrop-blur-sm border-b border-stone-100">
+    <nav class="fixed w-full z-50 flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 bg-[#fafaf9]/95 backdrop-blur-sm border-b border-stone-100">
         <a href="index.html" class="text-xl tracking-[0.5em] uppercase font-light text-stone-800">Aura</a>
         <div class="flex items-center gap-8">
-            <div class="space-x-8 text-[10px] uppercase tracking-[0.2em]">
+            <div class="space-x-8 text-[10px] uppercase tracking-[0.2em] hidden md:block">
                 <a href="index.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="home">Pocetna</a>
                 <a href="menu.html" class="text-stone-800 border-b border-stone-800 pb-1" data-i18n="menu">Menu</a>
                 <a href="reservation.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="reservation">Rezervacija</a>
                 <a href="contact.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="contact">Kontakt</a>
             </div>
+            <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="md:hidden w-8 h-8 flex flex-col items-center justify-center gap-1.5">
+                <span class="block w-5 h-[1px] bg-stone-800"></span>
+                <span class="block w-5 h-[1px] bg-stone-800"></span>
+            </button>
         </div>
     </nav>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden fixed inset-0 z-50 bg-[#fafaf9]/98 backdrop-blur-sm flex flex-col items-center justify-center gap-8 md:hidden">
+        <button onclick="document.getElementById('mobileMenu').classList.add('hidden')" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-stone-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <a href="index.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="home">Pocetna</a>
+        <a href="menu.html" class="text-stone-800 text-sm uppercase tracking-[0.3em] font-medium" data-i18n="menu">Menu</a>
+        <a href="reservation.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="reservation">Rezervacija</a>
+        <a href="contact.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="contact">Kontakt</a>
+    </div>
+
     <!-- Floating Cart Button -->
-    <button onclick="openCart()" id="cartButton" class="fixed bottom-8 right-8 z-40 bg-stone-900 text-white w-14 h-14 rounded-full shadow-2xl hover:bg-stone-800 transition-all flex items-center justify-center group">
+    <button onclick="openCart()" id="cartButton" class="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-40 bg-stone-900 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl hover:bg-stone-800 transition-all flex items-center justify-center group">
         <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
         </svg>
@@ -252,11 +279,11 @@
         </div>
     </div>
 
-    <main class="pt-32 pb-20">
+    <main class="pt-24 sm:pt-32 pb-20">
         <!-- Hero Section -->
-        <header class="text-center mb-20 px-8 fade-in">
+        <header class="text-center mb-12 sm:mb-20 px-4 sm:px-8 fade-in">
             <p class="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-4" data-i18n="season2026">Sezona 2026</p>
-            <h1 class="text-5xl md:text-6xl font-serif italic mb-6" data-i18n="menuTitle">Degustacijski Menu</h1>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif italic mb-6" data-i18n="menuTitle">Degustacijski Menu</h1>
             <div class="w-20 h-[1px] bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto"></div>
             <p class="text-stone-500 text-sm mt-8 max-w-lg mx-auto leading-relaxed" data-i18n="menuSubtitle">
                 Sedam sljedova koji slave lokalnu zemlju, more i tradiciju.
@@ -265,8 +292,8 @@
         </header>
 
         <!-- Featured Image -->
-        <div class="max-w-5xl mx-auto px-8 mb-24 fade-in fade-in-delay-1">
-            <div class="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl">
+        <div class="max-w-5xl mx-auto px-4 sm:px-8 mb-16 sm:mb-24 scroll-reveal">
+            <div class="relative h-[220px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl">
                 <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
                      class="w-full h-full object-cover" alt="Fine Dining Experience">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -278,13 +305,13 @@
         </div>
 
         <!-- Menu Items - Dynamic -->
-        <div id="menuContainer" class="max-w-4xl mx-auto px-8">
+        <div id="menuContainer" class="max-w-4xl mx-auto px-4 sm:px-8">
             <div class="text-center py-12 text-stone-400" data-i18n="loadingMenu">Učitavanje menija...</div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-16 text-center border-t border-stone-100">
+    <footer class="py-16 text-center border-t border-stone-100 scroll-reveal">
         <p class="text-xl font-serif tracking-[0.3em] text-stone-300 mb-4">AURA</p>
         <p class="text-stone-400 text-sm" data-i18n="address">Trg Kralja Tomislava 1, Zagreb</p>
         <p class="text-stone-400 text-sm mt-1" data-i18n="hours">Utorak - Subota, 18:00 - 00:00</p>
@@ -294,17 +321,10 @@
         let cart = JSON.parse(localStorage.getItem('auraCart') || '[]');
         let menuItems = [];
 
-        const categoryNames = {
-            'Appetizer': 'Predjela',
-            'Soup': 'Juhe',
-            'Salad': 'Salate',
-            'Pasta': 'Tjestenine',
-            'Fish': 'Riba',
-            'Meat': 'Meso',
-            'Dessert': 'Deserti',
-            'Beverage': 'Pića',
-            'Special': 'Specijalitet'
-        };
+        function getCategoryName(cat) {
+            const key = 'cat' + cat;
+            return i18n.t(key);
+        }
 
         const categoryOrder = ['Appetizer', 'Soup', 'Salad', 'Pasta', 'Fish', 'Meat', 'Dessert', 'Beverage', 'Special'];
 
@@ -319,7 +339,8 @@
                 menuItems = await response.json();
                 renderMenu();
             } catch (error) {
-                document.getElementById('menuContainer').innerHTML = '<div class="text-center py-12 text-red-400">Greška pri učitavanju menija</div>';
+                console.error('Menu load error:', error);
+                document.getElementById('menuContainer').innerHTML = '<div class="text-center py-12 text-red-400">' + (i18n ? i18n.t('menuLoadError') : 'Error loading menu') + '</div>';
             }
         }
 
@@ -337,10 +358,10 @@
                 if (!grouped[category] || grouped[category].length === 0) return;
 
                 html += `
-                    <section class="mb-16 fade-in">
-                        <div class="flex items-center gap-4 mb-10">
+                    <section class="mb-16">
+                        <div class="flex items-center gap-4 mb-10 scroll-reveal">
                             <div class="h-[1px] flex-1 bg-stone-200"></div>
-                            <h2 class="text-[11px] uppercase tracking-[0.4em] text-stone-400">${categoryNames[category] || category}</h2>
+                            <h2 class="text-[11px] uppercase tracking-[0.4em] text-stone-400">${getCategoryName(category)}</h2>
                             <div class="h-[1px] flex-1 bg-stone-200"></div>
                         </div>
                         <div class="space-y-8">
@@ -349,13 +370,15 @@
                 grouped[category].forEach(item => {
                     const hasDiscount = item.discountPercent > 0 && (!item.discountEndDate || new Date(item.discountEndDate) > new Date());
                     const effectivePrice = hasDiscount ? (item.price * (1 - item.discountPercent / 100)) : item.price;
+                    const displayName = i18n.tName(item.name);
+                    const displayDesc = i18n.tDesc(item.name, item.description || '');
 
                     html += `
-                        <div class="menu-item grid md:grid-cols-[1fr,140px] gap-6 pb-8 border-b border-stone-100 ${hasDiscount ? 'bg-green-50/50 -mx-4 px-4 py-4 rounded-xl' : ''}" data-id="${item.id}" data-name="${item.name}" data-price="${effectivePrice}">
+                        <div class="menu-item scroll-reveal grid md:grid-cols-[1fr,140px] gap-6 pb-8 border-b border-stone-100 ${hasDiscount ? 'bg-green-50/50 -mx-4 px-4 py-4 rounded-xl' : ''}" data-id="${item.id}" data-name="${item.name}" data-price="${effectivePrice}">
                             <div>
                                 <div class="flex justify-between items-start mb-2">
                                     <div class="flex items-center gap-2">
-                                        <h3 class="text-lg font-serif">${item.name}</h3>
+                                        <h3 class="text-lg font-serif">${displayName}</h3>
                                         ${hasDiscount ? `<span class="px-2 py-1 text-xs bg-green-500 text-white rounded-full font-medium">-${item.discountPercent}%</span>` : ''}
                                     </div>
                                     <div class="text-right">
@@ -367,16 +390,16 @@
                                         `}
                                     </div>
                                 </div>
-                                <p class="text-stone-400 text-sm leading-relaxed mb-4">${item.description || ''}</p>
+                                <p class="text-stone-400 text-sm leading-relaxed mb-4">${displayDesc}</p>
                                 <button onclick="addToCart(this)" class="add-btn group flex items-center gap-2 px-4 py-2 border ${hasDiscount ? 'border-green-400 text-green-600 hover:bg-green-500 hover:text-white' : 'border-stone-200 text-stone-600 hover:border-gold hover:text-gold'} text-sm rounded-full transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                     </svg>
-                                    Dodaj
+                                    ${i18n.t('addToCart')}
                                 </button>
                             </div>
                             ${item.imageUrl ? `
-                            <div class="h-28 md:h-auto rounded-xl overflow-hidden relative">
+                            <div class="h-40 w-full md:h-[110px] md:w-[140px] rounded-xl overflow-hidden relative flex-shrink-0">
                                 <img src="${item.imageUrl}" class="menu-image w-full h-full object-cover transition-transform duration-500" alt="${item.name}">
                                 ${hasDiscount ? '<div class="absolute top-2 right-2 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">-' + item.discountPercent + '%</div>' : ''}
                             </div>
@@ -389,6 +412,8 @@
             });
 
             container.innerHTML = html;
+            // Observe new scroll-reveal elements after dynamic render
+            container.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
         }
 
         // Flying animation with arc trajectory
@@ -489,10 +514,10 @@
             requestAnimationFrame(animate);
 
             // Button feedback
-            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Dodano`;
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ${i18n.t('added')}`;
             btn.classList.add('border-green-500', 'text-green-600');
             setTimeout(() => {
-                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Dodaj`;
+                btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ${i18n.t('addToCart')}`;
                 btn.classList.remove('border-green-500', 'text-green-600');
             }, 1500);
         }
@@ -515,7 +540,7 @@
                 countEl.classList.add('hidden');
             }
 
-            itemCountEl.textContent = `${totalItems} artikala`;
+            itemCountEl.textContent = `${totalItems} ${i18n.t('items')}`;
 
             if (cart.length === 0) {
                 emptyEl.classList.remove('hidden');
@@ -529,7 +554,7 @@
                 itemsEl.innerHTML = cart.map((item, index) => `
                     <div class="flex items-center gap-3 p-4 bg-stone-100 rounded-2xl">
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-medium text-stone-700 text-sm truncate">${item.name}</h4>
+                            <h4 class="font-medium text-stone-700 text-sm truncate">${i18n.tName(item.name)}</h4>
                             <p class="text-stone-400 text-sm">${item.price.toFixed(2)} €</p>
                         </div>
                         <div class="flex items-center gap-2">
@@ -587,13 +612,13 @@
 
             document.getElementById('checkoutItems').innerHTML = cart.map(item => `
                 <div class="flex justify-between">
-                    <span class="text-stone-600">${item.quantity}× ${item.name}</span>
+                    <span class="text-stone-600">${item.quantity}× ${i18n.tName(item.name)}</span>
                     <span class="text-stone-500">${(item.price * item.quantity).toFixed(2)} €</span>
                 </div>
             `).join('');
 
             document.getElementById('checkoutTotal').textContent = `${totalPrice.toFixed(2)} €`;
-            document.getElementById('checkoutItemCount').textContent = `${totalItems} artikala`;
+            document.getElementById('checkoutItemCount').textContent = `${totalItems} ${i18n.t('items')}`;
 
             modal.classList.add('active');
         }
@@ -653,7 +678,22 @@
             document.getElementById('successModal').classList.remove('active');
             document.body.classList.remove('modal-open');
         }
+
+        // Re-render dynamic content when language changes
+        window.addEventListener('languageChanged', () => {
+            if (menuItems.length > 0) renderMenu();
+            updateCartUI();
+        });
     </script>
-    <script src="/js/i18n.js"></script>
+    <script>
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+        document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+    </script>
+    <script src="/js/smooth-scroll.js"></script>
+    <script src="/js/i18n.js?v=3"></script>
 </body>
 </html>

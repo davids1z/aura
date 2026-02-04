@@ -22,7 +22,7 @@ const translations = {
     joinUs: 'Pridružite nam se',
     secureSpot: 'Osigurajte termin',
     address: 'Trg Kralja Tomislava 1, Zagreb',
-    hours: 'Utorak - Subota, 18:00 - 00:00',
+    hours: 'Radno vrijeme: Svaki dan, 12:00 - 21:00',
     copyright: '© 2026 Aura Fine Dining. Sva prava pridržana.',
 
     // Menu page
@@ -117,9 +117,14 @@ const translations = {
     contactLabel: 'Kontakt',
     workingHoursLabel: 'Radno vrijeme',
     wednesdaySunday: 'Srijeda — Nedjelja',
+    everyDay: 'Svaki dan',
     sendMessage: 'Pošalji poruku',
     message: 'Poruka',
     howCanWeHelp: 'Kako vam možemo pomoći?',
+
+    // Categories
+    catAppetizer: 'Predjela', catSoup: 'Juhe', catSalad: 'Salate', catPasta: 'Tjestenine',
+    catFish: 'Riba', catMeat: 'Meso', catDessert: 'Deserti', catBeverage: 'Pića', catSpecial: 'Specijalitet',
 
     // Days
     mon: 'Pon', tue: 'Uto', wed: 'Sri', thu: 'Čet', fri: 'Pet', sat: 'Sub', sun: 'Ned',
@@ -151,7 +156,7 @@ const translations = {
     joinUs: 'Join us',
     secureSpot: 'Secure your spot',
     address: 'King Tomislav Square 1, Zagreb',
-    hours: 'Tuesday - Saturday, 6:00 PM - 12:00 AM',
+    hours: 'Working hours: Every day, 12:00 PM - 9:00 PM',
     copyright: '© 2026 Aura Fine Dining. All rights reserved.',
 
     // Menu page
@@ -246,9 +251,14 @@ const translations = {
     contactLabel: 'Contact',
     workingHoursLabel: 'Working hours',
     wednesdaySunday: 'Wednesday — Sunday',
+    everyDay: 'Every day',
     sendMessage: 'Send message',
     message: 'Message',
     howCanWeHelp: 'How can we help you?',
+
+    // Categories
+    catAppetizer: 'Starters', catSoup: 'Soups', catSalad: 'Salads', catPasta: 'Pasta',
+    catFish: 'Fish', catMeat: 'Meat', catDessert: 'Desserts', catBeverage: 'Beverages', catSpecial: 'Specials',
 
     // Days
     mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun',
@@ -280,7 +290,7 @@ const translations = {
     joinUs: 'Besuchen Sie uns',
     secureSpot: 'Sichern Sie sich Ihren Platz',
     address: 'König-Tomislav-Platz 1, Zagreb',
-    hours: 'Dienstag - Samstag, 18:00 - 00:00',
+    hours: 'Öffnungszeiten: Jeden Tag, 12:00 - 21:00',
     copyright: '© 2026 Aura Fine Dining. Alle Rechte vorbehalten.',
 
     // Menu page
@@ -375,9 +385,14 @@ const translations = {
     contactLabel: 'Kontakt',
     workingHoursLabel: 'Öffnungszeiten',
     wednesdaySunday: 'Mittwoch — Sonntag',
+    everyDay: 'Jeden Tag',
     sendMessage: 'Nachricht senden',
     message: 'Nachricht',
     howCanWeHelp: 'Wie können wir Ihnen helfen?',
+
+    // Categories
+    catAppetizer: 'Vorspeisen', catSoup: 'Suppen', catSalad: 'Salate', catPasta: 'Pasta',
+    catFish: 'Fisch', catMeat: 'Fleisch', catDessert: 'Desserts', catBeverage: 'Getränke', catSpecial: 'Spezialitäten',
 
     // Days
     mon: 'Mo', tue: 'Di', wed: 'Mi', thu: 'Do', fri: 'Fr', sat: 'Sa', sun: 'So',
@@ -386,6 +401,78 @@ const translations = {
     january: 'Januar', february: 'Februar', march: 'März', april: 'April',
     may: 'Mai', june: 'Juni', july: 'Juli', august: 'August',
     september: 'September', october: 'Oktober', november: 'November', december: 'Dezember'
+  }
+};
+
+// Menu item translations (name and description)
+const menuTranslations = {
+  en: {
+    'Carpaccio od tune': { name: 'Tuna Carpaccio', desc: 'Thinly sliced fresh tuna with arugula and lemon dressing' },
+    'Bruschetta': { name: 'Bruschetta', desc: 'Toasted bread with tomatoes, garlic and fresh basil' },
+    'Pršut i sir': { name: 'Prosciutto & Cheese', desc: 'Dalmatian prosciutto with local cheeses' },
+    'Tartar od lososa': { name: 'Salmon Tartare', desc: 'Fresh salmon tartare with avocado and sesame' },
+    'Juha od rajčice': { name: 'Tomato Soup', desc: 'Creamy tomato soup with basil' },
+    'Riblja juha': { name: 'Fish Soup', desc: 'Traditional Adriatic fish soup' },
+    'Goveđa juha': { name: 'Beef Soup', desc: 'Clear beef broth with vegetables and noodles' },
+    'Cezar salata': { name: 'Caesar Salad', desc: 'Classic Caesar with crispy croutons and parmesan' },
+    'Grčka salata': { name: 'Greek Salad', desc: 'Fresh vegetables with feta cheese and olives' },
+    'Salata s kozjim sirom': { name: 'Goat Cheese Salad', desc: 'Mixed greens with warm goat cheese and honey' },
+    'Spaghetti Carbonara': { name: 'Spaghetti Carbonara', desc: 'Classic carbonara with pancetta and pecorino' },
+    'Penne Arrabiata': { name: 'Penne Arrabiata', desc: 'Penne in spicy tomato sauce' },
+    'Crni rižot': { name: 'Black Risotto', desc: 'Squid ink risotto with fresh seafood' },
+    'Tagliatelle s tartufima': { name: 'Truffle Tagliatelle', desc: 'Fresh tagliatelle with black truffle' },
+    'Brancin na žaru': { name: 'Grilled Sea Bass', desc: 'Whole sea bass grilled with herbs and olive oil' },
+    'Hobotnica ispod peke': { name: 'Octopus Under the Bell', desc: 'Slow-cooked octopus with potatoes, traditional style' },
+    'Škampi na buzaru': { name: 'Scampi Buzara', desc: 'Adriatic scampi in wine and garlic sauce' },
+    'Tuna steak': { name: 'Tuna Steak', desc: 'Seared tuna steak with sesame crust' },
+    'Biftek na žaru': { name: 'Grilled Steak', desc: 'Premium beef steak grilled to perfection' },
+    'Janjetina ispod peke': { name: 'Lamb Under the Bell', desc: 'Slow-roasted lamb with vegetables, traditional style' },
+    'Pureći odrezak': { name: 'Turkey Cutlet', desc: 'Breaded turkey cutlet with side salad' },
+    'Ćevapi': { name: 'Cevapi', desc: 'Traditional grilled meat sausages with flatbread' },
+    'Tiramisu': { name: 'Tiramisu', desc: 'Classic Italian coffee-flavored dessert' },
+    'Panna cotta': { name: 'Panna Cotta', desc: 'Italian cream dessert with berry coulis' },
+    'Čokoladni lava cake': { name: 'Chocolate Lava Cake', desc: 'Warm chocolate cake with molten center' },
+    'Voćna salata': { name: 'Fruit Salad', desc: 'Fresh seasonal fruit selection' },
+    'Espresso': { name: 'Espresso', desc: 'Italian espresso coffee' },
+    'Cappuccino': { name: 'Cappuccino', desc: 'Espresso with steamed milk foam' },
+    'Svježe cijeđeni sok': { name: 'Fresh Squeezed Juice', desc: 'Freshly squeezed seasonal juice' },
+    'Mineralna voda': { name: 'Mineral Water', desc: 'Sparkling or still mineral water' },
+    'Domaća limunada': { name: 'Homemade Lemonade', desc: 'Fresh homemade lemonade with mint' },
+    'Specijalitet dana': { name: 'Daily Special', desc: "Chef's daily special creation" }
+  },
+  de: {
+    'Carpaccio od tune': { name: 'Thunfisch-Carpaccio', desc: 'Dünn geschnittener frischer Thunfisch mit Rucola und Zitronendressing' },
+    'Bruschetta': { name: 'Bruschetta', desc: 'Geröstetes Brot mit Tomaten, Knoblauch und frischem Basilikum' },
+    'Pršut i sir': { name: 'Schinken & Käse', desc: 'Dalmatinischer Schinken mit lokalen Käsesorten' },
+    'Tartar od lososa': { name: 'Lachstartar', desc: 'Frisches Lachstartar mit Avocado und Sesam' },
+    'Juha od rajčice': { name: 'Tomatensuppe', desc: 'Cremige Tomatensuppe mit Basilikum' },
+    'Riblja juha': { name: 'Fischsuppe', desc: 'Traditionelle adriatische Fischsuppe' },
+    'Goveđa juha': { name: 'Rinderbrühe', desc: 'Klare Rinderbrühe mit Gemüse und Nudeln' },
+    'Cezar salata': { name: 'Caesar-Salat', desc: 'Klassischer Caesar mit knusprigen Croutons und Parmesan' },
+    'Grčka salata': { name: 'Griechischer Salat', desc: 'Frisches Gemüse mit Feta und Oliven' },
+    'Salata s kozjim sirom': { name: 'Ziegenkäse-Salat', desc: 'Gemischte Blätter mit warmem Ziegenkäse und Honig' },
+    'Spaghetti Carbonara': { name: 'Spaghetti Carbonara', desc: 'Klassische Carbonara mit Pancetta und Pecorino' },
+    'Penne Arrabiata': { name: 'Penne Arrabiata', desc: 'Penne in scharfer Tomatensauce' },
+    'Crni rižot': { name: 'Schwarzes Risotto', desc: 'Risotto mit Tintenfischtinte und frischen Meeresfrüchten' },
+    'Tagliatelle s tartufima': { name: 'Trüffel-Tagliatelle', desc: 'Frische Tagliatelle mit schwarzem Trüffel' },
+    'Brancin na žaru': { name: 'Gegrillter Wolfsbarsch', desc: 'Ganzer Wolfsbarsch gegrillt mit Kräutern und Olivenöl' },
+    'Hobotnica ispod peke': { name: 'Oktopus unter der Glocke', desc: 'Langsam gegarter Oktopus mit Kartoffeln' },
+    'Škampi na buzaru': { name: 'Scampi Buzara', desc: 'Adriatische Scampi in Wein-Knoblauch-Sauce' },
+    'Tuna steak': { name: 'Thunfischsteak', desc: 'Gegrilltes Thunfischsteak mit Sesamkruste' },
+    'Biftek na žaru': { name: 'Gegrilltes Steak', desc: 'Premium-Rindersteak perfekt gegrillt' },
+    'Janjetina ispod peke': { name: 'Lamm unter der Glocke', desc: 'Langsam gebratenes Lamm mit Gemüse' },
+    'Pureći odrezak': { name: 'Putenschnitzel', desc: 'Paniertes Putenschnitzel mit Beilagensalat' },
+    'Ćevapi': { name: 'Cevapcici', desc: 'Traditionelle gegrillte Fleischröllchen mit Fladenbrot' },
+    'Tiramisu': { name: 'Tiramisu', desc: 'Klassisches italienisches Kaffee-Dessert' },
+    'Panna cotta': { name: 'Panna Cotta', desc: 'Italienisches Sahnedessert mit Beerensauce' },
+    'Čokoladni lava cake': { name: 'Schokoladen-Lavakuchen', desc: 'Warmer Schokoladenkuchen mit flüssigem Kern' },
+    'Voćna salata': { name: 'Obstsalat', desc: 'Frische saisonale Obstauswahl' },
+    'Espresso': { name: 'Espresso', desc: 'Italienischer Espresso' },
+    'Cappuccino': { name: 'Cappuccino', desc: 'Espresso mit aufgeschäumter Milch' },
+    'Svježe cijeđeni sok': { name: 'Frisch gepresster Saft', desc: 'Frisch gepresster saisonaler Saft' },
+    'Mineralna voda': { name: 'Mineralwasser', desc: 'Mineral- oder stilles Wasser' },
+    'Domaća limunada': { name: 'Hausgemachte Limonade', desc: 'Frische hausgemachte Limonade mit Minze' },
+    'Specijalitet dana': { name: 'Tagesspezialität', desc: 'Tägliche Spezialkreation des Küchenchefs' }
   }
 };
 
@@ -419,11 +506,27 @@ const i18n = {
       this.currentLang = lang;
       localStorage.setItem('aura_language', lang);
       this.updatePage();
+      // Notify dynamic content to re-render
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
     }
   },
 
   t(key) {
     return translations[this.currentLang][key] || translations['hr'][key] || key;
+  },
+
+  // Translate menu item name
+  tName(originalName) {
+    if (this.currentLang === 'hr') return originalName;
+    const mt = menuTranslations[this.currentLang];
+    return (mt && mt[originalName] && mt[originalName].name) || originalName;
+  },
+
+  // Translate menu item description
+  tDesc(originalName, originalDesc) {
+    if (this.currentLang === 'hr') return originalDesc;
+    const mt = menuTranslations[this.currentLang];
+    return (mt && mt[originalName] && mt[originalName].desc) || originalDesc;
   },
 
   updatePage() {
@@ -450,7 +553,6 @@ const i18n = {
   },
 
   createLanguageSelector() {
-    // Only show language selector on homepage (index.html or root)
     const path = window.location.pathname;
     const isHomepage = path === '/' || path === '/index.html' || path.endsWith('/index.html');
     if (!isHomepage) return;

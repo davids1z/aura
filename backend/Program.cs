@@ -181,39 +181,39 @@ using (var scope = app.Services.CreateScope())
             -- Make all days open by default (admin can close specific days via DateOverrides)
             UPDATE ""DaySchedules"" SET ""IsOpen"" = true;
 
-            -- Add images to existing menu items if they don't have any
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=400' WHERE ""Name"" = 'Carpaccio od tune' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400' WHERE ""Name"" = 'Bruschetta' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400' WHERE ""Name"" = 'Pršut i sir' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400' WHERE ""Name"" = 'Tartar od lososa' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400' WHERE ""Name"" = 'Juha od rajčice' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1594756202469-9ff9799b2e4e?w=400' WHERE ""Name"" = 'Riblja juha' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=400' WHERE ""Name"" = 'Goveđa juha' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400' WHERE ""Name"" = 'Cezar salata' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400' WHERE ""Name"" = 'Grčka salata' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' WHERE ""Name"" = 'Salata s kozjim sirom' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400' WHERE ""Name"" = 'Spaghetti Carbonara' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400' WHERE ""Name"" = 'Penne Arrabiata' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400' WHERE ""Name"" = 'Crni rižot' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1556761223-4c4282c73f77?w=400' WHERE ""Name"" = 'Tagliatelle s tartufima' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1510130387422-82bed34b37e9?w=400' WHERE ""Name"" = 'Brancin na žaru' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400' WHERE ""Name"" = 'Hobotnica ispod peke' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=400' WHERE ""Name"" = 'Škampi na buzaru' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' WHERE ""Name"" = 'Tuna steak' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400' WHERE ""Name"" = 'Biftek na žaru' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1514516345957-556ca7c90a29?w=400' WHERE ""Name"" = 'Janjetina ispod peke' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400' WHERE ""Name"" = 'Pureći odrezak' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400' WHERE ""Name"" = 'Ćevapi' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400' WHERE ""Name"" = 'Tiramisu' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400' WHERE ""Name"" = 'Panna cotta' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400' WHERE ""Name"" = 'Čokoladni lava cake' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=400' WHERE ""Name"" = 'Voćna salata' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400' WHERE ""Name"" = 'Espresso' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400' WHERE ""Name"" = 'Cappuccino' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=400' WHERE ""Name"" = 'Svježe cijeđeni sok' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1560023907-5f339617ea30?w=400' WHERE ""Name"" = 'Mineralna voda' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1523371054106-bbf80586c38c?w=400' WHERE ""Name"" = 'Domaća limunada' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
-            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400' WHERE ""Name"" = 'Specijalitet dana' AND (""ImageUrl"" IS NULL OR ""ImageUrl"" = '');
+            -- Update menu item images (consistent 400x300 crop)
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop' WHERE ""Name"" = 'Carpaccio od tune';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400&h=300&fit=crop' WHERE ""Name"" = 'Bruschetta';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400&h=300&fit=crop' WHERE ""Name"" = 'Pršut i sir';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&h=300&fit=crop' WHERE ""Name"" = 'Tartar od lososa';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=300&fit=crop' WHERE ""Name"" = 'Juha od rajčice';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=400&h=300&fit=crop' WHERE ""Name"" = 'Riblja juha';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?w=400&h=300&fit=crop' WHERE ""Name"" = 'Goveđa juha';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&h=300&fit=crop' WHERE ""Name"" = 'Cezar salata';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop' WHERE ""Name"" = 'Grčka salata';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop' WHERE ""Name"" = 'Salata s kozjim sirom';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&h=300&fit=crop' WHERE ""Name"" = 'Spaghetti Carbonara';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=300&fit=crop' WHERE ""Name"" = 'Penne Arrabiata';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=300&fit=crop' WHERE ""Name"" = 'Crni rižot';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1556761223-4c4282c73f77?w=400&h=300&fit=crop' WHERE ""Name"" = 'Tagliatelle s tartufima';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop' WHERE ""Name"" = 'Brancin na žaru';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=300&fit=crop' WHERE ""Name"" = 'Hobotnica ispod peke';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=400&h=300&fit=crop' WHERE ""Name"" = 'Škampi na buzaru';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop' WHERE ""Name"" = 'Tuna steak';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=300&fit=crop' WHERE ""Name"" = 'Biftek na žaru';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop' WHERE ""Name"" = 'Janjetina ispod peke';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop' WHERE ""Name"" = 'Pureći odrezak';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&h=300&fit=crop' WHERE ""Name"" = 'Ćevapi';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop' WHERE ""Name"" = 'Tiramisu';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop' WHERE ""Name"" = 'Panna cotta';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&h=300&fit=crop' WHERE ""Name"" = 'Čokoladni lava cake';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=400&h=300&fit=crop' WHERE ""Name"" = 'Voćna salata';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&h=300&fit=crop' WHERE ""Name"" = 'Espresso';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop' WHERE ""Name"" = 'Cappuccino';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop' WHERE ""Name"" = 'Svježe cijeđeni sok';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&h=300&fit=crop' WHERE ""Name"" = 'Mineralna voda';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1523371054106-bbf80586c38c?w=400&h=300&fit=crop' WHERE ""Name"" = 'Domaća limunada';
+            UPDATE ""MenuItems"" SET ""ImageUrl"" = 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop' WHERE ""Name"" = 'Specijalitet dana';
         ");
         Console.WriteLine("Database schema and data cleaned up successfully");
     }
@@ -351,7 +351,7 @@ using (var scope = app.Services.CreateScope())
 
             // Meso (Meat)
             new MenuItem { Name = "Biftek na žaru", Description = "300g biftek s pečenim povrćem i umakom od vina", Price = 32.90m, Category = MenuCategory.Meat, ImageUrl = "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400", IsAvailable = true, IsGlutenFree = true, SortOrder = 1, CreatedAt = DateTime.UtcNow },
-            new MenuItem { Name = "Janjetina ispod peke", Description = "Janjetina s krumpirom ispod peke", Price = 28.90m, Category = MenuCategory.Meat, ImageUrl = "https://images.unsplash.com/photo-1514516345957-556ca7c90a29?w=400", IsAvailable = true, IsGlutenFree = true, SortOrder = 2, CreatedAt = DateTime.UtcNow },
+            new MenuItem { Name = "Janjetina ispod peke", Description = "Janjetina s krumpirom ispod peke", Price = 28.90m, Category = MenuCategory.Meat, ImageUrl = "https://images.unsplash.com/photo-1574484284002-952d92456975?w=400", IsAvailable = true, IsGlutenFree = true, SortOrder = 2, CreatedAt = DateTime.UtcNow },
             new MenuItem { Name = "Pureći odrezak", Description = "Pureći odrezak s pireom i umakom od gljiva", Price = 18.90m, Category = MenuCategory.Meat, ImageUrl = "https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400", IsAvailable = true, IsGlutenFree = true, SortOrder = 3, CreatedAt = DateTime.UtcNow },
             new MenuItem { Name = "Ćevapi", Description = "10 ćevapa s lepinjom, lukom i kajmakom", Price = 14.90m, Category = MenuCategory.Meat, ImageUrl = "https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400", IsAvailable = true, SortOrder = 4, CreatedAt = DateTime.UtcNow },
 

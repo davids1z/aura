@@ -12,18 +12,19 @@ import { CartService } from '../../core/services/cart.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { MenuItem, CATEGORY_ORDER, MenuCategory } from '../../core/models/menu-item.model';
 import { CartSheetComponent } from './components/cart-sheet.component';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatButtonModule, MatIconModule,
-    MatBadgeModule, MatBottomSheetModule, MatSnackBarModule
+    MatBadgeModule, MatBottomSheetModule, MatSnackBarModule, ScrollRevealDirective
   ],
   template: `
     <div class="menu-page">
       <!-- Header -->
-      <header class="menu-header">
+      <header class="menu-header" appReveal>
         <p class="label">{{ i18n.t().home.season }}</p>
         <h1>{{ i18n.t().menu.menuTitle }}</h1>
         <div class="divider"></div>
@@ -33,7 +34,7 @@ import { CartSheetComponent } from './components/cart-sheet.component';
       </header>
 
       <!-- Featured Image -->
-      <div class="featured-image">
+      <div class="featured-image" appReveal [revealDelay]="150">
         <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
              alt="Fine Dining">
         <div class="image-overlay">
@@ -65,33 +66,35 @@ import { CartSheetComponent } from './components/cart-sheet.component';
       <!-- Menu Items by Category -->
       @for (category of categories; track category) {
         @if (getItemsByCategory(category).length > 0) {
-          <section class="category-section">
+          <section class="category-section" appReveal>
             <div class="category-header">
               <div class="line"></div>
               <h2>{{ getCategoryName(category) }}</h2>
               <div class="line"></div>
             </div>
 
-            @for (item of getItemsByCategory(category); track item.id) {
-              <div class="menu-item">
-                <div class="item-content">
-                  <div class="item-header">
-                    <h3>{{ item.name }}</h3>
-                    <span class="price">{{ item.price.toFixed(2) }} €</span>
+            <div class="menu-items-grid">
+              @for (item of getItemsByCategory(category); track item.id) {
+                <div class="menu-item">
+                  <div class="item-content">
+                    <div class="item-header">
+                      <h3>{{ i18n.getItemName(item.id, item.name) }}</h3>
+                      <span class="price">{{ item.price.toFixed(2) }} €</span>
+                    </div>
+                    <p class="item-description">{{ i18n.getItemDescription(item.id, item.description) }}</p>
+                    <button class="add-button" (click)="addToCart(item)">
+                      <mat-icon>add</mat-icon>
+                      {{ i18n.t().menu.addToCart }}
+                    </button>
                   </div>
-                  <p class="item-description">{{ item.description }}</p>
-                  <button class="add-button" (click)="addToCart(item)">
-                    <mat-icon>add</mat-icon>
-                    {{ i18n.t().menu.addToCart }}
-                  </button>
+                  @if (item.imageUrl) {
+                    <div class="item-image">
+                      <img [src]="item.imageUrl" [alt]="item.name">
+                    </div>
+                  }
                 </div>
-                @if (item.imageUrl) {
-                  <div class="item-image">
-                    <img [src]="item.imageUrl" [alt]="item.name">
-                  </div>
-                }
-              </div>
-            }
+              }
+            </div>
           </section>
         }
       }
@@ -414,6 +417,92 @@ import { CartSheetComponent } from './components/cart-sheet.component';
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.1); }
     }
+
+    @media (min-width: 768px) {
+      .menu-header {
+        padding: 48px 48px 32px;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        max-width: 420px;
+      }
+
+      .featured-image {
+        margin: 0 48px 40px;
+        height: 280px;
+      }
+
+      .category-section {
+        padding: 0 48px 40px;
+      }
+
+      .menu-items-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0 32px;
+      }
+
+      .menu-item {
+        padding: 24px 0;
+      }
+
+      .item-header h3 {
+        font-size: 17px;
+      }
+
+      .item-image {
+        width: 90px;
+        height: 90px;
+      }
+
+      .add-button {
+        &:hover {
+          border-color: #d4af37;
+          color: #d4af37;
+          background: rgba(212, 175, 55, 0.05);
+        }
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .menu-header {
+        padding: 56px 64px 40px;
+      }
+
+      h1 {
+        font-size: 44px;
+      }
+
+      .subtitle {
+        max-width: 500px;
+        font-size: 16px;
+      }
+
+      .featured-image {
+        margin: 0 64px 48px;
+        height: 340px;
+        border-radius: 32px;
+      }
+
+      .category-section {
+        padding: 0 64px 48px;
+      }
+
+      .item-header h3 {
+        font-size: 18px;
+      }
+
+      .item-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 16px;
+      }
+    }
   `]
 })
 export class MenuComponent implements OnInit {
@@ -466,17 +555,22 @@ export class MenuComponent implements OnInit {
   getCategoryName(category: MenuCategory): string {
     const categories = this.i18n.t().menu.categories;
     const categoryMap: Record<string, string> = {
-      'Predjelo': categories.predjelo,
-      'Glavno jelo': categories.glavnoJelo,
-      'Desert': categories.desert,
-      'Piće': categories.pice
+      'Appetizer': categories.appetizer,
+      'Soup': categories.soup,
+      'Salad': categories.salad,
+      'Pasta': categories.pasta,
+      'Fish': categories.fish,
+      'Meat': categories.meat,
+      'Dessert': categories.dessert,
+      'Beverage': categories.beverage,
+      'Special': categories.special,
     };
     return categoryMap[category] || category;
   }
 
   addToCart(item: MenuItem) {
     this.cartService.addToCart(item);
-    this.snackBar.open(`${item.name} ✓`, '', {
+    this.snackBar.open(`${this.i18n.getItemName(item.id, item.name)} ✓`, '', {
       duration: 1500,
       horizontalPosition: 'center',
       verticalPosition: 'top',

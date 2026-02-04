@@ -86,8 +86,8 @@
 </head>
 <body class="min-h-screen text-stone-300">
     <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/90 modal-overlay flex items-center justify-center z-50">
-        <div class="bg-stone-900 border border-stone-700 p-10 w-full max-w-md">
+    <div id="loginModal" class="fixed inset-0 bg-black/90 modal-overlay flex items-center justify-center z-50 p-4">
+        <div class="bg-stone-900 border border-stone-700 p-6 sm:p-10 w-full max-w-md">
             <h2 class="text-3xl gold text-center mb-2 font-light tracking-widest">ADMIN</h2>
             <p class="text-center text-stone-500 mb-8 text-sm">Prijavite se za pristup</p>
             <form id="loginForm" class="space-y-4">
@@ -106,72 +106,72 @@
     <!-- Main Content -->
     <div id="mainContent" class="hidden">
         <!-- Header -->
-        <header class="border-b border-stone-800 p-6">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl gold tracking-[0.3em] font-light">AURA</h1>
-                    <p class="text-stone-500 text-xs tracking-widest mt-1">ADMIN PANEL</p>
+        <header class="border-b border-stone-800 p-4 sm:p-6">
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <h1 class="text-xl sm:text-2xl gold tracking-[0.3em] font-light">AURA</h1>
+                    <p class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1">ADMIN PANEL</p>
                 </div>
-                <div class="flex gap-3">
-                    <button onclick="loadAllData()" class="px-5 py-2 border border-stone-600 text-stone-400 hover:border-amber-500 hover:text-amber-500 transition text-sm tracking-wider">
+                <div class="flex gap-2 sm:gap-3 shrink-0">
+                    <button onclick="loadAllData()" class="px-3 sm:px-5 py-2 border border-stone-600 text-stone-400 hover:border-amber-500 hover:text-amber-500 transition text-xs sm:text-sm tracking-wider">
                         OSVJEŽI
                     </button>
-                    <button onclick="logout()" class="px-5 py-2 border border-red-900 text-red-400 hover:bg-red-900/30 transition text-sm tracking-wider">
+                    <button onclick="logout()" class="px-3 sm:px-5 py-2 border border-red-900 text-red-400 hover:bg-red-900/30 transition text-xs sm:text-sm tracking-wider">
                         ODJAVA
                     </button>
                 </div>
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto p-6">
+        <main class="max-w-7xl mx-auto p-3 sm:p-6">
             <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                <div class="bg-stone-900/50 border border-stone-800 p-6 text-center">
-                    <div id="totalReservations" class="text-4xl gold font-light">0</div>
-                    <div class="text-stone-500 text-xs tracking-widest mt-2">REZERVACIJA</div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-8">
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 text-center">
+                    <div id="totalReservations" class="text-2xl sm:text-4xl gold font-light">0</div>
+                    <div class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1 sm:mt-2">REZERVACIJA</div>
                 </div>
-                <div class="bg-stone-900/50 border border-stone-800 p-6 text-center">
-                    <div id="totalOrders" class="text-4xl gold font-light">0</div>
-                    <div class="text-stone-500 text-xs tracking-widest mt-2">NARUDŽBI</div>
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 text-center">
+                    <div id="totalOrders" class="text-2xl sm:text-4xl gold font-light">0</div>
+                    <div class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1 sm:mt-2">NARUDŽBI</div>
                 </div>
-                <div class="bg-stone-900/50 border border-stone-800 p-6 text-center">
-                    <div id="upcomingReservations" class="text-4xl gold font-light">0</div>
-                    <div class="text-stone-500 text-xs tracking-widest mt-2">NADOLAZEĆE</div>
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 text-center">
+                    <div id="upcomingReservations" class="text-2xl sm:text-4xl gold font-light">0</div>
+                    <div class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1 sm:mt-2">NADOLAZEĆE</div>
                 </div>
-                <div class="bg-stone-900/50 border border-stone-800 p-6 text-center">
-                    <div id="totalUsers" class="text-4xl gold font-light">0</div>
-                    <div class="text-stone-500 text-xs tracking-widest mt-2">KORISNIKA</div>
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 text-center">
+                    <div id="totalUsers" class="text-2xl sm:text-4xl gold font-light">0</div>
+                    <div class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1 sm:mt-2">KORISNIKA</div>
                 </div>
-                <div class="bg-stone-900/50 border border-stone-800 p-6 text-center cursor-pointer hover:border-amber-500/50 transition" onclick="switchTab('menu')">
-                    <div id="totalMenuItems" class="text-4xl gold font-light">0</div>
-                    <div class="text-stone-500 text-xs tracking-widest mt-2">JELA</div>
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 text-center cursor-pointer hover:border-amber-500/50 transition col-span-2 sm:col-span-1" onclick="switchTab('menu')">
+                    <div id="totalMenuItems" class="text-2xl sm:text-4xl gold font-light">0</div>
+                    <div class="text-stone-500 text-[10px] sm:text-xs tracking-widest mt-1 sm:mt-2">JELA</div>
                 </div>
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-2 mb-6 border-b border-stone-800 pb-4 flex-wrap">
+            <div class="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6 border-b border-stone-800 pb-3 sm:pb-4 flex-wrap overflow-x-auto">
                 <button onclick="switchTab('reservations')" data-tab="reservations"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition active">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition active whitespace-nowrap">
                     REZERVACIJE
                 </button>
                 <button onclick="switchTab('orders')" data-tab="orders"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition whitespace-nowrap">
                     NARUDŽBE
                 </button>
                 <button onclick="switchTab('schedule')" data-tab="schedule"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition whitespace-nowrap">
                     RASPORED
                 </button>
                 <button onclick="switchTab('overrides')" data-tab="overrides"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition whitespace-nowrap">
                     POSEBNI DATUMI
                 </button>
                 <button onclick="switchTab('users')" data-tab="users"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition whitespace-nowrap">
                     KORISNICI
                 </button>
                 <button onclick="switchTab('menu')" data-tab="menu"
-                    class="tab-btn px-6 py-3 text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition">
+                    class="tab-btn px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm tracking-wider border border-stone-700 text-stone-400 hover:border-amber-500 transition whitespace-nowrap">
                     JELOVNIK
                 </button>
             </div>
@@ -225,7 +225,7 @@
 
             <!-- Schedule Tab -->
             <div id="scheduleTab" class="tab-content hidden">
-                <div class="bg-stone-900/50 border border-stone-800 p-6">
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6">
                     <h3 class="text-lg gold mb-6 tracking-wider">TJEDNI RASPORED</h3>
                     <div id="weeklySchedule" class="space-y-4">
                         <div class="text-center py-8 text-stone-500">Učitavanje...</div>
@@ -239,9 +239,9 @@
 
             <!-- Overrides Tab -->
             <div id="overridesTab" class="tab-content hidden">
-                <div class="bg-stone-900/50 border border-stone-800 p-6 mb-6">
-                    <h3 class="text-lg gold mb-6 tracking-wider">DODAJ POSEBNI DATUM</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-stone-900/50 border border-stone-800 p-3 sm:p-6 mb-4 sm:mb-6">
+                    <h3 class="text-base sm:text-lg gold mb-4 sm:mb-6 tracking-wider">DODAJ POSEBNI DATUM</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-xs text-stone-500 mb-2 tracking-wider">DATUM</label>
                             <input type="date" id="overrideDate" class="w-full p-3 bg-stone-800 border border-stone-700 text-stone-200">
@@ -303,10 +303,10 @@
             <!-- Menu Tab -->
             <div id="menuTab" class="tab-content hidden">
                 <!-- Header with Add Button -->
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <h3 class="text-lg gold tracking-wider">UPRAVLJANJE JELOVNIKOM</h3>
-                        <select id="menuCategoryFilter" onchange="filterMenuByCategory()" class="px-4 py-2 bg-stone-800 border border-stone-700 text-stone-300 text-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        <h3 class="text-base sm:text-lg gold tracking-wider">UPRAVLJANJE JELOVNIKOM</h3>
+                        <select id="menuCategoryFilter" onchange="filterMenuByCategory()" class="px-3 sm:px-4 py-2 bg-stone-800 border border-stone-700 text-stone-300 text-sm w-full sm:w-auto">
                             <option value="all">Sve kategorije</option>
                             <option value="Appetizer">Predjela</option>
                             <option value="Soup">Juhe</option>
@@ -319,7 +319,7 @@
                             <option value="Special">Specijaliteti</option>
                         </select>
                     </div>
-                    <button onclick="openMenuModal()" class="px-6 py-3 bg-gold text-black font-medium tracking-wider hover:bg-amber-400 transition flex items-center gap-2">
+                    <button onclick="openMenuModal()" class="px-4 sm:px-6 py-2 sm:py-3 bg-gold text-black font-medium tracking-wider hover:bg-amber-400 transition flex items-center justify-center gap-2 w-full sm:w-auto">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
@@ -841,26 +841,26 @@
                 const row = document.createElement('div');
                 row.className = 'border border-stone-800 p-4';
                 row.innerHTML = `
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-28 font-medium">${dayNames[index]}</div>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-4">
+                        <div class="w-20 sm:w-28 font-medium text-sm sm:text-base">${dayNames[index]}</div>
                         <div class="toggle-switch ${day.isOpen ? 'active' : ''}" onclick="toggleDay(${index})"></div>
                         <div class="flex items-center gap-2 ${!day.isOpen ? 'opacity-30' : ''}">
                             <input type="time" value="${day.openTime || '12:00'}"
                                 onchange="updateDayTime(${index}, 'open', this.value)"
                                 ${!day.isOpen ? 'disabled' : ''}
-                                class="p-2 bg-stone-800 border border-stone-700 text-stone-200 text-sm">
+                                class="p-1.5 sm:p-2 bg-stone-800 border border-stone-700 text-stone-200 text-xs sm:text-sm w-[90px] sm:w-auto">
                             <span class="text-stone-500">-</span>
                             <input type="time" value="${day.closeTime || '23:00'}"
                                 onchange="updateDayTime(${index}, 'close', this.value)"
                                 ${!day.isOpen ? 'disabled' : ''}
-                                class="p-2 bg-stone-800 border border-stone-700 text-stone-200 text-sm">
+                                class="p-1.5 sm:p-2 bg-stone-800 border border-stone-700 text-stone-200 text-xs sm:text-sm w-[90px] sm:w-auto">
                         </div>
-                        <div class="text-sm ${day.isOpen ? 'text-green-400' : 'text-red-400'}">
+                        <div class="text-xs sm:text-sm ${day.isOpen ? 'text-green-400' : 'text-red-400'}">
                             ${day.isOpen ? 'OTVORENO' : 'ZATVORENO'}
                         </div>
                     </div>
                     ${day.isOpen ? `
-                        <div class="flex flex-wrap gap-2 ml-32">
+                        <div class="flex flex-wrap gap-2 sm:ml-24">
                             ${allSlots.map(time => {
                                 const slot = slots.find(s => s.time === time);
                                 const isEnabled = slot !== undefined;
@@ -990,10 +990,10 @@
                     const hasModifiedHours = o.openTime && o.closeTime && !isClosed;
 
                     return `
-                        <div class="flex items-center justify-between p-4 bg-stone-800/30 border-l-4 ${isClosed ? 'border-red-500' : 'border-amber-500'}">
-                            <div class="flex items-center gap-6">
-                                <div class="font-medium">${formattedDate}</div>
-                                <div class="text-stone-500 italic">${o.reason || '-'}</div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-stone-800/30 border-l-4 ${isClosed ? 'border-red-500' : 'border-amber-500'}">
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
+                                <div class="font-medium text-sm sm:text-base">${formattedDate}</div>
+                                <div class="text-stone-500 italic text-sm">${o.reason || '-'}</div>
                                 ${hasModifiedHours ? `
                                     <div class="text-amber-400 text-sm">${o.openTime} - ${o.closeTime}</div>
                                 ` : ''}
@@ -1004,7 +1004,7 @@
                                 </div>
                             </div>
                             <button onclick="deleteDateOverride(${o.id})"
-                                class="px-3 py-1 border border-red-900 text-red-400 text-xs hover:bg-red-900/30 transition">
+                                class="px-3 py-1 border border-red-900 text-red-400 text-xs hover:bg-red-900/30 transition self-start sm:self-center shrink-0">
                                 UKLONI
                             </button>
                         </div>

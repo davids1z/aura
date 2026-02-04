@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../services/i18n_service.dart';
 
@@ -12,49 +13,76 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = context.watch<I18nService>();
 
+    // Status bar bijeli tekst/ikone za tamnu hero sliku
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      // SafeArea osigurava da sadržaj ne ide ispod notcha/status bara
-      body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              // SingleChildScrollView omogućuje scrollanje
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // ========== HERO SEKCIJA ==========
-                  _buildHeroSection(context, i18n),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // Crna pozadina za gornji dio (overscroll gore)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: MediaQuery.of(context).size.height * 0.5,
+            child: Container(color: Colors.black),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // ========== HERO SEKCIJA ==========
+                _buildHeroSection(context, i18n),
 
-                  const SizedBox(height: 40),
+                // Bijela pozadina za sadržaj ispod hero slike
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 40),
 
-                  // ========== FILOZOFIJA SEKCIJA ==========
-                  _buildPhilosophySection(i18n),
+                      // ========== FILOZOFIJA SEKCIJA ==========
+                      _buildPhilosophySection(i18n),
 
-                  const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                  // ========== INFO KARTICE ==========
-                  _buildInfoCards(i18n),
+                      // ========== INFO KARTICE ==========
+                      _buildInfoCards(i18n),
 
-                  const SizedBox(height: 40),
-                ],
-              ),
+                      // SafeArea samo za dno (bottom nav)
+                      SizedBox(height: 40 + MediaQuery.of(context).padding.bottom),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            // Language selector
-            Positioned(
-              top: 16,
-              right: 16,
-              child: _LanguageSelector(i18n: i18n),
-            ),
-          ],
-        ),
+          ),
+          // Language selector - pomaknut ispod status bara
+          Positioned(
+            top: statusBarHeight + 8,
+            right: 16,
+            child: _LanguageSelector(i18n: i18n),
+          ),
+        ],
       ),
     );
   }
 
   // Hero sekcija sa slikom i tekstom
   Widget _buildHeroSection(BuildContext context, I18nService i18n) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final heroHeight = (screenHeight * 0.45).clamp(280.0, 500.0) + statusBarHeight;
+    final titleSize = (screenWidth * 0.12).clamp(32.0, 48.0);
+    final subtitleSize = (screenWidth * 0.065).clamp(18.0, 28.0);
+    final letterSpacing = (screenWidth * 0.04).clamp(8.0, 16.0);
+
     return Container(
-      height: 400,
+      height: heroHeight,
       decoration: const BoxDecoration(
         // Slika pozadine
         image: DecorationImage(
@@ -77,28 +105,28 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(screenWidth < 360 ? 16.0 : 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Naslov
-              const Text(
+              Text(
                 'AURA',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 48,
+                  fontSize: titleSize,
                   fontWeight: FontWeight.w200,
-                  letterSpacing: 16,
+                  letterSpacing: letterSpacing,
                 ),
               ),
               const SizedBox(height: 8),
               // Podnaslov
               Text(
                 i18n.t('home.heroTitle'),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: subtitleSize,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w300,
                 ),
@@ -164,26 +192,45 @@ class HomeScreen extends StatelessWidget {
   Widget _buildInfoCards(I18nService i18n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Row(
-        children: [
-          // Kartica 1 - Radno vrijeme
-          Expanded(
-            child: _InfoCard(
-              icon: Icons.access_time,
-              title: i18n.t('home.hours'),
-              subtitle: i18n.t('home.hoursValue'),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Kartica 2 - Lokacija
-          Expanded(
-            child: _InfoCard(
-              icon: Icons.location_on_outlined,
-              title: i18n.t('home.location'),
-              subtitle: i18n.t('home.locationValue'),
-            ),
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 300) {
+            return Column(
+              children: [
+                _InfoCard(
+                  icon: Icons.access_time,
+                  title: i18n.t('home.hours'),
+                  subtitle: i18n.t('home.hoursValue'),
+                ),
+                const SizedBox(height: 12),
+                _InfoCard(
+                  icon: Icons.location_on_outlined,
+                  title: i18n.t('home.location'),
+                  subtitle: i18n.t('home.locationValue'),
+                ),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              Expanded(
+                child: _InfoCard(
+                  icon: Icons.access_time,
+                  title: i18n.t('home.hours'),
+                  subtitle: i18n.t('home.hoursValue'),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _InfoCard(
+                  icon: Icons.location_on_outlined,
+                  title: i18n.t('home.location'),
+                  subtitle: i18n.t('home.locationValue'),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

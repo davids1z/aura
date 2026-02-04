@@ -18,8 +18,24 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .modal-overlay {
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
+            background: rgba(250, 250, 249, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        .modal-overlay .fade-in {
+            animation: modalSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        /* Hide reservation form until authenticated */
+        .content-hidden { opacity: 0; pointer-events: none; }
+        .content-visible { animation: contentReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes contentReveal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .slot-btn { transition: all 0.15s ease; }
         .slot-btn:hover:not(:disabled):not(.slot-full) { transform: scale(1.02); }
@@ -91,16 +107,28 @@
             outline: 2px solid #1C1917;
             outline-offset: -2px;
         }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-reveal.delay-1 { transition-delay: 0.25s; }
+        .scroll-reveal.delay-2 { transition-delay: 0.5s; }
+        .scroll-reveal.delay-3 { transition-delay: 0.75s; }
     </style>
 </head>
-<body class="bg-[#fafaf9] text-stone-800 flex items-center justify-center min-h-screen p-4">
+<body class="bg-[#fafaf9] text-stone-800 flex items-center justify-center min-h-screen p-2 sm:p-4">
 
     <!-- AUTH MODAL -->
     <div id="auth-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0"></div>
 
         <div class="bg-white w-full max-w-[400px] p-8 rounded-[2rem] shadow-2xl relative fade-in">
-            <a href="/" class="absolute top-5 left-5 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 transition-colors">
+            <a href="javascript:void(0)" onclick="history.back()" class="absolute top-5 left-5 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -169,15 +197,15 @@
     </div>
 
     <!-- MAIN RESERVATION FORM -->
-    <div class="bg-white w-full max-w-[500px] p-8 md:p-10 rounded-[3rem] shadow-xl shadow-stone-200/50 border border-stone-100 relative">
+    <div id="reservationCard" class="bg-white w-full max-w-[500px] p-5 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[3rem] shadow-xl shadow-stone-200/50 border border-stone-100 relative content-hidden">
 
         <!-- User Info Bar -->
-        <div id="user-bar" class="hidden absolute top-5 right-5 flex items-center gap-2 bg-stone-50 rounded-full pl-4 pr-2 py-2">
+        <div id="user-bar" class="hidden absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-2 bg-stone-50 rounded-full pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 max-w-[60%] sm:max-w-none">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 rounded-full bg-stone-200 flex items-center justify-center">
                     <span id="user-initial" class="text-[10px] font-medium text-stone-600"></span>
                 </div>
-                <span id="user-name-display" class="text-xs text-stone-600 font-medium"></span>
+                <span id="user-name-display" class="text-xs text-stone-600 font-medium truncate max-w-[100px] sm:max-w-none"></span>
             </div>
             <button onclick="logout()" class="ml-1 w-6 h-6 flex items-center justify-center rounded-full hover:bg-stone-200 transition-colors text-stone-400 hover:text-stone-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,10 +216,10 @@
 
         <div id="booking-container">
             <header class="text-center mb-8">
-                <a href="/" class="absolute top-6 left-6 text-stone-400 hover:text-stone-800 transition-colors text-sm" data-i18n="backHome">
+                <a href="javascript:void(0)" onclick="history.back()" class="absolute top-6 left-6 text-stone-400 hover:text-stone-800 transition-colors text-sm" data-i18n="backHome">
                     ← Natrag
                 </a>
-                <h1 class="text-3xl font-light tracking-[0.4em] uppercase">Aura</h1>
+                <h1 class="text-2xl sm:text-3xl font-light tracking-[0.3em] sm:tracking-[0.4em] uppercase">Aura</h1>
                 <div class="w-12 h-[1px] bg-stone-300 mx-auto mt-4"></div>
                 <p class="text-[10px] text-stone-400 uppercase tracking-[0.2em] mt-4 italic" data-i18n="season2026">Sezona 2026.</p>
             </header>
@@ -262,7 +290,7 @@
                 </div>
 
                 <!-- Slot selection -->
-                <div class="space-y-3" id="slot-container">
+                <div class="space-y-3 scroll-reveal" id="slot-container">
                     <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="availableSlots">Dostupni termini</label>
                     <div id="slots-loading" class="hidden text-center py-6">
                         <div class="inline-block w-6 h-6 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin"></div>
@@ -272,14 +300,14 @@
                         <p class="text-red-600 text-sm font-medium" data-i18n="closed">Zatvoreno</p>
                         <p id="closed-reason" class="text-red-400 text-xs mt-1"></p>
                     </div>
-                    <div id="slots-list" class="grid grid-cols-3 gap-2">
-                        <p class="col-span-3 text-center text-stone-400 text-xs py-4" data-i18n="noSlots">Nema dostupnih termina</p>
+                    <div id="slots-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <p class="col-span-2 sm:col-span-3 text-center text-stone-400 text-xs py-4" data-i18n="noSlots">Nema dostupnih termina</p>
                     </div>
                     <input type="hidden" id="res-slot" required>
                 </div>
 
                 <!-- Broj gostiju -->
-                <div class="space-y-3">
+                <div class="space-y-3 scroll-reveal">
                     <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="guests">Broj gostiju</label>
                     <div class="flex items-center justify-between border border-stone-100 rounded-2xl p-2">
                         <button type="button" onclick="updateGuests(-1)" class="w-12 h-12 flex items-center justify-center text-stone-300 hover:text-stone-800 transition-colors text-xl font-light">—</button>
@@ -289,13 +317,13 @@
                 </div>
 
                 <!-- Posebni zahtjevi -->
-                <div class="space-y-3">
+                <div class="space-y-3 scroll-reveal">
                     <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="specialRequests">Posebni zahtjevi (opcionalno)</label>
                     <textarea id="res-notes" data-i18n="specialRequestsHint" rows="2" class="w-full bg-stone-50 border-none rounded-2xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none text-stone-600 resize-none"></textarea>
                 </div>
 
                 <!-- Cijena -->
-                <div class="pt-4 border-t border-stone-50 flex justify-between items-end">
+                <div class="pt-4 border-t border-stone-50 flex justify-between items-end scroll-reveal">
                     <div>
                         <p class="text-[9px] uppercase tracking-widest text-stone-400 mb-1" data-i18n="pricePerPerson">Cijena po osobi</p>
                         <p class="text-sm font-medium text-stone-500">95,00 €</p>
@@ -440,10 +468,17 @@
 
         function showAuthModal() {
             document.getElementById('auth-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('reservationCard').classList.add('content-hidden');
+            document.getElementById('reservationCard').classList.remove('content-visible');
         }
 
         function hideAuthModal() {
             document.getElementById('auth-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+            var card = document.getElementById('reservationCard');
+            card.classList.remove('content-hidden');
+            card.classList.add('content-visible');
         }
 
         function showLogin() {
@@ -952,6 +987,15 @@
             }
         });
     </script>
-    <script src="/js/i18n.js"></script>
+    <script>
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+        document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+    </script>
+    <script src="/js/smooth-scroll.js"></script>
+    <script src="/js/i18n.js?v=3"></script>
 </body>
 </html>

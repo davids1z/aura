@@ -344,15 +344,14 @@ class _AvailabilityCalendarState extends State<AvailabilityCalendar> {
   }
 
   Widget _buildLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 12,
+      runSpacing: 8,
       children: [
         _buildLegendItem(const Color(0xFFD1FAE5), 'Dostupno'),
-        const SizedBox(width: 12),
         _buildLegendItem(const Color(0xFFFEF3C7), 'Ograniceno'),
-        const SizedBox(width: 12),
         _buildLegendItem(const Color(0xFFFEE2E2), 'Popunjeno'),
-        const SizedBox(width: 12),
         _buildLegendItem(Colors.grey[200]!, 'Zatvoreno'),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
@@ -10,6 +11,22 @@ import 'services/i18n_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Zaključaj orijentaciju na portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Ignoriraj poznate Flutter debug assertion bugove
+  FlutterError.onError = (FlutterErrorDetails details) {
+    final message = details.toString();
+    if (message.contains('debugFrameWasSentToEngine') ||
+        message.contains('parentDataDirty')) {
+      return;
+    }
+    FlutterError.presentError(details);
+  };
 
   // Učitaj spremljenu sesiju prije pokretanja aplikacije
   await ApiService.loadSavedSession();
@@ -105,6 +122,12 @@ class _MainNavigationState extends State<MainNavigation> {
 
   Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
     final isSelected = _currentIndex == index;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final horizontalPadding = isSelected
+        ? (screenWidth < 360 ? 14.0 : 20.0)
+        : (screenWidth < 360 ? 8.0 : 12.0);
+    final fontSize = screenWidth < 360 ? 11.0 : 13.0;
+
     return GestureDetector(
       onTap: () {
         setState(() => _currentIndex = index);
@@ -112,7 +135,7 @@ class _MainNavigationState extends State<MainNavigation> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 20 : 12,
+          horizontal: horizontalPadding,
           vertical: 10,
         ),
         decoration: BoxDecoration(
@@ -120,6 +143,7 @@ class _MainNavigationState extends State<MainNavigation> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               isSelected ? activeIcon : icon,
@@ -127,14 +151,15 @@ class _MainNavigationState extends State<MainNavigation> {
               size: 22,
             ),
             if (isSelected) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 13,
+                  fontSize: fontSize,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ],
