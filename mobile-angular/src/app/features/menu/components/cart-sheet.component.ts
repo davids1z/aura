@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ElementRef, AfterViewInit, OnDestroy, ViewChild, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CartService } from '../../../core/services/cart.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { CheckoutDialogComponent } from './checkout-dialog.component';
 
 @Component({
@@ -13,25 +14,34 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatDialogModule],
   template: `
-    <div class="cart-sheet">
+    <div class="cart-sheet" #sheet [style.transform]="'translateY(' + dragOffset + 'px)'"
+         [style.transition]="dragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)'">
       <!-- Drag Handle -->
-      <div class="drag-handle-area">
-        <div class="drag-handle"></div>
-      </div>
+      <div class="drag-zone"
+           (touchstart)="onDragStart($event)"
+           (touchmove)="onDragMove($event)"
+           (touchend)="onDragEnd($event)">
+        <div class="drag-handle-area">
+          <div class="drag-handle"></div>
+        </div>
 
-      <!-- Title -->
-      <div class="sheet-title">
-        <h2>Košarica</h2>
-        <p>{{ (cartService.totalItems$ | async) || 0 }} artikala</p>
+        <!-- Title -->
+        <div class="sheet-title">
+          <h2>{{ i18n.t().menu.cart }}</h2>
+          <p>{{ (cartService.totalItems$ | async) || 0 }} {{ i18n.t().menu.items }}</p>
+        </div>
       </div>
 
       <!-- Empty State -->
       @if ((cartService.cartItems$ | async)?.length === 0) {
-        <div class="empty-state">
+        <div class="empty-state"
+             (touchstart)="onDragStart($event)"
+             (touchmove)="onDragMove($event)"
+             (touchend)="onDragEnd($event)">
           <div class="empty-icon">
             <mat-icon>shopping_bag</mat-icon>
           </div>
-          <p>Košarica je prazna</p>
+          <p>{{ i18n.t().menu.emptyCart }}</p>
         </div>
       }
 
@@ -59,11 +69,11 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
         <!-- Footer -->
         <div class="cart-footer">
           <div class="total-row">
-            <span>Ukupno</span>
+            <span>{{ i18n.t().menu.total }}</span>
             <span class="total-price">{{ (cartService.totalPrice$ | async)?.toFixed(2) }} €</span>
           </div>
           <button class="checkout-btn" (click)="checkout()">
-            Nastavi na narudžbu
+            {{ i18n.t().menu.continueToOrder }}
           </button>
         </div>
       }
@@ -80,6 +90,14 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       display: flex;
       flex-direction: column;
       box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
+      overscroll-behavior: none;
+      will-change: transform;
+    }
+
+    .drag-zone {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .drag-handle-area {
@@ -118,6 +136,9 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
     .empty-state {
       padding: 48px 20px;
       text-align: center;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
 
       .empty-icon {
         width: 64px;
@@ -148,6 +169,8 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       overflow-y: auto;
       padding: 0 20px;
       max-height: 55vh;
+      touch-action: pan-y;
+      overscroll-behavior: contain;
     }
 
     .cart-item {
@@ -277,8 +300,60 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
 })
 export class CartSheetComponent {
   cartService = inject(CartService);
+  readonly i18n = inject(I18nService);
   private bottomSheetRef = inject(MatBottomSheetRef<CartSheetComponent>);
   private dialog = inject(MatDialog);
+
+  dragOffset = 0;
+  dragging = false;
+  private startY = 0;
+  private lastY = 0;
+  private lastTime = 0;
+  private velocity = 0;
+
+  onDragStart(e: TouchEvent) {
+    this.dragging = true;
+    this.startY = e.touches[0].clientY;
+    this.lastY = this.startY;
+    this.lastTime = Date.now();
+    this.velocity = 0;
+  }
+
+  onDragMove(e: TouchEvent) {
+    if (!this.dragging) return;
+    e.preventDefault();
+
+    const currentY = e.touches[0].clientY;
+    const now = Date.now();
+    const dt = now - this.lastTime;
+
+    if (dt > 0) {
+      this.velocity = (currentY - this.lastY) / dt * 1000;
+    }
+
+    this.lastY = currentY;
+    this.lastTime = now;
+
+    const delta = currentY - this.startY;
+    // Only allow dragging down (positive delta), add resistance for dragging up
+    this.dragOffset = delta > 0 ? delta : delta * 0.2;
+  }
+
+  onDragEnd(e: TouchEvent) {
+    if (!this.dragging) return;
+    this.dragging = false;
+
+    const threshold = window.innerHeight * 0.2;
+
+    if (this.dragOffset > threshold || this.velocity > 500) {
+      // Dismiss: slide all the way down
+      this.dragOffset = window.innerHeight;
+      setTimeout(() => this.bottomSheetRef.dismiss(), 300);
+    } else {
+      // Bounce back
+      this.dragOffset = 0;
+    }
+  }
 
   updateQuantity(id: number, delta: number) {
     this.cartService.updateQuantity(id, delta);

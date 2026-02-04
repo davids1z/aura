@@ -27,13 +27,20 @@ export interface Translations {
   // Menu page
   menu: {
     title: string;
+    menuTitle: string;
+    menuSubtitle: string;
+    deliveryAvailable: string;
+    deliveryTagline: string;
     loading: string;
     error: string;
     retry: string;
     addToCart: string;
     cart: string;
     emptyCart: string;
+    items: string;
     total: string;
+    continueToOrder: string;
+    yourOrder: string;
     orderDelivery: string;
     categories: {
       predjelo: string;
@@ -89,16 +96,25 @@ export interface Translations {
   // Checkout
   checkout: {
     title: string;
+    subtitle: string;
+    firstName: string;
+    lastName: string;
     deliveryAddress: string;
     street: string;
     city: string;
     phone: string;
     note: string;
     noteHint: string;
+    noteOptional: string;
     order: string;
     ordering: string;
+    sending: string;
+    confirmOrder: string;
+    thankYou: string;
     success: string;
     successMessage: string;
+    fillRequired: string;
+    orderError: string;
   };
   // Common
   common: {
@@ -106,6 +122,7 @@ export interface Translations {
     back: string;
     confirm: string;
     cancel: string;
+    ok: string;
     eur: string;
   };
 }
@@ -133,13 +150,20 @@ const translations: Record<Language, Translations> = {
     },
     menu: {
       title: 'Menu',
+      menuTitle: 'Degustacijski Menu',
+      menuSubtitle: 'Sedam sljedova koji slave lokalnu zemlju, more i tradiciju.',
+      deliveryAvailable: 'Dostava dostupna',
+      deliveryTagline: 'Naručite svoja omiljena jela',
       loading: 'Učitavam menu...',
       error: 'Greška pri učitavanju',
       retry: 'Pokušaj ponovo',
       addToCart: 'Dodaj',
       cart: 'Košarica',
       emptyCart: 'Košarica je prazna',
+      items: 'artikala',
       total: 'Ukupno',
+      continueToOrder: 'Nastavi na narudžbu',
+      yourOrder: 'Vaša narudžba',
       orderDelivery: 'Naruči dostavu',
       categories: {
         predjelo: 'Predjela',
@@ -192,22 +216,32 @@ const translations: Record<Language, Translations> = {
     },
     checkout: {
       title: 'Dostava',
+      subtitle: 'Unesite podatke za dostavu',
+      firstName: 'Ime',
+      lastName: 'Prezime',
       deliveryAddress: 'Adresa dostave',
       street: 'Ulica i kućni broj',
       city: 'Grad',
       phone: 'Telefon',
       note: 'Napomena',
       noteHint: 'Alergije, posebni zahtjevi...',
+      noteOptional: 'Napomena (opcionalno)',
       order: 'Naruči',
       ordering: 'Naručujem...',
+      sending: 'Šaljem...',
+      confirmOrder: 'Potvrdi narudžbu',
+      thankYou: 'Hvala vam!',
       success: 'Narudžba uspješna!',
-      successMessage: 'Vaša narudžba je zaprimljena. Očekujte dostavu za 45-60 minuta.'
+      successMessage: 'Vaša narudžba je uspješno zaprimljena.\nUskoro ćemo vas kontaktirati.',
+      fillRequired: 'Molimo popunite sva obavezna polja',
+      orderError: 'Greška pri slanju narudžbe'
     },
     common: {
       close: 'Zatvori',
       back: 'Natrag',
       confirm: 'Potvrdi',
       cancel: 'Odustani',
+      ok: 'U redu',
       eur: 'EUR'
     }
   },
@@ -233,13 +267,20 @@ const translations: Record<Language, Translations> = {
     },
     menu: {
       title: 'Menu',
+      menuTitle: 'Tasting Menu',
+      menuSubtitle: 'Seven courses celebrating local land, sea and tradition.',
+      deliveryAvailable: 'Delivery available',
+      deliveryTagline: 'Order your favourite dishes',
       loading: 'Loading menu...',
       error: 'Error loading menu',
       retry: 'Try again',
       addToCart: 'Add',
       cart: 'Cart',
       emptyCart: 'Cart is empty',
+      items: 'items',
       total: 'Total',
+      continueToOrder: 'Continue to order',
+      yourOrder: 'Your order',
       orderDelivery: 'Order delivery',
       categories: {
         predjelo: 'Starters',
@@ -292,22 +333,32 @@ const translations: Record<Language, Translations> = {
     },
     checkout: {
       title: 'Delivery',
+      subtitle: 'Enter your delivery details',
+      firstName: 'First name',
+      lastName: 'Last name',
       deliveryAddress: 'Delivery address',
       street: 'Street and number',
       city: 'City',
       phone: 'Phone',
       note: 'Note',
       noteHint: 'Allergies, special requests...',
+      noteOptional: 'Note (optional)',
       order: 'Order',
       ordering: 'Ordering...',
+      sending: 'Sending...',
+      confirmOrder: 'Confirm order',
+      thankYou: 'Thank you!',
       success: 'Order successful!',
-      successMessage: 'Your order has been received. Expect delivery in 45-60 minutes.'
+      successMessage: 'Your order has been received.\nWe will contact you shortly.',
+      fillRequired: 'Please fill in all required fields',
+      orderError: 'Error sending order'
     },
     common: {
       close: 'Close',
       back: 'Back',
       confirm: 'Confirm',
       cancel: 'Cancel',
+      ok: 'OK',
       eur: 'EUR'
     }
   },
@@ -333,13 +384,20 @@ const translations: Record<Language, Translations> = {
     },
     menu: {
       title: 'Speisekarte',
+      menuTitle: 'Degustationsmenü',
+      menuSubtitle: 'Sieben Gänge, die Land, Meer und Tradition feiern.',
+      deliveryAvailable: 'Lieferung verfügbar',
+      deliveryTagline: 'Bestellen Sie Ihre Lieblingsgerichte',
       loading: 'Speisekarte wird geladen...',
       error: 'Fehler beim Laden',
       retry: 'Erneut versuchen',
       addToCart: 'Hinzufügen',
       cart: 'Warenkorb',
       emptyCart: 'Warenkorb ist leer',
+      items: 'Artikel',
       total: 'Gesamt',
+      continueToOrder: 'Zur Bestellung',
+      yourOrder: 'Ihre Bestellung',
       orderDelivery: 'Lieferung bestellen',
       categories: {
         predjelo: 'Vorspeisen',
@@ -392,22 +450,32 @@ const translations: Record<Language, Translations> = {
     },
     checkout: {
       title: 'Lieferung',
+      subtitle: 'Geben Sie Ihre Lieferdetails ein',
+      firstName: 'Vorname',
+      lastName: 'Nachname',
       deliveryAddress: 'Lieferadresse',
       street: 'Straße und Hausnummer',
       city: 'Stadt',
       phone: 'Telefon',
       note: 'Anmerkung',
       noteHint: 'Allergien, besondere Wünsche...',
+      noteOptional: 'Anmerkung (optional)',
       order: 'Bestellen',
       ordering: 'Bestelle...',
+      sending: 'Sende...',
+      confirmOrder: 'Bestellung bestätigen',
+      thankYou: 'Vielen Dank!',
       success: 'Bestellung erfolgreich!',
-      successMessage: 'Ihre Bestellung wurde empfangen. Lieferung in 45-60 Minuten.'
+      successMessage: 'Ihre Bestellung wurde empfangen.\nWir werden Sie in Kürze kontaktieren.',
+      fillRequired: 'Bitte füllen Sie alle Pflichtfelder aus',
+      orderError: 'Fehler beim Senden der Bestellung'
     },
     common: {
       close: 'Schließen',
       back: 'Zurück',
       confirm: 'Bestätigen',
       cancel: 'Abbrechen',
+      ok: 'OK',
       eur: 'EUR'
     }
   }

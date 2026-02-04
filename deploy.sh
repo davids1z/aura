@@ -4,7 +4,7 @@ set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-SERVER_DEPLOY='cd /opt/aura && sudo git fetch origin && sudo git reset --hard origin/main && sudo docker compose down && sudo docker compose build --no-cache && sudo docker compose up -d'
+SERVER_DEPLOY='cd /opt/aura && sudo git config --global --add safe.directory /opt/aura && sudo git fetch origin && sudo git reset --hard origin/main && sudo docker compose down && sudo docker compose build --no-cache && sudo docker compose up -d'
 
 usage() {
     echo "Usage: ./deploy.sh [project]"

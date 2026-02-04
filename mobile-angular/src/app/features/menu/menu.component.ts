@@ -24,11 +24,11 @@ import { CartSheetComponent } from './components/cart-sheet.component';
     <div class="menu-page">
       <!-- Header -->
       <header class="menu-header">
-        <p class="label">Sezona 2026</p>
-        <h1>Degustacijski Menu</h1>
+        <p class="label">{{ i18n.t().home.season }}</p>
+        <h1>{{ i18n.t().menu.menuTitle }}</h1>
         <div class="divider"></div>
         <p class="subtitle">
-          Sedam sljedova koji slave lokalnu zemlju, more i tradiciju.
+          {{ i18n.t().menu.menuSubtitle }}
         </p>
       </header>
 
@@ -37,8 +37,8 @@ import { CartSheetComponent } from './components/cart-sheet.component';
         <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
              alt="Fine Dining">
         <div class="image-overlay">
-          <p class="delivery-label">Dostava dostupna</p>
-          <p class="delivery-text">Naručite svoja omiljena jela</p>
+          <p class="delivery-label">{{ i18n.t().menu.deliveryAvailable }}</p>
+          <p class="delivery-text">{{ i18n.t().menu.deliveryTagline }}</p>
         </div>
       </div>
 
@@ -485,10 +485,14 @@ export class MenuComponent implements OnInit {
   }
 
   openCart() {
-    this.bottomSheet.open(CartSheetComponent, {
+    document.body.style.overflow = 'hidden';
+    const ref = this.bottomSheet.open(CartSheetComponent, {
       backdropClass: 'cart-sheet-backdrop',
       panelClass: 'cart-sheet-container',
       scrollStrategy: this.overlay.scrollStrategies.noop()
+    });
+    ref.afterDismissed().subscribe(() => {
+      document.body.style.overflow = '';
     });
   }
 }

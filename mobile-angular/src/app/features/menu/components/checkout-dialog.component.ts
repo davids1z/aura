@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartService } from '../../../core/services/cart.service';
 import { ApiService } from '../../../core/services/api.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { GuestOrderRequest } from '../../../core/models/reservation.model';
 
 @Component({
@@ -30,32 +31,32 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
 
         <!-- Title -->
         <div class="dialog-title">
-          <h2>Dostava</h2>
-          <p>Unesite podatke za dostavu</p>
+          <h2>{{ i18n.t().checkout.title }}</h2>
+          <p>{{ i18n.t().checkout.subtitle }}</p>
         </div>
 
         <!-- Form -->
         <form class="checkout-form" (ngSubmit)="submitOrder()">
           <input type="text" [(ngModel)]="firstName" name="firstName"
-                 placeholder="Ime" required class="form-input">
+                 [placeholder]="i18n.t().checkout.firstName" required class="form-input">
 
           <input type="text" [(ngModel)]="lastName" name="lastName"
-                 placeholder="Prezime" required class="form-input">
+                 [placeholder]="i18n.t().checkout.lastName" required class="form-input">
 
           <input type="tel" [(ngModel)]="phone" name="phone"
-                 placeholder="Telefon" required class="form-input">
+                 [placeholder]="i18n.t().checkout.phone" required class="form-input">
 
           <input type="text" [(ngModel)]="address" name="address"
-                 placeholder="Adresa dostave" required class="form-input">
+                 [placeholder]="i18n.t().checkout.deliveryAddress" required class="form-input">
 
           <textarea [(ngModel)]="notes" name="notes" rows="2"
-                    placeholder="Napomena (opcionalno)" class="form-input"></textarea>
+                    [placeholder]="i18n.t().checkout.noteOptional" class="form-input"></textarea>
 
           <!-- Order Summary -->
           <div class="order-summary">
             <div class="summary-header">
-              <span>Vaša narudžba</span>
-              <span>{{ (cartService.totalItems$ | async) }} artikala</span>
+              <span>{{ i18n.t().menu.yourOrder }}</span>
+              <span>{{ (cartService.totalItems$ | async) }} {{ i18n.t().menu.items }}</span>
             </div>
             <div class="summary-items">
               @for (item of cartService.cartItems$ | async; track item.id) {
@@ -66,7 +67,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
               }
             </div>
             <div class="summary-total">
-              <span>Ukupno</span>
+              <span>{{ i18n.t().menu.total }}</span>
               <span class="total">{{ (cartService.totalPrice$ | async)?.toFixed(2) }} €</span>
             </div>
           </div>
@@ -76,7 +77,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
           }
 
           <button type="submit" class="submit-btn" [disabled]="loading">
-            {{ loading ? 'Šaljem...' : 'Potvrdi narudžbu' }}
+            {{ loading ? i18n.t().checkout.sending : i18n.t().checkout.confirmOrder }}
           </button>
         </form>
       }
@@ -87,9 +88,9 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
           <div class="success-icon">
             <mat-icon>check</mat-icon>
           </div>
-          <h3>Hvala vam!</h3>
-          <p>Vaša narudžba je uspješno zaprimljena.<br>Uskoro ćemo vas kontaktirati.</p>
-          <button class="ok-btn" (click)="close()">U redu</button>
+          <h3>{{ i18n.t().checkout.thankYou }}</h3>
+          <p>{{ i18n.t().checkout.successMessage }}</p>
+          <button class="ok-btn" (click)="close()">{{ i18n.t().common.ok }}</button>
         </div>
       }
     </div>
@@ -307,6 +308,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
 })
 export class CheckoutDialogComponent {
   cartService = inject(CartService);
+  readonly i18n = inject(I18nService);
   private apiService = inject(ApiService);
   private dialogRef = inject(MatDialogRef<CheckoutDialogComponent>);
   private snackBar = inject(MatSnackBar);
@@ -326,7 +328,7 @@ export class CheckoutDialogComponent {
 
   submitOrder() {
     if (!this.firstName || !this.lastName || !this.phone || !this.address) {
-      this.error = 'Molimo popunite sva obavezna polja';
+      this.error = this.i18n.t().checkout.fillRequired;
       return;
     }
 
@@ -352,7 +354,7 @@ export class CheckoutDialogComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.error?.error || 'Greška pri slanju narudžbe';
+        this.error = err.error?.error || this.i18n.t().checkout.orderError;
       }
     });
   }
