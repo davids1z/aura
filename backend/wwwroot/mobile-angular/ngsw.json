@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1770245696794,
+  "timestamp": 1770246209112,
   "index": "/mobile-angular/index.html",
   "assetGroups": [
     {
@@ -12,8 +12,8 @@
       },
       "urls": [
         "/mobile-angular/chunk-4H4AH3VF.js",
-        "/mobile-angular/chunk-A7R6YCH4.js",
         "/mobile-angular/chunk-BB6UT332.js",
+        "/mobile-angular/chunk-D4YKZ4UL.js",
         "/mobile-angular/chunk-H5MGFNEA.js",
         "/mobile-angular/chunk-HQ264A2L.js",
         "/mobile-angular/chunk-OK2EKJPW.js",
@@ -22,9 +22,9 @@
         "/mobile-angular/chunk-W3SOODEB.js",
         "/mobile-angular/favicon.ico",
         "/mobile-angular/index.html",
-        "/mobile-angular/main-KU44KJKE.js",
+        "/mobile-angular/main-G54MOLYC.js",
         "/mobile-angular/manifest.webmanifest",
-        "/mobile-angular/styles-ZIXCGDMY.css"
+        "/mobile-angular/styles-U65637VE.css"
       ],
       "patterns": []
     },
@@ -51,8 +51,8 @@
   "dataGroups": [],
   "hashTable": {
     "/mobile-angular/chunk-4H4AH3VF.js": "3a23e610285509ae9c6650aeab9681583264e4f4",
-    "/mobile-angular/chunk-A7R6YCH4.js": "5b38d29af06234b7e09afda53d151a1811fbf6d4",
     "/mobile-angular/chunk-BB6UT332.js": "fc913d67028eaca6c65d8a3d956e92232451fff9",
+    "/mobile-angular/chunk-D4YKZ4UL.js": "3fa9ffc60a216ea3bfa39ab2679719cc6c9a9e01",
     "/mobile-angular/chunk-H5MGFNEA.js": "45fa739c93d5058ae4777ca5b757184f0398013e",
     "/mobile-angular/chunk-HQ264A2L.js": "d99196434c16d012c89e14704b531271dbc91eea",
     "/mobile-angular/chunk-OK2EKJPW.js": "6e26e624d0032f464b6ac4cedc47a8c2a4a0bd0d",
@@ -68,10 +68,10 @@
     "/mobile-angular/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/mobile-angular/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/mobile-angular/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/mobile-angular/index.html": "b51e58038a29f4874ce2a5ed6a12f9209091ca27",
-    "/mobile-angular/main-KU44KJKE.js": "891bc74b12412ad437328912414aa5d53d7d7873",
+    "/mobile-angular/index.html": "fe69ac4421f21f293b699170d57d462c3fd986e7",
+    "/mobile-angular/main-G54MOLYC.js": "edb3c8b256d80ae332952ef3718658a7333d3b92",
     "/mobile-angular/manifest.webmanifest": "ef1a840bd20dc673238df0c00366fc1f1db2aafa",
-    "/mobile-angular/styles-ZIXCGDMY.css": "0944067c725e87e48bfe53404dbc8558d7d66a07"
+    "/mobile-angular/styles-U65637VE.css": "a8f5185bc64350d070c2fa3d582d38c55083e0dd"
   },
   "navigationUrls": [
     {
