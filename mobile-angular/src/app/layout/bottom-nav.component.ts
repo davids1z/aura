@@ -40,7 +40,7 @@ import { ScrollRevealState } from '../shared/directives/scroll-reveal.directive'
       flex-direction: column;
       height: 100vh;
       height: 100dvh;
-      background: #fafaf9;
+      background: #0a0a0a;
       position: relative;
       overflow: hidden;
     }
@@ -49,8 +49,9 @@ import { ScrollRevealState } from '../shared/directives/scroll-reveal.directive'
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding-top: env(safe-area-inset-top, 0);
+      overscroll-behavior-y: none;
       padding-bottom: 80px;
+      background: #0a0a0a;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -60,13 +61,18 @@ import { ScrollRevealState } from '../shared/directives/scroll-reveal.directive'
       left: 0;
       right: 0;
       height: 70px;
-      background: white;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       justify-content: space-evenly;
       align-items: center;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      gap: 4px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       border-top-left-radius: 24px;
       border-top-right-radius: 24px;
+      padding: 0 8px;
       padding-bottom: env(safe-area-inset-bottom, 0);
       z-index: 1000;
     }
@@ -79,28 +85,28 @@ import { ScrollRevealState } from '../shared/directives/scroll-reveal.directive'
       gap: 4px;
       padding: 8px 0;
       text-decoration: none;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       transition: all 0.2s ease;
       border-radius: 16px;
       flex: 1;
       text-align: center;
 
       mat-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
+        font-size: clamp(20px, 6vw, 24px);
+        width: clamp(20px, 6vw, 24px);
+        height: clamp(20px, 6vw, 24px);
       }
 
       span {
-        font-size: 10px;
+        font-size: clamp(8px, 2.8vw, 10px);
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
 
       &.active {
-        color: #1C1917;
-        background: rgba(28, 25, 23, 0.05);
+        color: #c9a96e;
+        background: rgba(201, 169, 110, 0.08);
 
         mat-icon {
           transform: scale(1.1);
@@ -121,7 +127,8 @@ import { ScrollRevealState } from '../shared/directives/scroll-reveal.directive'
         transform: translateX(-50%);
         border-radius: 24px;
         bottom: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.06);
       }
     }
 

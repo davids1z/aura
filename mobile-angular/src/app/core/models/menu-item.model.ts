@@ -10,6 +10,8 @@ export interface MenuItem {
   isGlutenFree: boolean;
   allergens: string;
   sortOrder: number;
+  discountPercent?: number;
+  discountEndDate?: string;
 }
 
 export type MenuCategory =

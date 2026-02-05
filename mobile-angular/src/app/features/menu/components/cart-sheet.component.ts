@@ -81,7 +81,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
   `,
   styles: [`
     .cart-sheet {
-      background: white;
+      background: #0a0a0a;
       border-top-left-radius: 32px;
       border-top-right-radius: 32px;
       min-height: 75vh;
@@ -89,7 +89,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
       overscroll-behavior: none;
       will-change: transform;
     }
@@ -111,25 +111,25 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       width: 36px;
       height: 4px;
       border-radius: 2px;
-      background: #d6d3d1;
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .sheet-title {
       text-align: center;
-      padding: 0 20px 20px;
+      padding: 0 clamp(12px, 4vw, 20px) 20px;
 
       h2 {
         font-size: 18px;
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.3em;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 8px;
       }
 
       p {
         font-size: 14px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
       }
     }
 
@@ -145,7 +145,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
         height: 64px;
         margin: 0 auto 16px;
         border-radius: 50%;
-        background: #f5f5f4;
+        background: rgba(255, 255, 255, 0.05);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -154,12 +154,12 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
           font-size: 32px;
           width: 32px;
           height: 32px;
-          color: #d6d3d1;
+          color: rgba(255, 255, 255, 0.2);
         }
       }
 
       p {
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
         font-size: 14px;
       }
     }
@@ -167,7 +167,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
     .cart-items {
       flex: 1;
       overflow-y: auto;
-      padding: 0 20px;
+      padding: 0 clamp(12px, 4vw, 20px);
       max-height: 55vh;
       touch-action: pan-y;
       overscroll-behavior: contain;
@@ -176,11 +176,12 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
     .cart-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 16px;
-      background: #f5f5f4;
-      border-radius: 16px;
-      margin-bottom: 12px;
+      gap: clamp(8px, 3vw, 12px);
+      padding: clamp(12px, 3.5vw, 16px);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: clamp(12px, 4vw, 16px);
+      margin-bottom: clamp(8px, 3vw, 12px);
     }
 
     .item-info {
@@ -190,7 +191,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       h4 {
         font-size: 14px;
         font-weight: 500;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 4px;
         white-space: nowrap;
         overflow: hidden;
@@ -199,7 +200,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
 
       p {
         font-size: 13px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.4);
       }
     }
 
@@ -210,24 +211,25 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
     }
 
     .qty-btn {
-      width: 32px;
-      height: 32px;
+      width: clamp(28px, 8vw, 32px);
+      height: clamp(28px, 8vw, 32px);
       border-radius: 50%;
-      background: white;
+      background: rgba(255, 255, 255, 0.06);
       border: none;
-      font-size: 18px;
-      color: #78716c;
+      font-size: clamp(16px, 4.5vw, 18px);
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
 
       &:active {
-        background: #e5e5e5;
+        background: rgba(255, 255, 255, 0.12);
+        color: #c9a96e;
       }
     }
 
     .qty {
       font-size: 14px;
       font-weight: 600;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
       min-width: 24px;
       text-align: center;
     }
@@ -241,7 +243,7 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       cursor: pointer;
 
       mat-icon {
@@ -251,14 +253,14 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       }
 
       &:active {
-        color: #ef4444;
-        background: #fef2f2;
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.1);
       }
     }
 
     .cart-footer {
-      padding: 20px;
-      border-top: 1px solid #f5f5f4;
+      padding: clamp(12px, 4vw, 20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .total-row {
@@ -268,32 +270,33 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       margin-bottom: 16px;
 
       span {
-        color: #78716c;
+        color: rgba(255, 255, 255, 0.4);
         font-size: 14px;
       }
 
       .total-price {
-        font-size: 24px;
+        font-size: clamp(20px, 6vw, 24px);
         font-weight: 500;
-        color: #1C1917;
+        color: #c9a96e;
       }
     }
 
     .checkout-btn {
       width: 100%;
-      padding: 18px;
-      background: #1C1917;
-      color: white;
+      padding: clamp(14px, 4.5vw, 18px);
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       border: none;
-      border-radius: 16px;
-      font-size: 12px;
+      border-radius: clamp(12px, 4vw, 16px);
+      font-size: clamp(10px, 3vw, 12px);
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.2em;
       cursor: pointer;
+      box-shadow: 0 8px 24px rgba(201, 169, 110, 0.2);
 
       &:active {
-        background: #292524;
+        box-shadow: 0 12px 30px rgba(201, 169, 110, 0.35);
       }
     }
 
@@ -306,16 +309,17 @@ import { CheckoutDialogComponent } from './checkout-dialog.component';
       }
 
       .checkout-btn:hover {
-        background: #292524;
+        box-shadow: 0 14px 40px rgba(201, 169, 110, 0.35);
       }
 
       .qty-btn:hover {
-        background: #e5e5e5;
+        background: rgba(255, 255, 255, 0.12);
+        color: #c9a96e;
       }
 
       .remove-btn:hover {
-        color: #ef4444;
-        background: #fef2f2;
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.1);
       }
     }
   `]

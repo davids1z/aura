@@ -69,20 +69,34 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
           <section class="category-section" appReveal>
             <div class="category-header">
               <div class="line"></div>
+              <span class="diamond"></span>
               <h2>{{ getCategoryName(category) }}</h2>
+              <span class="diamond"></span>
               <div class="line"></div>
             </div>
 
-            <div class="menu-items-grid">
+            <div class="menu-items-list">
               @for (item of getItemsByCategory(category); track item.id) {
-                <div class="menu-item">
+                <div class="menu-item" [class.has-discount]="hasDiscount(item)">
                   <div class="item-content">
                     <div class="item-header">
-                      <h3>{{ i18n.getItemName(item.id, item.name) }}</h3>
-                      <span class="price">{{ item.price.toFixed(2) }} €</span>
+                      <div class="item-name">
+                        <h3>{{ i18n.getItemName(item.id, item.name) }}</h3>
+                        @if (hasDiscount(item)) {
+                          <span class="discount-tag">-{{ item.discountPercent }}%</span>
+                        }
+                      </div>
+                      <div class="item-prices">
+                        @if (hasDiscount(item)) {
+                          <span class="original-price">{{ item.price.toFixed(2) }} €</span>
+                          <span class="sale-price">{{ getEffectivePrice(item).toFixed(2) }} €</span>
+                        } @else {
+                          <span class="price">{{ item.price.toFixed(2) }} €</span>
+                        }
+                      </div>
                     </div>
                     <p class="item-description">{{ i18n.getItemDescription(item.id, item.description) }}</p>
-                    <button class="add-button" (click)="addToCart(item)">
+                    <button class="add-button" [class.discount-btn]="hasDiscount(item)" (click)="addToCart(item)">
                       <mat-icon>add</mat-icon>
                       {{ i18n.t().menu.addToCart }}
                     </button>
@@ -90,6 +104,9 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
                   @if (item.imageUrl) {
                     <div class="item-image">
                       <img [src]="item.imageUrl" [alt]="item.name">
+                      @if (hasDiscount(item)) {
+                        <span class="image-badge">-{{ item.discountPercent }}%</span>
+                      }
                     </div>
                   }
                 </div>
@@ -109,43 +126,48 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      background: #0a0a0a;
+    }
+
     .menu-page {
-      background: #fafaf9;
+      background: #0a0a0a;
       min-height: 100vh;
       padding-bottom: 100px;
     }
 
     .menu-header {
       text-align: center;
-      padding: 32px 24px;
+      padding: clamp(20px, 6vw, 32px) clamp(12px, 4vw, 24px);
     }
 
     .label {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.5em;
-      color: #a8a29e;
+      color: rgba(201, 169, 110, 0.7);
       margin-bottom: 12px;
     }
 
     h1 {
-      font-size: 32px;
+      font-size: clamp(24px, 7vw, 32px);
       font-weight: 400;
       font-style: italic;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
       font-family: 'Playfair Display', serif;
     }
 
     .divider {
-      width: 60px;
+      width: 80px;
       height: 1px;
-      background: linear-gradient(to right, transparent, #d6d3d1, transparent);
+      background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5), transparent);
       margin: 24px auto;
     }
 
     .subtitle {
       font-size: 14px;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 300;
       line-height: 1.6;
       max-width: 300px;
@@ -154,11 +176,11 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
     .featured-image {
       position: relative;
-      margin: 0 24px 32px;
+      margin: 0 clamp(12px, 4vw, 24px) clamp(20px, 6vw, 32px);
       border-radius: 24px;
       overflow: hidden;
       height: 200px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 20px 40px rgba(201, 169, 110, 0.12);
 
       img {
         width: 100%;
@@ -194,7 +216,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     .loading {
       text-align: center;
       padding: 48px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
 
       mat-icon {
         font-size: 32px;
@@ -213,7 +235,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
       .loading-hint {
         font-size: 12px;
-        color: #d6d3d1;
+        color: rgba(255, 255, 255, 0.2);
         margin-top: 8px;
       }
     }
@@ -221,13 +243,13 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     .error-state {
       text-align: center;
       padding: 48px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
 
       mat-icon {
         font-size: 48px;
         width: 48px;
         height: 48px;
-        color: #d6d3d1;
+        color: rgba(255, 255, 255, 0.2);
       }
 
       p {
@@ -241,8 +263,8 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
         align-items: center;
         gap: 8px;
         padding: 12px 24px;
-        background: #1C1917;
-        color: white;
+        background: #c9a96e;
+        color: #0a0a0a;
         border: none;
         border-radius: 50px;
         font-size: 13px;
@@ -252,7 +274,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
           font-size: 18px;
           width: 18px;
           height: 18px;
-          color: white;
+          color: #0a0a0a;
         }
       }
     }
@@ -263,35 +285,63 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     }
 
     .category-section {
-      padding: 0 24px 32px;
+      padding: 0 clamp(12px, 4vw, 24px) clamp(20px, 6vw, 32px);
     }
 
     .category-header {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       margin-bottom: 24px;
 
       .line {
         flex: 1;
         height: 1px;
-        background: #e5e5e5;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08));
+
+        &:last-child {
+          background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.08));
+        }
+      }
+
+      .diamond {
+        width: 5px;
+        height: 5px;
+        background: rgba(201, 169, 110, 0.3);
+        transform: rotate(45deg);
+        flex-shrink: 0;
       }
 
       h2 {
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.4em;
-        color: #a8a29e;
+        color: #c9a96e;
         font-weight: 400;
+        white-space: nowrap;
       }
+    }
+
+    .menu-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .menu-item {
       display: flex;
+      flex-direction: column;
       gap: 16px;
-      padding: 20px 0;
-      border-bottom: 1px solid #f5f5f4;
+      padding: clamp(12px, 3.5vw, 20px);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      transition: border-color 0.2s ease;
+
+      &.has-discount {
+        background: rgba(34, 197, 94, 0.06);
+        border-color: rgba(110, 231, 183, 0.1);
+      }
     }
 
     .item-content {
@@ -303,24 +353,57 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 8px;
+    }
+
+    .item-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
 
       h3 {
         font-size: 16px;
         font-weight: 500;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         font-family: 'Playfair Display', serif;
       }
+    }
+
+    .discount-tag {
+      padding: 2px 8px;
+      font-size: 11px;
+      background: rgba(34, 197, 94, 0.8);
+      color: white;
+      border-radius: 50px;
+      font-weight: 500;
+    }
+
+    .item-prices {
+      text-align: right;
 
       .price {
         font-size: 16px;
         font-weight: 500;
-        color: #d4af37;
+        color: #c9a96e;
+      }
+
+      .original-price {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.3);
+        text-decoration: line-through;
+        display: block;
+      }
+
+      .sale-price {
+        font-size: 16px;
+        color: #6ee7b7;
+        font-weight: 500;
+        display: block;
       }
     }
 
     .item-description {
       font-size: 13px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.4);
       line-height: 1.5;
       margin-bottom: 12px;
     }
@@ -330,10 +413,10 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       align-items: center;
       gap: 6px;
       padding: 8px 16px;
-      border: 1px solid #e5e5e5;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 50px;
       background: transparent;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
       font-size: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -345,37 +428,66 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       }
 
       &:active {
-        border-color: #d4af37;
-        color: #d4af37;
-        background: rgba(212, 175, 55, 0.05);
+        border-color: #c9a96e;
+        color: #c9a96e;
+        background: rgba(201, 169, 110, 0.08);
+      }
+
+      &.discount-btn {
+        border-color: rgba(110, 231, 183, 0.3);
+        color: #6ee7b7;
+
+        &:active {
+          background: rgba(34, 197, 94, 0.2);
+          color: #6ee7b7;
+          border-color: #6ee7b7;
+        }
       }
     }
 
     .item-image {
-      width: 80px;
-      height: 80px;
+      position: relative;
+      width: 100%;
+      height: clamp(120px, 40vw, 160px);
       border-radius: 12px;
       overflow: hidden;
-      flex-shrink: 0;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.5s ease;
       }
+    }
+
+    .image-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 40px;
+      height: 40px;
+      background: rgba(34, 197, 94, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     .cart-fab {
       position: fixed;
       bottom: 90px;
-      right: 24px;
+      right: clamp(12px, 4vw, 24px);
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: #1C1917;
-      color: white;
+      background: #c9a96e;
+      color: #0a0a0a;
       border: none;
-      box-shadow: 0 8px 24px rgba(28, 25, 23, 0.3);
+      box-shadow: 0 8px 24px rgba(201, 169, 110, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -403,19 +515,77 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #d4af37, #f4d03f);
-      color: #1C1917;
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       font-size: 11px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 8px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 4px 8px rgba(201, 169, 110, 0.4);
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.1); }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .menu-page {
+        padding-bottom: 60px;
+      }
+
+      .menu-header {
+        padding: 16px 24px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .divider {
+        margin: 12px auto;
+      }
+
+      .subtitle {
+        font-size: 12px;
+      }
+
+      .featured-image {
+        margin: 0 24px 20px;
+        height: 150px;
+      }
+
+      .category-section {
+        padding: 0 24px 20px;
+      }
+
+      .menu-item {
+        padding: 12px 0;
+      }
+
+      .item-header h3 {
+        font-size: 14px;
+      }
+
+      .item-description {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .item-image {
+        height: 120px;
+      }
+
+      .cart-fab {
+        bottom: 60px;
+        width: 48px;
+        height: 48px;
+
+        mat-icon {
+          font-size: 20px;
+        }
+      }
     }
 
     @media (min-width: 768px) {
@@ -441,14 +611,14 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
         padding: 0 48px 40px;
       }
 
-      .menu-items-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0 32px;
-      }
-
       .menu-item {
-        padding: 24px 0;
+        flex-direction: row;
+        padding: 24px;
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.03);
+        }
       }
 
       .item-header h3 {
@@ -456,15 +626,22 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       }
 
       .item-image {
-        width: 90px;
-        height: 90px;
+        width: 140px;
+        height: 110px;
+        flex-shrink: 0;
       }
 
       .add-button {
         &:hover {
-          border-color: #d4af37;
-          color: #d4af37;
-          background: rgba(212, 175, 55, 0.05);
+          border-color: #c9a96e;
+          color: #c9a96e;
+          background: rgba(201, 169, 110, 0.08);
+        }
+
+        &.discount-btn:hover {
+          background: rgba(34, 197, 94, 0.2);
+          color: #6ee7b7;
+          border-color: #6ee7b7;
         }
       }
     }
@@ -498,8 +675,8 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       }
 
       .item-image {
-        width: 100px;
-        height: 100px;
+        width: 160px;
+        height: 120px;
         border-radius: 16px;
       }
     }
@@ -568,8 +745,23 @@ export class MenuComponent implements OnInit {
     return categoryMap[category] || category;
   }
 
+  hasDiscount(item: MenuItem): boolean {
+    return !!item.discountPercent && item.discountPercent > 0 &&
+      (!item.discountEndDate || new Date(item.discountEndDate) > new Date());
+  }
+
+  getEffectivePrice(item: MenuItem): number {
+    if (this.hasDiscount(item)) {
+      return item.price * (1 - item.discountPercent! / 100);
+    }
+    return item.price;
+  }
+
   addToCart(item: MenuItem) {
-    this.cartService.addToCart(item);
+    const cartItem = this.hasDiscount(item)
+      ? { ...item, price: this.getEffectivePrice(item) }
+      : item;
+    this.cartService.addToCart(cartItem);
     this.snackBar.open(`${this.i18n.getItemName(item.id, item.name)} ✓`, '', {
       duration: 1500,
       horizontalPosition: 'center',

@@ -35,7 +35,7 @@ interface CalendarDay {
         <header class="res-header" appReveal [revealDelay]="50">
           <h1>Aura</h1>
           <div class="divider"></div>
-          <p class="season">Sezona 2026.</p>
+          <p class="season">{{ i18n.t().home.season }}</p>
         </header>
 
         <!-- User Bar -->
@@ -53,13 +53,13 @@ interface CalendarDay {
 
         <!-- Calendar -->
         <section class="calendar-section" appReveal [revealDelay]="300">
-          <label>Odaberite datum</label>
+          <label>{{ i18n.t().reservation.selectDate }}</label>
 
           <div class="calendar-nav">
             <button (click)="prevMonth()" [disabled]="!canGoPrev" class="nav-btn">
               <mat-icon>chevron_left</mat-icon>
             </button>
-            <span class="month-label">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+            <span class="month-label">{{ i18n.t().reservation.monthNames[currentMonth] }} {{ currentYear }}</span>
             <button (click)="nextMonth()" [disabled]="!canGoNext" class="nav-btn">
               <mat-icon>chevron_right</mat-icon>
             </button>
@@ -67,7 +67,7 @@ interface CalendarDay {
 
           <div class="calendar-grid">
             <div class="weekday-header">
-              @for (day of weekdays; track day) {
+              @for (day of i18n.t().reservation.weekdays; track day) {
                 <span>{{ day }}</span>
               }
             </div>
@@ -92,10 +92,10 @@ interface CalendarDay {
 
           <!-- Legend -->
           <div class="legend">
-            <div class="legend-item"><span class="dot available"></span>Dostupno</div>
-            <div class="legend-item"><span class="dot limited"></span>Ograničeno</div>
-            <div class="legend-item"><span class="dot full"></span>Popunjeno</div>
-            <div class="legend-item"><span class="dot closed"></span>Zatvoreno</div>
+            <div class="legend-item"><span class="dot available"></span>{{ i18n.t().reservation.available }}</div>
+            <div class="legend-item"><span class="dot limited"></span>{{ i18n.t().reservation.limited }}</div>
+            <div class="legend-item"><span class="dot full"></span>{{ i18n.t().reservation.full }}</div>
+            <div class="legend-item"><span class="dot closed"></span>{{ i18n.t().reservation.closed }}</div>
           </div>
 
           <!-- Selected Date Display -->
@@ -108,31 +108,31 @@ interface CalendarDay {
 
         <!-- Time Slots -->
         <section class="slots-section" appReveal [revealDelay]="80">
-          <label>Dostupni termini</label>
+          <label>{{ i18n.t().reservation.selectTime }}</label>
 
           @if (loadingSlots) {
             <div class="loading-slots">
               <mat-icon class="spin">sync</mat-icon>
-              <p>Učitavam termine...</p>
-              <p class="loading-hint">Molimo pričekajte...</p>
+              <p>{{ i18n.t().reservation.loading }}</p>
+              <p class="loading-hint">{{ i18n.t().reservation.pleaseWait }}</p>
             </div>
           }
 
           @if (slotsError && !loadingSlots) {
             <div class="error-slots">
               <mat-icon>cloud_off</mat-icon>
-              <p>Greška pri učitavanju</p>
+              <p>{{ i18n.t().reservation.error }}</p>
               <button class="retry-btn" (click)="loadSlots(selectedDate!)">
                 <mat-icon>refresh</mat-icon>
-                Pokušaj ponovo
+                {{ i18n.t().reservation.retry }}
               </button>
             </div>
           }
 
           @if (isClosed && !loadingSlots) {
             <div class="closed-message">
-              <p class="closed-title">Zatvoreno</p>
-              <p class="closed-reason">{{ closedReason || 'Restoran ne radi ovaj dan' }}</p>
+              <p class="closed-title">{{ i18n.t().reservation.closed }}</p>
+              <p class="closed-reason">{{ closedReason || i18n.t().reservation.closedDefault }}</p>
             </div>
           }
 
@@ -146,7 +146,7 @@ interface CalendarDay {
                         [disabled]="slot.available <= 0"
                         (click)="selectSlot(slot.time)">
                   <span class="slot-time">{{ slot.time }}</span>
-                  <span class="slot-status">{{ slot.available > 0 ? 'Slobodno' : 'Popunjeno' }}</span>
+                  <span class="slot-status">{{ slot.available > 0 ? i18n.t().reservation.slotAvailable : i18n.t().reservation.slotFull }}</span>
                 </button>
               }
             </div>
@@ -155,7 +155,7 @@ interface CalendarDay {
 
         <!-- Guest Count -->
         <section class="guests-section" appReveal [revealDelay]="80">
-          <label>Broj gostiju</label>
+          <label>{{ i18n.t().reservation.guests }}</label>
           <div class="guest-counter">
             <button class="counter-btn" (click)="updateGuests(-1)" [disabled]="guests <= 1">−</button>
             <span class="guest-count">{{ guests }}</span>
@@ -165,19 +165,19 @@ interface CalendarDay {
 
         <!-- Notes -->
         <section class="notes-section" appReveal [revealDelay]="80">
-          <label>Posebni zahtjevi (opcionalno)</label>
-          <textarea [(ngModel)]="notes" placeholder="Alergije, posebne prigode..."></textarea>
+          <label>{{ i18n.t().reservation.specialRequests }}</label>
+          <textarea [(ngModel)]="notes" [placeholder]="i18n.t().checkout.noteHint"></textarea>
         </section>
 
         <!-- Price -->
         <section class="price-section" appReveal [revealDelay]="100">
           <div class="price-row">
             <div>
-              <p class="price-label">Cijena po osobi</p>
+              <p class="price-label">{{ i18n.t().reservation.pricePerPersonLabel }}</p>
               <p class="price-value">95,00 €</p>
             </div>
             <div class="price-total">
-              <p class="price-label">Ukupno</p>
+              <p class="price-label">{{ i18n.t().reservation.total }}</p>
               <p class="total-value">{{ (guests * 95).toFixed(2).replace('.', ',') }} €</p>
             </div>
           </div>
@@ -187,7 +187,7 @@ interface CalendarDay {
         <button class="submit-btn" appReveal [revealDelay]="150"
                 [disabled]="!canSubmit || loading"
                 (click)="submitReservation()">
-          {{ loading ? 'Šaljem...' : (canSubmit ? 'Potvrdi rezervaciju' : 'Odaberite termin') }}
+          {{ loading ? i18n.t().reservation.sending : (canSubmit ? i18n.t().reservation.confirmReservation : i18n.t().reservation.selectSlot) }}
         </button>
       }
 
@@ -195,9 +195,9 @@ interface CalendarDay {
         <!-- Success Screen -->
         <div class="success-screen">
           <div class="success-divider"></div>
-          <h2>Uspješno</h2>
+          <h2>{{ i18n.t().reservation.successTitle }}</h2>
           <div class="success-summary" [innerHTML]="successMessage"></div>
-          <button class="back-btn" routerLink="/home">Natrag na početnu</button>
+          <button class="back-btn" routerLink="/home">{{ i18n.t().reservation.backToHome }}</button>
         </div>
       }
     </div>
@@ -206,16 +206,18 @@ interface CalendarDay {
     :host {
       display: block;
       overflow: hidden;
-      background: white;
+      background: #0a0a0a;
     }
 
     .reservation-page {
-      background: white;
+      background: rgba(15, 15, 15, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       min-height: 100vh;
-      padding: 32px 24px 120px;
-      border-radius: 32px;
-      margin: 16px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      padding: clamp(20px, 6vw, 32px) clamp(12px, 4vw, 24px) 120px;
+      border-radius: clamp(20px, 6vw, 32px);
+      margin: clamp(8px, 2.5vw, 16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     .res-header {
@@ -223,17 +225,17 @@ interface CalendarDay {
       margin-bottom: 24px;
 
       h1 {
-        font-size: 28px;
+        font-size: clamp(22px, 6vw, 28px);
         font-weight: 300;
         letter-spacing: 0.4em;
         text-transform: uppercase;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
       }
 
       .divider {
-        width: 40px;
+        width: 60px;
         height: 1px;
-        background: #d6d3d1;
+        background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5), transparent);
         margin: 16px auto;
       }
 
@@ -241,7 +243,7 @@ interface CalendarDay {
         font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        color: #a8a29e;
+        color: #c9a96e;
         font-style: italic;
       }
     }
@@ -250,7 +252,10 @@ interface CalendarDay {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fafaf9;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       padding: 8px 12px 8px 16px;
       border-radius: 50px;
       margin-bottom: 24px;
@@ -266,18 +271,18 @@ interface CalendarDay {
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: #e5e5e5;
+      background: rgba(201, 169, 110, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
       font-weight: 600;
-      color: #78716c;
+      color: #c9a96e;
     }
 
     .user-info span {
       font-size: 13px;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 500;
     }
 
@@ -290,7 +295,7 @@ interface CalendarDay {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       cursor: pointer;
 
       mat-icon {
@@ -309,7 +314,7 @@ interface CalendarDay {
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: #a8a29e;
+      color: #c9a96e;
       margin-bottom: 12px;
     }
 
@@ -325,7 +330,7 @@ interface CalendarDay {
       height: 36px;
       border: none;
       background: transparent;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -340,13 +345,14 @@ interface CalendarDay {
     .month-label {
       font-size: 14px;
       font-weight: 500;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .calendar-grid {
-      background: #fafaf9;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 16px;
-      padding: 16px;
+      padding: clamp(8px, 3vw, 16px);
     }
 
     .weekday-header {
@@ -358,7 +364,7 @@ interface CalendarDay {
       span {
         text-align: center;
         font-size: 10px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
         font-weight: 500;
         padding: 8px 0;
       }
@@ -367,55 +373,55 @@ interface CalendarDay {
     .days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: clamp(2px, 0.8vw, 4px);
     }
 
     .cal-day {
       aspect-ratio: 1;
       border: none;
-      border-radius: 10px;
-      font-size: 13px;
+      border-radius: clamp(6px, 2vw, 10px);
+      font-size: clamp(11px, 3.2vw, 13px);
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &.available {
-        background: #D1FAE5;
-        color: #065F46;
+        background: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
       }
 
       &.limited {
-        background: #FEF3C7;
-        color: #92400E;
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
       }
 
       &.full {
-        background: #FEE2E2;
-        color: #991B1B;
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
         cursor: not-allowed;
       }
 
       &.closed {
-        background: #E5E5E5;
-        color: #737373;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.3);
         text-decoration: line-through;
         cursor: not-allowed;
       }
 
       &.past, &.disabled {
         background: transparent;
-        color: #d6d3d1;
+        color: rgba(255, 255, 255, 0.15);
         cursor: not-allowed;
       }
 
       &.today:not(.selected) {
-        outline: 2px solid #1C1917;
+        outline: 2px solid #c9a96e;
         outline-offset: -2px;
       }
 
       &.selected {
-        background: #1C1917 !important;
-        color: white !important;
+        background: #c9a96e !important;
+        color: #0a0a0a !important;
         font-weight: 700;
       }
     }
@@ -433,7 +439,7 @@ interface CalendarDay {
       align-items: center;
       gap: 6px;
       font-size: 9px;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.4);
     }
 
     .dot {
@@ -441,15 +447,15 @@ interface CalendarDay {
       height: 12px;
       border-radius: 4px;
 
-      &.available { background: #D1FAE5; }
-      &.limited { background: #FEF3C7; }
-      &.full { background: #FEE2E2; }
-      &.closed { background: #E5E5E5; }
+      &.available { background: rgba(16, 185, 129, 0.15); }
+      &.limited { background: rgba(245, 158, 11, 0.15); }
+      &.full { background: rgba(239, 68, 68, 0.15); }
+      &.closed { background: rgba(255, 255, 255, 0.05); }
     }
 
     .selected-date-display {
-      background: #1C1917;
-      color: white;
+      background: #c9a96e;
+      color: #0a0a0a;
       text-align: center;
       padding: 14px;
       border-radius: 12px;
@@ -461,7 +467,7 @@ interface CalendarDay {
     .loading-slots, .closed-message {
       text-align: center;
       padding: 24px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
 
       mat-icon {
         font-size: 24px;
@@ -480,22 +486,23 @@ interface CalendarDay {
 
       .loading-hint {
         font-size: 11px;
-        color: #d6d3d1;
+        color: rgba(255, 255, 255, 0.2);
       }
     }
 
     .error-slots {
       text-align: center;
       padding: 24px;
-      background: #fafaf9;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 16px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
 
       mat-icon {
         font-size: 32px;
         width: 32px;
         height: 32px;
-        color: #d6d3d1;
+        color: rgba(255, 255, 255, 0.2);
       }
 
       p {
@@ -509,8 +516,8 @@ interface CalendarDay {
         align-items: center;
         gap: 6px;
         padding: 10px 20px;
-        background: #1C1917;
-        color: white;
+        background: #c9a96e;
+        color: #0a0a0a;
         border: none;
         border-radius: 50px;
         font-size: 12px;
@@ -520,7 +527,7 @@ interface CalendarDay {
           font-size: 16px;
           width: 16px;
           height: 16px;
-          color: white;
+          color: #0a0a0a;
         }
       }
     }
@@ -531,29 +538,30 @@ interface CalendarDay {
     }
 
     .closed-message {
-      background: #FEF2F2;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.15);
       border-radius: 16px;
 
       .closed-title {
-        color: #DC2626;
+        color: #fca5a5;
         font-weight: 500;
         font-size: 14px;
       }
 
       .closed-reason {
-        color: #F87171;
+        color: rgba(252, 165, 165, 0.7);
         font-size: 12px;
       }
     }
 
     .slots-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(min(80px, 30%), 1fr));
+      gap: clamp(4px, 1.5vw, 8px);
     }
 
     .slot-btn {
-      padding: 12px 8px;
+      padding: clamp(8px, 2.5vw, 12px) clamp(4px, 1.5vw, 8px);
       border-radius: 12px;
       border: none;
       cursor: pointer;
@@ -562,7 +570,7 @@ interface CalendarDay {
 
       .slot-time {
         display: block;
-        font-size: 14px;
+        font-size: clamp(12px, 3.5vw, 14px);
         font-weight: 500;
         margin-bottom: 2px;
       }
@@ -573,22 +581,22 @@ interface CalendarDay {
       }
 
       &.available {
-        background: #ECFDF5;
-        .slot-time { color: #059669; }
-        .slot-status { color: #10B981; }
+        background: rgba(16, 185, 129, 0.1);
+        .slot-time { color: #6ee7b7; }
+        .slot-status { color: rgba(110, 231, 183, 0.6); }
       }
 
       &.full {
-        background: #FEF2F2;
-        .slot-time { color: #F87171; text-decoration: line-through; }
-        .slot-status { color: #EF4444; }
+        background: rgba(239, 68, 68, 0.1);
+        .slot-time { color: #fca5a5; text-decoration: line-through; }
+        .slot-status { color: rgba(252, 165, 165, 0.6); }
         cursor: not-allowed;
       }
 
       &.selected {
-        background: #1C1917;
-        box-shadow: 0 4px 12px rgba(28, 25, 23, 0.3);
-        .slot-time, .slot-status { color: white; text-decoration: none; }
+        background: #c9a96e;
+        box-shadow: 0 4px 12px rgba(201, 169, 110, 0.3);
+        .slot-time, .slot-status { color: #0a0a0a; text-decoration: none; }
       }
     }
 
@@ -596,18 +604,18 @@ interface CalendarDay {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid #f5f5f4;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 16px;
       padding: 8px;
     }
 
     .counter-btn {
-      width: 48px;
-      height: 48px;
+      width: clamp(40px, 12vw, 48px);
+      height: clamp(40px, 12vw, 48px);
       border: none;
       background: transparent;
       font-size: 20px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       cursor: pointer;
 
       &:disabled {
@@ -616,36 +624,41 @@ interface CalendarDay {
       }
 
       &:active:not(:disabled) {
-        color: #1C1917;
+        color: #c9a96e;
       }
     }
 
     .guest-count {
       font-size: 16px;
       font-weight: 500;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
     }
 
     textarea {
       width: 100%;
-      padding: 16px;
-      background: #fafaf9;
-      border: none;
+      padding: clamp(12px, 3vw, 16px);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 16px;
       font-size: 14px;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
       resize: none;
       font-family: inherit;
       outline: none;
 
       &::placeholder {
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.2);
+      }
+
+      &:focus {
+        border-color: rgba(201, 169, 110, 0.3);
+        box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
       }
     }
 
     .price-section {
       padding-top: 16px;
-      border-top: 1px solid #fafaf9;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .price-row {
@@ -658,14 +671,14 @@ interface CalendarDay {
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.3);
       margin-bottom: 4px;
     }
 
     .price-value {
       font-size: 14px;
       font-weight: 500;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .price-total {
@@ -673,16 +686,16 @@ interface CalendarDay {
     }
 
     .total-value {
-      font-size: 24px;
+      font-size: clamp(20px, 6vw, 24px);
       font-weight: 300;
-      color: #1C1917;
+      color: #c9a96e;
     }
 
     .submit-btn {
       width: 100%;
-      padding: 20px;
-      background: #1C1917;
-      color: white;
+      padding: clamp(16px, 4vw, 20px);
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       border: none;
       border-radius: 16px;
       font-size: 10px;
@@ -690,11 +703,16 @@ interface CalendarDay {
       text-transform: uppercase;
       letter-spacing: 0.4em;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(28, 25, 23, 0.2);
+      box-shadow: 0 10px 30px rgba(201, 169, 110, 0.25);
       margin-top: 8px;
 
+      &:active:not(:disabled) {
+        box-shadow: 0 14px 40px rgba(201, 169, 110, 0.4);
+      }
+
       &:disabled {
-        background: #a8a29e;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.25);
         cursor: not-allowed;
         box-shadow: none;
       }
@@ -707,7 +725,7 @@ interface CalendarDay {
       .success-divider {
         width: 40px;
         height: 1px;
-        background: #1C1917;
+        background: #c9a96e;
         margin: 0 auto 40px;
       }
 
@@ -716,17 +734,17 @@ interface CalendarDay {
         font-weight: 300;
         text-transform: uppercase;
         letter-spacing: 0.3em;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 24px;
       }
 
       .success-summary {
         font-size: 12px;
-        color: #78716c;
+        color: rgba(255, 255, 255, 0.5);
         line-height: 2;
 
         b {
-          color: #1C1917;
+          color: rgba(255, 255, 255, 0.9);
         }
       }
 
@@ -737,15 +755,112 @@ interface CalendarDay {
         font-size: 9px;
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
         cursor: pointer;
         padding-bottom: 4px;
         border-bottom: 1px solid transparent;
 
         &:hover {
-          color: #1C1917;
-          border-bottom-color: #1C1917;
+          color: #c9a96e;
+          border-bottom-color: #c9a96e;
         }
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .reservation-page {
+        padding: 16px 24px 80px;
+        margin: 8px;
+        border-radius: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .res-header {
+        margin-bottom: 16px;
+
+        h1 {
+          font-size: 22px;
+        }
+
+        .divider {
+          margin: 10px auto;
+        }
+      }
+
+      .user-bar {
+        margin-bottom: 16px;
+      }
+
+      section {
+        margin-bottom: 16px;
+      }
+
+      .calendar-grid {
+        padding: 12px;
+      }
+
+      .cal-day {
+        font-size: 11px;
+        border-radius: 8px;
+      }
+
+      .legend {
+        margin-top: 10px;
+      }
+
+      .selected-date-display {
+        padding: 10px;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+
+      .slots-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+
+      .slot-btn {
+        padding: 8px 6px;
+
+        .slot-time {
+          font-size: 12px;
+        }
+
+        .slot-status {
+          font-size: 9px;
+        }
+      }
+
+      .guest-counter {
+        max-width: 250px;
+      }
+
+      .counter-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      textarea {
+        padding: 12px;
+        font-size: 13px;
+      }
+
+      .total-value {
+        font-size: 20px;
+      }
+
+      .submit-btn {
+        padding: 16px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+
+      .success-screen {
+        padding: 40px 24px;
       }
     }
 
@@ -836,12 +951,6 @@ export class ReservationComponent implements OnInit {
   currentMonth = new Date().getMonth();
   currentYear = new Date().getFullYear();
   calendarDays: CalendarDay[] = [];
-  monthNames = ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj',
-                'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
-  monthNamesGenitive = ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja',
-                        'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
-  dayNames = ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
-  weekdays = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned'];
 
   today = new Date();
   maxDate = new Date(2026, 11, 31);
@@ -1073,10 +1182,11 @@ export class ReservationComponent implements OnInit {
 
   formatSelectedDate(): string {
     if (!this.selectedDate) return '';
+    const t = this.i18n.t().reservation;
     const date = new Date(this.selectedDate + 'T12:00:00');
-    const dayName = this.dayNames[date.getDay()];
+    const dayName = t.dayNames[date.getDay()];
     const day = date.getDate();
-    const month = this.monthNamesGenitive[date.getMonth()];
+    const month = t.monthNamesGenitive[date.getMonth()];
     const year = date.getFullYear();
     return `${dayName}, ${day}. ${month} ${year}`;
   }
@@ -1118,27 +1228,29 @@ export class ReservationComponent implements OnInit {
         this.loading = false;
         this.success = true;
 
+        const t = this.i18n.t().reservation;
         const date = new Date(this.selectedDate + 'T12:00:00');
-        const dayName = this.dayNames[date.getDay()];
+        const dayName = t.dayNames[date.getDay()];
         const day = date.getDate();
-        const month = this.monthNamesGenitive[date.getMonth()];
+        const month = t.monthNamesGenitive[date.getMonth()];
         const year = date.getFullYear();
         const total = (this.guests * 95).toFixed(2).replace('.', ',');
+        const personWord = this.guests === 1 ? t.person1 : this.guests < 5 ? t.person24 : t.person5plus;
 
         this.successMessage = `
-          Vaša rezervacija za <b>${this.guests} ${this.guests === 1 ? 'osobu' : this.guests < 5 ? 'osobe' : 'osoba'}</b> je zaprimljena.<br><br>
-          <span style="color:#a8a29e;text-transform:uppercase;letter-spacing:0.2em;font-size:10px">Datum:</span><br>
+          ${t.successFor} <b>${this.guests} ${personWord}</b> ${t.successReceived}<br><br>
+          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.dateLabel}</span><br>
           <b>${dayName}, ${day}. ${month} ${year}</b><br><br>
-          <span style="color:#a8a29e;text-transform:uppercase;letter-spacing:0.2em;font-size:10px">Termin:</span><br>
+          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.timeLabel}</span><br>
           <b>${this.selectedSlot}</b><br><br>
-          <span style="color:#a8a29e;text-transform:uppercase;letter-spacing:0.2em;font-size:10px">Ukupni iznos:</span><br>
-          <span style="font-size:16px">${total} €</span><br><br>
-          <span style="color:#a8a29e;font-size:9px">Potvrda je poslana na ${this.authService.currentUser?.email}</span>
+          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.totalAmountLabel}</span><br>
+          <span style="font-size:16px;color:#c9a96e">${total} €</span><br><br>
+          <span style="color:rgba(255,255,255,0.3);font-size:9px">${t.confirmSentTo} ${this.authService.currentUser?.email}</span>
         `;
       },
       error: (err) => {
         this.loading = false;
-        this.snackBar.open(err.error?.error || 'Greška pri rezervaciji', 'OK', { duration: 3000 });
+        this.snackBar.open(err.error?.error || this.i18n.t().reservation.reservationError, 'OK', { duration: 3000 });
       }
     });
   }

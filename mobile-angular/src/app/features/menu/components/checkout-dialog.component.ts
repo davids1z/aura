@@ -97,10 +97,10 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
   `,
   styles: [`
     .checkout-dialog {
-      background: white;
+      background: rgba(15, 15, 15, 0.95);
       min-height: 100vh;
-      padding: 20px;
-      padding-bottom: 40px;
+      padding: clamp(12px, 4vw, 20px);
+      padding-bottom: clamp(24px, 8vw, 40px);
     }
 
     .dialog-header {
@@ -111,31 +111,31 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #f5f5f4;
-      border: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
     }
 
     .dialog-title {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: clamp(16px, 5vw, 24px);
 
       h2 {
-        font-size: 18px;
+        font-size: clamp(16px, 4.5vw, 18px);
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.3em;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 8px;
       }
 
       p {
         font-size: 14px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
       }
     }
 
@@ -147,29 +147,31 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
 
     .form-input {
       width: 100%;
-      padding: 16px 20px;
-      background: #f5f5f4;
-      border: none;
-      border-radius: 16px;
-      font-size: 14px;
-      color: #1C1917;
+      padding: clamp(12px, 4vw, 16px) clamp(14px, 4.5vw, 20px);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: clamp(12px, 4vw, 16px);
+      font-size: clamp(13px, 3.8vw, 14px);
+      color: rgba(255, 255, 255, 0.9);
       outline: none;
       font-family: inherit;
       resize: none;
 
       &::placeholder {
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.2);
       }
 
       &:focus {
-        box-shadow: 0 0 0 2px rgba(28, 25, 23, 0.1);
+        border-color: rgba(201, 169, 110, 0.3);
+        box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
       }
     }
 
     .order-summary {
-      background: #fafaf9;
-      border-radius: 16px;
-      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: clamp(12px, 4vw, 16px);
+      padding: clamp(12px, 3.5vw, 16px);
       margin-top: 8px;
     }
 
@@ -177,12 +179,12 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       display: flex;
       justify-content: space-between;
       font-size: 12px;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.4);
       margin-bottom: 12px;
     }
 
     .summary-items {
-      max-height: 120px;
+      max-height: clamp(80px, 25vw, 120px);
       overflow-y: auto;
       margin-bottom: 12px;
     }
@@ -191,7 +193,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       display: flex;
       justify-content: space-between;
       font-size: 13px;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.4);
       margin-bottom: 6px;
     }
 
@@ -199,23 +201,24 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       display: flex;
       justify-content: space-between;
       padding-top: 12px;
-      border-top: 1px solid #e5e5e5;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       font-size: 14px;
 
       span {
-        color: #78716c;
+        color: rgba(255, 255, 255, 0.4);
       }
 
       .total {
         font-size: 18px;
         font-weight: 500;
-        color: #1C1917;
+        color: #c9a96e;
       }
     }
 
     .error-message {
-      background: #fef2f2;
-      color: #dc2626;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
       padding: 12px 16px;
       border-radius: 12px;
       font-size: 13px;
@@ -224,25 +227,28 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
 
     .submit-btn {
       width: 100%;
-      padding: 18px;
-      background: #1C1917;
-      color: white;
+      padding: clamp(14px, 4.5vw, 18px);
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       border: none;
-      border-radius: 16px;
-      font-size: 12px;
+      border-radius: clamp(12px, 4vw, 16px);
+      font-size: clamp(10px, 3vw, 12px);
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.2em;
       cursor: pointer;
       margin-top: 8px;
+      box-shadow: 0 8px 24px rgba(201, 169, 110, 0.2);
 
       &:disabled {
-        background: #a8a29e;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.25);
         cursor: not-allowed;
+        box-shadow: none;
       }
 
       &:active:not(:disabled) {
-        background: #292524;
+        box-shadow: 0 12px 30px rgba(201, 169, 110, 0.35);
       }
     }
 
@@ -253,14 +259,14 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       justify-content: center;
       min-height: 80vh;
       text-align: center;
-      padding: 40px 20px;
+      padding: clamp(24px, 8vw, 40px) clamp(12px, 4vw, 20px);
     }
 
     .success-icon {
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: #dcfce7;
+      background: rgba(201, 169, 110, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -270,7 +276,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
         font-size: 32px;
         width: 32px;
         height: 32px;
-        color: #16a34a;
+        color: #c9a96e;
       }
     }
 
@@ -279,13 +285,13 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: #1C1917;
+      color: rgba(255, 255, 255, 0.9);
       margin-bottom: 12px;
     }
 
     .success-state p {
       font-size: 14px;
-      color: #a8a29e;
+      color: rgba(255, 255, 255, 0.4);
       line-height: 1.6;
       margin-bottom: 32px;
     }
@@ -293,9 +299,9 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
     .ok-btn {
       width: 100%;
       max-width: 300px;
-      padding: 18px;
-      background: #1C1917;
-      color: white;
+      padding: clamp(14px, 4.5vw, 18px);
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       border: none;
       border-radius: 16px;
       font-size: 12px;
@@ -303,6 +309,7 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       text-transform: uppercase;
       letter-spacing: 0.2em;
       cursor: pointer;
+      box-shadow: 0 8px 24px rgba(201, 169, 110, 0.2);
     }
 
     @media (min-width: 768px) {
@@ -318,11 +325,11 @@ import { GuestOrderRequest } from '../../../core/models/reservation.model';
       }
 
       .submit-btn:hover:not(:disabled) {
-        background: #292524;
+        box-shadow: 0 14px 40px rgba(201, 169, 110, 0.35);
       }
 
       .ok-btn:hover {
-        background: #292524;
+        box-shadow: 0 14px 40px rgba(201, 169, 110, 0.35);
       }
     }
   `]

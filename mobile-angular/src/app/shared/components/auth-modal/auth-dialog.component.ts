@@ -32,8 +32,15 @@ import { I18nService } from '../../../core/services/i18n.service';
           <form class="auth-form" (ngSubmit)="login()">
             <input type="email" [(ngModel)]="loginEmail" name="email"
                    [placeholder]="i18n.t().auth.email" required class="form-input">
-            <input type="password" [(ngModel)]="loginPassword" name="password"
-                   [placeholder]="i18n.t().auth.password" required class="form-input">
+            <div class="password-field">
+              <input [type]="showLoginPassword ? 'text' : 'password'" [(ngModel)]="loginPassword" name="password"
+                     [placeholder]="i18n.t().auth.password" required class="form-input">
+              @if (loginPassword) {
+                <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showLoginPassword = !showLoginPassword">
+                  <mat-icon>{{ showLoginPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              }
+            </div>
 
             @if (error) {
               <div class="error-message">{{ error }}</div>
@@ -66,8 +73,15 @@ import { I18nService } from '../../../core/services/i18n.service';
                    [placeholder]="i18n.t().auth.email" required class="form-input">
             <input type="tel" [(ngModel)]="regPhone" name="phone"
                    [placeholder]="i18n.t().auth.phone" required class="form-input">
-            <input type="password" [(ngModel)]="regPassword" name="password"
-                   [placeholder]="i18n.t().auth.passwordHint" required minlength="6" class="form-input">
+            <div class="password-field">
+              <input [type]="showRegPassword ? 'text' : 'password'" [(ngModel)]="regPassword" name="password"
+                     [placeholder]="i18n.t().auth.passwordHint" required minlength="6" class="form-input">
+              @if (regPassword) {
+                <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showRegPassword = !showRegPassword">
+                  <mat-icon>{{ showRegPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              }
+            </div>
 
             @if (error) {
               <div class="error-message">{{ error }}</div>
@@ -88,30 +102,30 @@ import { I18nService } from '../../../core/services/i18n.service';
   `,
   styles: [`
     .auth-dialog {
-      background: white;
+      background: rgba(15, 15, 15, 0.95);
       min-height: 100vh;
       min-height: 100dvh;
-      padding: 20px;
+      padding: clamp(12px, 4vw, 20px);
       padding-bottom: env(safe-area-inset-bottom, 20px);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior: none;
+      touch-action: pan-y;
     }
 
     .dialog-header {
-      margin-bottom: 32px;
+      margin-bottom: clamp(16px, 6vw, 32px);
     }
 
     .back-btn {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #f5f5f4;
-      border: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #78716c;
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
     }
 
@@ -122,20 +136,20 @@ import { I18nService } from '../../../core/services/i18n.service';
 
     .form-title {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: clamp(20px, 6vw, 32px);
 
       h2 {
-        font-size: 20px;
+        font-size: clamp(16px, 5vw, 20px);
         font-weight: 300;
         text-transform: uppercase;
         letter-spacing: 0.3em;
-        color: #1C1917;
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 8px;
       }
 
       p {
         font-size: 12px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
       }
     }
 
@@ -147,27 +161,64 @@ import { I18nService } from '../../../core/services/i18n.service';
 
     .form-input {
       width: 100%;
-      padding: 16px 20px;
-      background: #fafaf9;
-      border: none;
+      padding: clamp(12px, 4vw, 16px) clamp(14px, 4.5vw, 20px);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 12px;
-      font-size: 14px;
-      color: #1C1917;
+      font-size: clamp(13px, 3.8vw, 14px);
+      color: rgba(255, 255, 255, 0.9);
       outline: none;
       font-family: inherit;
 
       &::placeholder {
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.2);
       }
 
       &:focus {
-        box-shadow: 0 0 0 2px rgba(28, 25, 23, 0.1);
+        border-color: rgba(201, 169, 110, 0.3);
+        box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
+      }
+    }
+
+    .password-field {
+      position: relative;
+
+      .form-input {
+        padding-right: 48px;
+      }
+
+      .eye-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        &:active {
+          color: #c9a96e;
+        }
       }
     }
 
     .error-message {
-      background: #fef2f2;
-      color: #dc2626;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
       padding: 12px 16px;
       border-radius: 12px;
       font-size: 13px;
@@ -176,37 +227,40 @@ import { I18nService } from '../../../core/services/i18n.service';
 
     .submit-btn {
       width: 100%;
-      padding: 18px;
-      background: #1C1917;
-      color: white;
+      padding: clamp(14px, 4.5vw, 18px);
+      background: linear-gradient(135deg, #c9a96e, #dfc598);
+      color: #0a0a0a;
       border: none;
       border-radius: 12px;
-      font-size: 10px;
+      font-size: clamp(9px, 2.8vw, 10px);
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.3em;
       cursor: pointer;
       margin-top: 8px;
+      box-shadow: 0 8px 24px rgba(201, 169, 110, 0.2);
 
       &:disabled {
-        background: #a8a29e;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.25);
         cursor: not-allowed;
+        box-shadow: none;
       }
 
       &:active:not(:disabled) {
-        background: #292524;
+        box-shadow: 0 12px 30px rgba(201, 169, 110, 0.35);
       }
     }
 
     .switch-mode {
       text-align: center;
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid #f5f5f4;
+      margin-top: clamp(20px, 6vw, 32px);
+      padding-top: clamp(16px, 5vw, 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
 
       p {
         font-size: 12px;
-        color: #a8a29e;
+        color: rgba(255, 255, 255, 0.3);
         margin-bottom: 8px;
       }
 
@@ -214,7 +268,7 @@ import { I18nService } from '../../../core/services/i18n.service';
         background: none;
         border: none;
         font-size: 12px;
-        color: #1C1917;
+        color: #c9a96e;
         font-weight: 500;
         cursor: pointer;
       }
@@ -239,7 +293,7 @@ import { I18nService } from '../../../core/services/i18n.service';
       }
 
       .submit-btn:hover:not(:disabled) {
-        background: #292524;
+        box-shadow: 0 14px 40px rgba(201, 169, 110, 0.35);
       }
     }
   `]
@@ -254,6 +308,8 @@ export class AuthDialogComponent {
   mode: 'login' | 'register' = 'register';
   error = '';
   loading = false;
+  showLoginPassword = false;
+  showRegPassword = false;
 
   // Login
   loginEmail = '';
