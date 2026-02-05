@@ -93,6 +93,7 @@ const translations = {
     loadingMenu: 'Učitavanje menija...',
     menuLoadError: 'Greška pri učitavanju menija',
     addItemsFirst: 'Prvo dodajte artikle u košaricu',
+    returnToCart: 'Vratite se na košaricu',
 
     // Checkout/Delivery
     checkoutTitle: 'Dostava',
@@ -274,6 +275,7 @@ const translations = {
     loadingMenu: 'Loading menu...',
     menuLoadError: 'Error loading menu',
     addItemsFirst: 'Add items to cart first',
+    returnToCart: 'Return to cart',
 
     // Checkout/Delivery
     checkoutTitle: 'Delivery',
@@ -455,6 +457,7 @@ const translations = {
     loadingMenu: 'Speisekarte wird geladen...',
     menuLoadError: 'Fehler beim Laden der Speisekarte',
     addItemsFirst: 'Fügen Sie zuerst Artikel zum Warenkorb hinzu',
+    returnToCart: 'Zurück zum Warenkorb',
 
     // Checkout/Delivery
     checkoutTitle: 'Lieferung',
@@ -617,27 +620,26 @@ const menuTranslations = {
   }
 };
 
+// Detect language immediately (before DOMContentLoaded)
+function detectLanguage() {
+  const saved = localStorage.getItem('aura_language');
+  if (saved && translations[saved]) {
+    return saved;
+  }
+  const browserLang = navigator.language.split('-')[0].toLowerCase();
+  if (browserLang === 'hr' || browserLang === 'bs' || browserLang === 'sr') {
+    return 'hr';
+  } else if (browserLang === 'de' || browserLang === 'at' || browserLang === 'ch') {
+    return 'de';
+  }
+  return 'en';
+}
+
 // i18n Manager
 const i18n = {
-  currentLang: 'hr',
+  currentLang: detectLanguage(),
 
   init() {
-    // Check localStorage first
-    const saved = localStorage.getItem('aura_language');
-    if (saved && translations[saved]) {
-      this.currentLang = saved;
-    } else {
-      // Detect from browser
-      const browserLang = navigator.language.split('-')[0].toLowerCase();
-      if (browserLang === 'hr' || browserLang === 'bs' || browserLang === 'sr') {
-        this.currentLang = 'hr';
-      } else if (browserLang === 'de' || browserLang === 'at' || browserLang === 'ch') {
-        this.currentLang = 'de';
-      } else {
-        this.currentLang = 'en';
-      }
-    }
-
     this.createLanguageSelector();
     this.updatePage();
   },
@@ -694,6 +696,11 @@ const i18n = {
   },
 
   createLanguageSelector() {
+    // Only show on homepage
+    const path = window.location.pathname;
+    const isHomepage = path === '/' || path === '/index.html' || path.endsWith('/index.html');
+    if (!isHomepage) return;
+
     // Find or create language selector container
     let selector = document.getElementById('language-selector');
     if (!selector) {
