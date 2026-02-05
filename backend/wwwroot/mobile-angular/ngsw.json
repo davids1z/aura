@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1770251286578,
+  "timestamp": 1770308668509,
   "index": "/mobile-angular/index.html",
   "assetGroups": [
     {
@@ -16,13 +16,13 @@
         "/mobile-angular/chunk-H5MGFNEA.js",
         "/mobile-angular/chunk-OK2EKJPW.js",
         "/mobile-angular/chunk-PVC76RJU.js",
-        "/mobile-angular/chunk-QHY34AI4.js",
         "/mobile-angular/chunk-THODLY4P.js",
+        "/mobile-angular/chunk-VSLXKDDE.js",
         "/mobile-angular/chunk-W3SOODEB.js",
         "/mobile-angular/chunk-Y4NHQ5UI.js",
         "/mobile-angular/favicon.ico",
         "/mobile-angular/index.html",
-        "/mobile-angular/main-KAIXXGTX.js",
+        "/mobile-angular/main-AA6T3AIG.js",
         "/mobile-angular/manifest.webmanifest",
         "/mobile-angular/styles-D7P2L5JG.css"
       ],
@@ -55,8 +55,8 @@
     "/mobile-angular/chunk-H5MGFNEA.js": "45fa739c93d5058ae4777ca5b757184f0398013e",
     "/mobile-angular/chunk-OK2EKJPW.js": "6e26e624d0032f464b6ac4cedc47a8c2a4a0bd0d",
     "/mobile-angular/chunk-PVC76RJU.js": "01bf6022001e77e58228197785652a8658ee953a",
-    "/mobile-angular/chunk-QHY34AI4.js": "5e5ad76ee5a852f6ff38030680a4679e352b61c1",
     "/mobile-angular/chunk-THODLY4P.js": "c351be31c18acf423ae1881e62d778e3e796b77f",
+    "/mobile-angular/chunk-VSLXKDDE.js": "0c322cc73f35f0cb90d0ac62707458a2b1ddd898",
     "/mobile-angular/chunk-W3SOODEB.js": "4783c3ffc7ac6914350177b592b1827a7dff37d2",
     "/mobile-angular/chunk-Y4NHQ5UI.js": "852a338d16c7766a8679caec7bff50e7799ce158",
     "/mobile-angular/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
@@ -68,8 +68,8 @@
     "/mobile-angular/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/mobile-angular/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/mobile-angular/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/mobile-angular/index.html": "2bced1d6e531d2aeb29ddc86d56f563bd5e01317",
-    "/mobile-angular/main-KAIXXGTX.js": "063baab77b218677e2f79e2d35dc67b2afa1e8e5",
+    "/mobile-angular/index.html": "ad8ff0449ef90f501220a1f8a5a8df567dd4fca3",
+    "/mobile-angular/main-AA6T3AIG.js": "e995b6bec8ae9be93670feb68db0c7cff9752fdd",
     "/mobile-angular/manifest.webmanifest": "ef1a840bd20dc673238df0c00366fc1f1db2aafa",
     "/mobile-angular/styles-D7P2L5JG.css": "3fb58e4c2b8fdd6af92c718812aa38da3845d234"
   },
