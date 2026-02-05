@@ -467,8 +467,8 @@
     </section>
 
     <!-- ========== MENU PREVIEW ========== -->
-    <section class="py-32 bg-black relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center bg-fixed opacity-[0.03]"></div>
+    <section id="menuPreview" class="py-32 bg-black relative overflow-hidden">
+        <div class="menu-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center opacity-[0.03]" style="will-change: transform; transform: translateZ(0);"></div>
         <div class="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
             <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
                 <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
@@ -695,6 +695,32 @@
         document.querySelectorAll('img:not([loading])').forEach(function(img) {
             if (img.complete) img.classList.add('loaded');
         });
+
+        // ===== Parallax Background (GPU accelerated) =====
+        (function() {
+            var menuSection = document.getElementById('menuPreview');
+            var menuBg = menuSection ? menuSection.querySelector('.menu-bg') : null;
+            if (!menuBg) return;
+
+            var ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        var rect = menuSection.getBoundingClientRect();
+                        var windowHeight = window.innerHeight;
+
+                        // Only animate when section is in view
+                        if (rect.bottom > 0 && rect.top < windowHeight) {
+                            var scrolled = (windowHeight - rect.top) / (windowHeight + rect.height);
+                            var parallaxOffset = (scrolled - 0.5) * 100; // Subtle movement
+                            menuBg.style.transform = 'translateY(' + parallaxOffset + 'px) translateZ(0)';
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
     </script>
     <script src="/js/smooth-scroll.js"></script>
     <script src="/js/i18n.js?v=3"></script>
