@@ -23,6 +23,9 @@ export interface Translations {
     address: string;
     hours: string;
     copyright: string;
+    scroll: string;
+    fineDiningLabel: string;
+    established: string;
   };
   // Menu page
   menu: {
@@ -37,6 +40,8 @@ export interface Translations {
     addToCart: string;
     cart: string;
     emptyCart: string;
+    addItemsFirst: string;
+    returnToCart: string;
     items: string;
     total: string;
     continueToOrder: string;
@@ -75,6 +80,36 @@ export interface Translations {
     success: string;
     successMessage: string;
     loginRequired: string;
+    // Calendar
+    available: string;
+    limited: string;
+    full: string;
+    closedDefault: string;
+    pleaseWait: string;
+    specialRequests: string;
+    confirmReservation: string;
+    selectSlot: string;
+    backToHome: string;
+    slotAvailable: string;
+    slotFull: string;
+    successTitle: string;
+    pricePerPersonLabel: string;
+    sending: string;
+    monthNames: string[];
+    monthNamesGenitive: string[];
+    dayNames: string[];
+    weekdays: string[];
+    // Success message parts
+    successFor: string;
+    person1: string;
+    person24: string;
+    person5plus: string;
+    successReceived: string;
+    dateLabel: string;
+    timeLabel: string;
+    totalAmountLabel: string;
+    confirmSentTo: string;
+    reservationError: string;
   };
   // Auth
   auth: {
@@ -151,7 +186,10 @@ const translations: Record<Language, Translations> = {
       secureSpot: 'Osigurajte termin',
       address: 'Trg Kralja Tomislava 1, Zagreb',
       hours: 'Svaki dan, 12:00 - 21:00',
-      copyright: '© 2026 Aura Fine Dining'
+      copyright: '© 2026 Aura Fine Dining',
+      scroll: 'Pomakni',
+      fineDiningLabel: 'Fine Dining Zagreb',
+      established: 'Est. 2026'
     },
     menu: {
       title: 'Menu',
@@ -165,6 +203,8 @@ const translations: Record<Language, Translations> = {
       addToCart: 'Dodaj',
       cart: 'Košarica',
       emptyCart: 'Košarica je prazna',
+      addItemsFirst: 'Prvo dodajte artikle u košaricu',
+      returnToCart: 'Vratite se na košaricu',
       items: 'artikala',
       total: 'Ukupno',
       continueToOrder: 'Nastavi na narudžbu',
@@ -186,7 +226,7 @@ const translations: Record<Language, Translations> = {
       title: 'Rezervacija',
       subtitle: 'Fine Dining Iskustvo',
       selectDate: 'Odaberite datum',
-      selectTime: 'Odaberite termin',
+      selectTime: 'Dostupni termini',
       guests: 'Broj gostiju',
       guest: 'gost',
       guestsPlural: 'gostiju',
@@ -201,7 +241,37 @@ const translations: Record<Language, Translations> = {
       closed: 'Zatvoreno',
       success: 'Rezervacija uspješna!',
       successMessage: 'Vaša rezervacija je potvrđena. Vidimo se!',
-      loginRequired: 'Za rezervaciju je potrebna prijava'
+      loginRequired: 'Za rezervaciju je potrebna prijava',
+      available: 'Dostupno',
+      limited: 'Ograničeno',
+      full: 'Popunjeno',
+      closedDefault: 'Restoran ne radi ovaj dan',
+      pleaseWait: 'Molimo pričekajte...',
+      specialRequests: 'Posebni zahtjevi (opcionalno)',
+      confirmReservation: 'Potvrdi rezervaciju',
+      selectSlot: 'Odaberite termin',
+      backToHome: 'Natrag na početnu',
+      slotAvailable: 'Slobodno',
+      slotFull: 'Popunjeno',
+      successTitle: 'Uspješno',
+      pricePerPersonLabel: 'Cijena po osobi',
+      sending: 'Šaljem...',
+      monthNames: ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj',
+                   'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'],
+      monthNamesGenitive: ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja',
+                           'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'],
+      dayNames: ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'],
+      weekdays: ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned'],
+      successFor: 'Vaša rezervacija za',
+      person1: 'osobu',
+      person24: 'osobe',
+      person5plus: 'osoba',
+      successReceived: 'je zaprimljena.',
+      dateLabel: 'Datum:',
+      timeLabel: 'Termin:',
+      totalAmountLabel: 'Ukupni iznos:',
+      confirmSentTo: 'Potvrda je poslana na',
+      reservationError: 'Greška pri rezervaciji'
     },
     auth: {
       login: 'Prijavi se',
@@ -273,7 +343,10 @@ const translations: Record<Language, Translations> = {
       secureSpot: 'Secure your spot',
       address: 'King Tomislav Square 1, Zagreb',
       hours: 'Every day, 12:00 PM - 9:00 PM',
-      copyright: '© 2026 Aura Fine Dining'
+      copyright: '© 2026 Aura Fine Dining',
+      scroll: 'Scroll',
+      fineDiningLabel: 'Fine Dining Zagreb',
+      established: 'Est. 2026'
     },
     menu: {
       title: 'Menu',
@@ -287,6 +360,8 @@ const translations: Record<Language, Translations> = {
       addToCart: 'Add',
       cart: 'Cart',
       emptyCart: 'Cart is empty',
+      addItemsFirst: 'Add items to cart first',
+      returnToCart: 'Return to cart',
       items: 'items',
       total: 'Total',
       continueToOrder: 'Continue to order',
@@ -308,7 +383,7 @@ const translations: Record<Language, Translations> = {
       title: 'Reservation',
       subtitle: 'Fine Dining Experience',
       selectDate: 'Select date',
-      selectTime: 'Select time',
+      selectTime: 'Available times',
       guests: 'Number of guests',
       guest: 'guest',
       guestsPlural: 'guests',
@@ -323,7 +398,37 @@ const translations: Record<Language, Translations> = {
       closed: 'Closed',
       success: 'Reservation successful!',
       successMessage: 'Your reservation is confirmed. See you soon!',
-      loginRequired: 'Login required for reservation'
+      loginRequired: 'Login required for reservation',
+      available: 'Available',
+      limited: 'Limited',
+      full: 'Full',
+      closedDefault: 'Restaurant is closed today',
+      pleaseWait: 'Please wait...',
+      specialRequests: 'Special requests (optional)',
+      confirmReservation: 'Confirm reservation',
+      selectSlot: 'Select a time slot',
+      backToHome: 'Back to home',
+      slotAvailable: 'Available',
+      slotFull: 'Full',
+      successTitle: 'Success',
+      pricePerPersonLabel: 'Price per person',
+      sending: 'Sending...',
+      monthNames: ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'],
+      monthNamesGenitive: ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December'],
+      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      successFor: 'Your reservation for',
+      person1: 'person',
+      person24: 'people',
+      person5plus: 'people',
+      successReceived: 'has been received.',
+      dateLabel: 'Date:',
+      timeLabel: 'Time:',
+      totalAmountLabel: 'Total amount:',
+      confirmSentTo: 'Confirmation sent to',
+      reservationError: 'Reservation error'
     },
     auth: {
       login: 'Log in',
@@ -395,7 +500,10 @@ const translations: Record<Language, Translations> = {
       secureSpot: 'Sichern Sie sich Ihren Platz',
       address: 'König-Tomislav-Platz 1, Zagreb',
       hours: 'Jeden Tag, 12:00 - 21:00',
-      copyright: '© 2026 Aura Fine Dining'
+      copyright: '© 2026 Aura Fine Dining',
+      scroll: 'Scrollen',
+      fineDiningLabel: 'Feines Essen Zagreb',
+      established: 'Seit 2026'
     },
     menu: {
       title: 'Speisekarte',
@@ -409,6 +517,8 @@ const translations: Record<Language, Translations> = {
       addToCart: 'Hinzufügen',
       cart: 'Warenkorb',
       emptyCart: 'Warenkorb ist leer',
+      addItemsFirst: 'Fügen Sie zuerst Artikel zum Warenkorb hinzu',
+      returnToCart: 'Zurück zum Warenkorb',
       items: 'Artikel',
       total: 'Gesamt',
       continueToOrder: 'Zur Bestellung',
@@ -430,7 +540,7 @@ const translations: Record<Language, Translations> = {
       title: 'Reservierung',
       subtitle: 'Fine Dining Erlebnis',
       selectDate: 'Datum wählen',
-      selectTime: 'Zeit wählen',
+      selectTime: 'Verfügbare Zeiten',
       guests: 'Anzahl der Gäste',
       guest: 'Gast',
       guestsPlural: 'Gäste',
@@ -445,7 +555,37 @@ const translations: Record<Language, Translations> = {
       closed: 'Geschlossen',
       success: 'Reservierung erfolgreich!',
       successMessage: 'Ihre Reservierung ist bestätigt. Wir freuen uns auf Sie!',
-      loginRequired: 'Anmeldung für Reservierung erforderlich'
+      loginRequired: 'Anmeldung für Reservierung erforderlich',
+      available: 'Verfügbar',
+      limited: 'Begrenzt',
+      full: 'Voll',
+      closedDefault: 'Restaurant ist heute geschlossen',
+      pleaseWait: 'Bitte warten...',
+      specialRequests: 'Besondere Wünsche (optional)',
+      confirmReservation: 'Reservierung bestätigen',
+      selectSlot: 'Zeitfenster wählen',
+      backToHome: 'Zurück zur Startseite',
+      slotAvailable: 'Verfügbar',
+      slotFull: 'Voll',
+      successTitle: 'Erfolgreich',
+      pricePerPersonLabel: 'Preis pro Person',
+      sending: 'Sende...',
+      monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+                   'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+      monthNamesGenitive: ['Januars', 'Februars', 'März', 'Aprils', 'Mais', 'Junis',
+                           'Julis', 'Augusts', 'Septembers', 'Oktobers', 'Novembers', 'Dezembers'],
+      dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+      weekdays: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
+      successFor: 'Ihre Reservierung für',
+      person1: 'Person',
+      person24: 'Personen',
+      person5plus: 'Personen',
+      successReceived: 'wurde empfangen.',
+      dateLabel: 'Datum:',
+      timeLabel: 'Zeit:',
+      totalAmountLabel: 'Gesamtbetrag:',
+      confirmSentTo: 'Bestätigung gesendet an',
+      reservationError: 'Reservierungsfehler'
     },
     auth: {
       login: 'Anmelden',
