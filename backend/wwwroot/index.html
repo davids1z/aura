@@ -115,33 +115,33 @@
     <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- ========== NAVIGATION ========== -->
-    <nav id="mainNav" class="fixed w-full z-50 transition-all duration-500" style="padding: 1.5rem 2rem;">
+    <nav id="mainNav" class="fixed w-full z-50 transition-all duration-500 px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <a href="/" class="relative z-10 group">
-                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white group-hover:text-gold transition-colors duration-500">Aura</span>
+                <span class="text-lg sm:text-xl md:text-2xl tracking-[0.4em] sm:tracking-[0.5em] md:tracking-[0.6em] uppercase font-light text-white group-hover:text-gold transition-colors duration-500">Aura</span>
             </a>
-            <div class="hidden md:flex items-center gap-12">
-                <a href="menu.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="menu">Menu</a>
-                <a href="reservation.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="reservation">Rezervacija</a>
-                <a href="contact.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="contact">Kontakt</a>
-                <a href="reservation.html" class="magnetic-btn ml-4 px-6 py-2.5 border border-gold/40 text-gold text-[10px] uppercase tracking-[0.3em] hover:bg-gold hover:text-black transition-all duration-500 rounded-full">
+            <div class="hidden md:flex items-center gap-8 lg:gap-12">
+                <a href="menu.html" class="nav-link text-[10px] uppercase tracking-[0.2em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="menu">Menu</a>
+                <a href="reservation.html" class="nav-link text-[10px] uppercase tracking-[0.2em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="reservation">Rezervacija</a>
+                <a href="contact.html" class="nav-link text-[10px] uppercase tracking-[0.2em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="contact">Kontakt</a>
+                <a href="reservation.html" class="magnetic-btn ml-4 px-5 py-2 lg:px-6 lg:py-2.5 border border-gold/40 text-gold text-[10px] uppercase tracking-[0.2em] lg:tracking-[0.3em] hover:bg-gold hover:text-black transition-all duration-500 rounded-full">
                     <span data-i18n="ctaButton">Rezervirajte</span>
                 </a>
             </div>
             <button onclick="toggleMobileMenu()" class="md:hidden relative z-10 w-10 h-10 flex flex-col items-center justify-center gap-1.5" id="menuToggle">
-                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
-                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="menu-line block w-5 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="menu-line block w-5 h-[1px] bg-white transition-all duration-300"></span>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
-        <a href="menu.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="menu">Menu</a>
-        <a href="reservation.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
-        <a href="contact.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="contact">Kontakt</a>
-        <div class="w-12 h-[1px] bg-gold/30 my-4"></div>
-        <a href="reservation.html" class="px-8 py-3 border border-gold/40 text-gold text-[11px] uppercase tracking-[0.3em] rounded-full" data-i18n="ctaButton">Rezervirajte</a>
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-all duration-500 md:hidden">
+        <a href="menu.html" class="text-white text-base tracking-[0.3em] uppercase font-light hover:text-gold transition" data-i18n="menu">Menu</a>
+        <a href="reservation.html" class="text-white text-base tracking-[0.3em] uppercase font-light hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+        <a href="contact.html" class="text-white text-base tracking-[0.3em] uppercase font-light hover:text-gold transition" data-i18n="contact">Kontakt</a>
+        <div class="w-10 h-[1px] bg-gold/30 my-2"></div>
+        <a href="reservation.html" class="px-6 py-2.5 border border-gold/40 text-gold text-[10px] uppercase tracking-[0.2em] rounded-full" data-i18n="ctaButton">Rezervirajte</a>
     </div>
 
     <!-- ========== HERO ========== -->
@@ -567,40 +567,40 @@
     </section>
 
     <!-- ========== FOOTER ========== -->
-    <footer class="bg-[#050505] pt-20 pb-10 relative">
+    <footer class="bg-[#050505] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 relative">
         <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="grid md:grid-cols-3 gap-12 md:gap-8 mb-16">
-                <div>
-                    <span class="text-2xl tracking-[0.6em] uppercase font-light text-white/80">Aura</span>
-                    <p class="text-white/25 text-sm font-light mt-4 leading-relaxed max-w-xs" data-i18n="footerTagline">Ekskluzivno gastronomsko iskustvo u srcu Zagreba.</p>
-                    <div class="flex gap-3 mt-6">
-                        <a href="https://instagram.com" target="_blank" class="w-9 h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 md:gap-8 mb-10 sm:mb-12 md:mb-16">
+                <div class="sm:col-span-2 md:col-span-1">
+                    <span class="text-lg sm:text-xl md:text-2xl tracking-[0.4em] sm:tracking-[0.5em] md:tracking-[0.6em] uppercase font-light text-white/80">Aura</span>
+                    <p class="text-white/25 text-xs sm:text-sm font-light mt-3 sm:mt-4 leading-relaxed max-w-xs" data-i18n="footerTagline">Ekskluzivno gastronomsko iskustvo u srcu Zagreba.</p>
+                    <div class="flex gap-3 mt-4 sm:mt-6">
+                        <a href="https://instagram.com" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         </a>
-                        <a href="https://facebook.com" target="_blank" class="w-9 h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
+                        <a href="https://facebook.com" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
                     </div>
                 </div>
-                <div class="space-y-4">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gold/50 mb-4" data-i18n="navigation">Navigacija</p>
-                    <a href="menu.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="menu">Menu</a>
-                    <a href="reservation.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
-                    <a href="contact.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="contact">Kontakt</a>
+                <div class="space-y-3 sm:space-y-4">
+                    <p class="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold/50 mb-3 sm:mb-4" data-i18n="navigation">Navigacija</p>
+                    <a href="menu.html" class="footer-link block text-white/30 text-xs sm:text-sm hover:text-gold transition" data-i18n="menu">Menu</a>
+                    <a href="reservation.html" class="footer-link block text-white/30 text-xs sm:text-sm hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+                    <a href="contact.html" class="footer-link block text-white/30 text-xs sm:text-sm hover:text-gold transition" data-i18n="contact">Kontakt</a>
                 </div>
-                <div class="space-y-4">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gold/50 mb-4" data-i18n="contactLabel">Kontakt</p>
-                    <p class="text-white/30 text-sm" data-i18n="footerAddress">Trg Kralja Tomislava 1, Zagreb</p>
-                    <p class="text-white/30 text-sm">+385 1 234 5678</p>
-                    <p class="text-white/30 text-sm">info@aura-dining.hr</p>
+                <div class="space-y-3 sm:space-y-4">
+                    <p class="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold/50 mb-3 sm:mb-4" data-i18n="contactLabel">Kontakt</p>
+                    <p class="text-white/30 text-xs sm:text-sm" data-i18n="footerAddress">Trg Kralja Tomislava 1, Zagreb</p>
+                    <p class="text-white/30 text-xs sm:text-sm">+385 1 234 5678</p>
+                    <p class="text-white/30 text-xs sm:text-sm">info@aura-dining.hr</p>
                 </div>
             </div>
 
-            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
-                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="hours">Svaki dan, 12:00 - 21:00</p>
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent mb-5 sm:mb-6 md:mb-8"></div>
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-center">
+                <p class="text-white/15 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em]" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
+                <p class="text-white/15 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em]" data-i18n="hours">Svaki dan, 12:00 - 21:00</p>
             </div>
         </div>
     </footer>
@@ -621,12 +621,14 @@
             if (s > 100) {
                 nav.style.background = 'rgba(10,10,10,0.92)';
                 nav.style.backdropFilter = 'blur(20px)';
-                nav.style.padding = '0.75rem 2rem';
+                nav.classList.add('py-2', 'sm:py-3');
+                nav.classList.remove('py-4', 'sm:py-5', 'md:py-6');
                 nav.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
             } else {
                 nav.style.background = 'transparent';
                 nav.style.backdropFilter = 'none';
-                nav.style.padding = '1.5rem 2rem';
+                nav.classList.remove('py-2', 'sm:py-3');
+                nav.classList.add('py-4', 'sm:py-5', 'md:py-6');
                 nav.style.borderBottom = 'none';
             }
             if (s > lastScroll && s > 500) {
