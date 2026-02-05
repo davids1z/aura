@@ -468,7 +468,12 @@
 
     <!-- ========== MENU PREVIEW ========== -->
     <section id="menuPreview" class="py-32 bg-black relative overflow-hidden">
-        <div class="menu-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center opacity-[0.03]" style="will-change: transform; transform: translateZ(0);"></div>
+        <!-- Fixed background that stays in place -->
+        <div class="menu-bg-fixed pointer-events-none" style="position: fixed; inset: 0; z-index: 0; transform: translateZ(0); will-change: transform;">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center opacity-[0.03]"></div>
+        </div>
+        <!-- Black overlay to hide fixed bg outside this section -->
+        <div class="absolute inset-0 bg-black -z-10"></div>
         <div class="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
             <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
                 <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
@@ -696,11 +701,14 @@
             if (img.complete) img.classList.add('loaded');
         });
 
-        // ===== Parallax Background (GPU accelerated) =====
+        // ===== Fixed Background Visibility =====
         (function() {
             var menuSection = document.getElementById('menuPreview');
-            var menuBg = menuSection ? menuSection.querySelector('.menu-bg') : null;
-            if (!menuBg) return;
+            var menuBg = document.querySelector('.menu-bg-fixed');
+            if (!menuSection || !menuBg) return;
+
+            menuBg.style.opacity = '0';
+            menuBg.style.transition = 'opacity 0.3s ease';
 
             var ticking = false;
             window.addEventListener('scroll', function() {
@@ -708,18 +716,23 @@
                     requestAnimationFrame(function() {
                         var rect = menuSection.getBoundingClientRect();
                         var windowHeight = window.innerHeight;
-
-                        // Only animate when section is in view
+                        // Show fixed bg only when menu section is in view
                         if (rect.bottom > 0 && rect.top < windowHeight) {
-                            var scrolled = (windowHeight - rect.top) / (windowHeight + rect.height);
-                            var parallaxOffset = (scrolled - 0.5) * 100; // Subtle movement
-                            menuBg.style.transform = 'translateY(' + parallaxOffset + 'px) translateZ(0)';
+                            menuBg.style.opacity = '1';
+                        } else {
+                            menuBg.style.opacity = '0';
                         }
                         ticking = false;
                     });
                     ticking = true;
                 }
             }, { passive: true });
+
+            // Initial check
+            var rect = menuSection.getBoundingClientRect();
+            if (rect.bottom > 0 && rect.top < window.innerHeight) {
+                menuBg.style.opacity = '1';
+            }
         })();
     </script>
     <script src="/js/smooth-scroll.js"></script>
