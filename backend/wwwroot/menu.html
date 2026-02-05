@@ -5,316 +5,332 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura | Menu</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="Aura Fine Dining - Degustacijski menu. Sezonski menu s lokalnim namirnicama.">
+    <meta property="og:title" content="Aura | Menu">
+    <meta property="og:description" content="Degustacijski menu s lokalnim namirnicama.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] },
+                    colors: { gold: { DEFAULT: '#c9a96e', light: '#dfc598', dark: '#a88a4e' } },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        body.modal-open { overflow: hidden; }
-        .font-serif { font-family: 'Playfair Display', serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
+        ::selection { background: #c9a96e; color: #0a0a0a; }
 
-        .fade-in { animation: fadeIn 0.8s ease forwards; opacity: 0; }
-        .fade-in-delay-1 { animation-delay: 0.15s; }
-        .fade-in-delay-2 { animation-delay: 0.3s; }
-        .fade-in-delay-3 { animation-delay: 0.45s; }
+        .noise { position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.025; }
+        .noise::after { content: ''; position: absolute; inset: -200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); animation: noise 0.5s steps(3) infinite; }
+        @keyframes noise { to { transform: translate3d(-7%, -2%, 0); } }
 
-        @keyframes fadeIn { to { opacity: 1; } }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
+
+        .reveal-up { opacity: 0; transform: translateY(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-up.visible { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-scale.visible { opacity: 1; transform: scale(1); }
+        .delay-1 { transition-delay: 0.15s !important; }
+        .delay-2 { transition-delay: 0.3s !important; }
+        .delay-3 { transition-delay: 0.45s !important; }
+
+        .scroll-reveal { opacity: 0; transform: translateY(50px); transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
 
         .menu-item:hover .menu-image { transform: scale(1.05); }
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .scroll-reveal.delay-1 { transition-delay: 0.25s; }
-        .scroll-reveal.delay-2 { transition-delay: 0.5s; }
-        .scroll-reveal.delay-3 { transition-delay: 0.75s; }
+        .hover-card { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-card:hover { transform: translateY(-6px); border-color: rgba(201,169,110,0.2); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5), 0 0 30px rgba(201,169,110,0.04); }
+        .glow-gold { box-shadow: 0 0 40px rgba(201,169,110,0.15), 0 0 80px rgba(201,169,110,0.05); }
 
-        /* Flying item animation - arc trajectory */
-        .flying-item {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #d4af37, #b8963a);
-            color: white;
-            border-radius: 50%;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5);
-        }
+        .footer-link { transition: all 0.3s ease; position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #c9a96e; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
 
-        /* Cart button pulse */
-        @keyframes cartPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
+        img { opacity: 0; transition: opacity 0.6s ease; }
+        img.loaded { opacity: 1; }
+        .img-zoom { overflow: hidden; }
+        .img-zoom img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .img-zoom:hover img { transform: scale(1.08); }
+
+        .flying-item { position: fixed; pointer-events: none; z-index: 9999; width: 36px; height: 36px; background: linear-gradient(135deg, #c9a96e, #dfc598); color: #0a0a0a; border-radius: 50%; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(201,169,110,0.5); }
+        @keyframes cartPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .cart-pulse { animation: cartPulse 0.3s ease; }
 
-        /* Modal styles - FIXED positioning for blur */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
+        /* Modal — simple, no position:fixed on body */
+        .modal-overlay { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .modal-content { position: relative; z-index: 1; }
+        .modal-enter { animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(12px); } to { opacity: 1; transform: none; } }
 
-        .modal-content {
-            position: relative;
-            z-index: 1;
-            max-height: calc(100vh - 2rem);
-            overflow-y: auto;
-            overscroll-behavior: contain;
-        }
+        /* Tabs */
+        .tab-bar { position: relative; }
+        .tab-indicator { position: absolute; bottom: 0; left: 0; width: 50%; height: 2px; background: linear-gradient(90deg, #c9a96e, #dfc598); border-radius: 1px; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 0 10px rgba(201,169,110,0.3); }
+        .tab-indicator.right { transform: translateX(100%); }
+        .cart-tab { cursor: pointer; }
 
-        .modal-enter { animation: modalEnter 0.3s ease; }
-        @keyframes modalEnter {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        /* Panel slide */
+        .panels-track { display: flex; width: 200%; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .panels-track.show-delivery { transform: translateX(-50%); }
+        .tab-panel { width: 50%; flex-shrink: 0; }
 
-        /* Gold accent */
-        .gold-gradient { background: linear-gradient(135deg, #d4af37, #f4d03f); }
-        .text-gold { color: #d4af37; }
+        /* Stagger entry */
+        .stagger-in > * { opacity: 0; transform: translateY(10px); animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .stagger-in > *:nth-child(1) { animation-delay: 0.03s; }
+        .stagger-in > *:nth-child(2) { animation-delay: 0.06s; }
+        .stagger-in > *:nth-child(3) { animation-delay: 0.09s; }
+        .stagger-in > *:nth-child(4) { animation-delay: 0.12s; }
+        .stagger-in > *:nth-child(5) { animation-delay: 0.15s; }
+        .stagger-in > *:nth-child(6) { animation-delay: 0.18s; }
+        .stagger-in > *:nth-child(7) { animation-delay: 0.21s; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 2px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 2px; }
+        @keyframes successPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+        @keyframes checkDraw { to { stroke-dashoffset: 0; } }
+        @keyframes ringDraw { to { stroke-dashoffset: 0; } }
+        @keyframes glowPulse { 0% { opacity: 0; transform: translateX(-50%) scale(0.5); } 50% { opacity: 1; } 100% { opacity: 0.5; transform: translateX(-50%) scale(1); } }
 
-        /* Input focus */
-        .input-elegant:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-        }
+        .custom-scroll::-webkit-scrollbar { width: 3px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 3px; }
+
+        .form-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); color: white; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .form-input:hover { border-color: rgba(201,169,110,0.15); background: rgba(255,255,255,0.045); transform: scale(1.015); box-shadow: 0 0 16px rgba(201,169,110,0.03); }
+        .form-input:focus { outline: none; border-color: rgba(201,169,110,0.35); background: rgba(255,255,255,0.05); transform: scale(1.015); box-shadow: 0 0 20px rgba(201,169,110,0.06), 0 0 0 2px rgba(201,169,110,0.05); }
+        .form-input::placeholder { color: rgba(255,255,255,0.15); transition: color 0.3s; }
+        .form-input:hover::placeholder { color: rgba(255,255,255,0.25); }
     </style>
 </head>
-<body class="bg-[#fafaf9] text-stone-800 antialiased">
+<body class="text-white antialiased">
+    <div class="noise"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 bg-[#fafaf9]/95 backdrop-blur-sm border-b border-stone-100">
-        <a href="index.html" class="text-xl tracking-[0.5em] uppercase font-light text-stone-800">Aura</a>
-        <div class="flex items-center gap-8">
-            <div class="space-x-8 text-[10px] uppercase tracking-[0.2em] hidden md:block">
-                <a href="index.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="home">Pocetna</a>
-                <a href="menu.html" class="text-stone-800 border-b border-stone-800 pb-1" data-i18n="menu">Menu</a>
-                <a href="reservation.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="reservation">Rezervacija</a>
-                <a href="contact.html" class="text-stone-400 hover:text-stone-800 transition" data-i18n="contact">Kontakt</a>
+    <nav class="fixed w-full z-50 transition-all duration-500 bg-[#0a0a0a]/90 backdrop-blur-lg border-b border-white/[0.03]" style="padding: 1rem 2rem;">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="group">
+                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white group-hover:text-gold transition-colors duration-500">Aura</span>
+            </a>
+            <div class="hidden md:flex items-center gap-12">
+                <a href="index.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="home">Pocetna</a>
+                <a href="menu.html" class="text-[11px] uppercase tracking-[0.25em] text-gold border-b border-gold/30 pb-1" data-i18n="menu">Menu</a>
+                <a href="reservation.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="reservation">Rezervacija</a>
+                <a href="contact.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="contact">Kontakt</a>
             </div>
-            <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="md:hidden w-8 h-8 flex flex-col items-center justify-center gap-1.5">
-                <span class="block w-5 h-[1px] bg-stone-800"></span>
-                <span class="block w-5 h-[1px] bg-stone-800"></span>
+            <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5">
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden fixed inset-0 z-50 bg-[#fafaf9]/98 backdrop-blur-sm flex flex-col items-center justify-center gap-8 md:hidden">
-        <button onclick="document.getElementById('mobileMenu').classList.add('hidden')" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-stone-800">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-        <a href="index.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="home">Pocetna</a>
-        <a href="menu.html" class="text-stone-800 text-sm uppercase tracking-[0.3em] font-medium" data-i18n="menu">Menu</a>
-        <a href="reservation.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="reservation">Rezervacija</a>
-        <a href="contact.html" class="text-stone-600 text-sm uppercase tracking-[0.3em] hover:text-stone-800 transition" data-i18n="contact">Kontakt</a>
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500 md:hidden">
+        <a href="index.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="home">Pocetna</a>
+        <a href="menu.html" class="text-gold text-lg tracking-[0.4em] uppercase font-light" data-i18n="menu">Menu</a>
+        <a href="reservation.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+        <a href="contact.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="contact">Kontakt</a>
+        <div class="w-12 h-[1px] bg-gold/30 my-2"></div>
+        <a href="reservation.html" class="px-8 py-3 border border-gold/40 text-gold text-[11px] uppercase tracking-[0.3em] rounded-full" data-i18n="ctaButton">Rezervirajte</a>
     </div>
 
     <!-- Floating Cart Button -->
-    <button onclick="openCart()" id="cartButton" class="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-40 bg-stone-900 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl hover:bg-stone-800 transition-all flex items-center justify-center group">
+    <button onclick="openCart()" id="cartButton" class="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-40 bg-gold text-black w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl hover:shadow-[0_0_30px_rgba(201,169,110,0.4)] transition-all flex items-center justify-center group">
         <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
         </svg>
-        <span id="cartCount" class="absolute -top-1 -right-1 w-6 h-6 gold-gradient text-stone-900 text-xs rounded-full flex items-center justify-center font-bold shadow-lg hidden">0</span>
+        <span id="cartCount" class="absolute -top-1 -right-1 w-6 h-6 bg-white text-black text-xs rounded-full flex items-center justify-center font-bold shadow-lg hidden">0</span>
     </button>
 
     <!-- Cart Modal -->
     <div id="cartModal" class="modal-overlay">
         <div class="modal-backdrop" onclick="closeCart()"></div>
-        <div class="modal-content modal-enter bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-            <!-- Header with back button -->
-            <div class="p-6 pb-2">
-                <button onclick="closeCart()" class="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 transition flex items-center justify-center">
-                    <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
+        <div class="modal-content modal-enter rounded-2xl w-full max-w-md mx-4 overflow-hidden" style="background: rgba(10,10,10,0.98); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); box-shadow: 0 25px 60px rgba(0,0,0,0.5);">
+
+            <!-- Header + close -->
+            <div class="flex justify-between items-center px-5 pt-5 pb-3">
+                <span id="cartItemCount" class="text-white/15 text-[10px] tracking-widest uppercase"></span>
+                <button onclick="closeCart()" class="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.08] transition flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
-            <!-- Title -->
-            <div class="text-center px-8 pb-6">
-                <h2 class="text-xl tracking-[0.3em] uppercase text-stone-800 font-medium" data-i18n="cart">Košarica</h2>
-                <p id="cartItemCount" class="text-stone-400 text-sm mt-2" data-i18n="yourOrder">Vaša narudžba</p>
+            <!-- Tabs -->
+            <div class="px-5">
+                <div class="tab-bar flex border-b border-white/[0.04]">
+                    <button onclick="switchTab('cart')" id="tabCart" class="cart-tab flex-1 flex items-center justify-center gap-2 pb-3 transition-all duration-300">
+                        <span id="stepCart" class="w-5 h-5 rounded-full bg-gold/20 text-gold text-[10px] font-semibold flex items-center justify-center transition-all duration-300">1</span>
+                        <span id="labelCart" class="text-[11px] uppercase tracking-[0.2em] text-gold transition-all duration-300" data-i18n="cart">Kosarica</span>
+                    </button>
+                    <button onclick="switchTab('delivery')" id="tabDelivery" class="cart-tab flex-1 flex items-center justify-center gap-2 pb-3 transition-all duration-300">
+                        <span id="stepDelivery" class="w-5 h-5 rounded-full bg-white/[0.05] text-white/20 text-[10px] font-semibold flex items-center justify-center transition-all duration-300">2</span>
+                        <span id="labelDelivery" class="text-[11px] uppercase tracking-[0.2em] text-white/20 transition-all duration-300" data-i18n="checkoutTitle">Dostava</span>
+                    </button>
+                    <div id="tabIndicator" class="tab-indicator"></div>
+                </div>
             </div>
 
-            <!-- Cart Content -->
-            <div class="px-8 pb-8 max-h-[50vh] overflow-y-auto custom-scroll">
-                <!-- Empty state -->
-                <div id="cartEmpty" class="py-12 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-stone-100 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
+            <!-- Panels -->
+            <div class="overflow-hidden">
+                <div id="panelsTrack" class="panels-track">
+                    <!-- Cart panel -->
+                    <div class="tab-panel">
+                        <div id="cartEmpty" class="py-14 text-center">
+                            <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white/[0.06]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            </div>
+                            <p class="text-white/20 text-sm font-light" data-i18n="emptyCart">Kosarica je prazna</p>
+                        </div>
+                        <div id="cartContent" class="hidden">
+                            <div class="px-5 pt-4 pb-0">
+                                <div id="cartItems" class="space-y-2 max-h-[42vh] overflow-y-auto custom-scroll pr-1"></div>
+                            </div>
+                            <div class="px-5 py-5">
+                                <div class="flex justify-between items-center py-3 mb-4 border-t border-white/[0.04]">
+                                    <span class="text-white/25 text-xs uppercase tracking-widest" data-i18n="total">Ukupno</span>
+                                    <span id="cartTotal" class="text-xl font-light text-gold">0 &#8364;</span>
+                                </div>
+                                <button onclick="switchTab('delivery')" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-gold to-gold-light text-black py-3.5 rounded-xl font-semibold tracking-wider uppercase text-[12px] transition-all hover:shadow-[0_0_25px_rgba(201,169,110,0.2)] active:scale-[0.98]" data-i18n="continueToOrder">
+                                    Nastavi na narudzbu
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-stone-400" data-i18n="emptyCart">Košarica je prazna</p>
-                </div>
 
-                <!-- Cart Items -->
-                <div id="cartItems" class="space-y-3 hidden"></div>
-            </div>
-
-            <!-- Footer -->
-            <div id="cartFooter" class="px-8 pb-8 hidden">
-                <div class="flex justify-between items-center py-4 border-t border-stone-100 mb-4">
-                    <span class="text-stone-500" data-i18n="total">Ukupno</span>
-                    <span id="cartTotal" class="text-2xl font-medium text-stone-800">0 €</span>
-                </div>
-                <button onclick="proceedToCheckout()" class="w-full bg-stone-900 text-white py-4 rounded-2xl font-medium tracking-wider uppercase text-sm hover:bg-stone-800 transition" data-i18n="continueToOrder">
-                    Nastavi na narudžbu
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div id="checkoutModal" class="modal-overlay">
-        <div class="modal-backdrop" onclick="closeCheckoutModal()"></div>
-        <div class="modal-content modal-enter bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-            <!-- Header with back button -->
-            <div class="p-6 pb-2">
-                <button onclick="closeCheckoutModal(); setTimeout(() => openCart(), 200);" class="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 transition flex items-center justify-center">
-                    <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Title -->
-            <div class="text-center px-8 pb-6">
-                <h2 class="text-xl tracking-[0.3em] uppercase text-stone-800 font-medium" data-i18n="checkoutTitle">Dostava</h2>
-                <p class="text-stone-400 text-sm mt-2" data-i18n="deliveryData">Unesite podatke za dostavu</p>
-            </div>
-
-            <form id="checkoutForm" class="px-8 pb-8" onsubmit="handleCheckout(event)">
-                <!-- Contact Fields -->
-                <div class="space-y-4">
-                    <input type="text" id="deliveryFirstName" required data-i18n="firstName"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400">
-
-                    <input type="text" id="deliveryLastName" required data-i18n="lastName"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400">
-
-                    <input type="email" id="deliveryEmail" required data-i18n="email"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400">
-
-                    <input type="tel" id="deliveryPhone" required data-i18n="phone"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400">
-
-                    <input type="text" id="deliveryAddress" required data-i18n="deliveryAddress"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400">
-
-                    <textarea id="deliveryNotes" rows="2" data-i18n="noteOptional"
-                        class="w-full px-5 py-4 bg-stone-100 border-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-stone-300 transition text-stone-700 placeholder-stone-400 resize-none"></textarea>
-                </div>
-
-                <!-- Order Summary -->
-                <div class="mt-6 p-4 bg-stone-50 rounded-2xl">
-                    <div class="flex items-center justify-between text-sm text-stone-500 mb-3">
-                        <span data-i18n="yourOrder">Vaša narudžba</span>
-                        <span id="checkoutItemCount"></span>
-                    </div>
-                    <div id="checkoutItems" class="space-y-1 text-sm text-stone-600 mb-3 max-h-24 overflow-y-auto"></div>
-                    <div class="border-t border-stone-200 pt-3 flex justify-between items-center">
-                        <span class="text-stone-600 font-medium" data-i18n="total">Ukupno</span>
-                        <span id="checkoutTotal" class="text-lg font-medium text-stone-800"></span>
+                    <!-- Delivery panel -->
+                    <div class="tab-panel">
+                        <!-- Empty: no items -->
+                        <div id="deliveryEmpty" class="py-14 text-center">
+                            <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white/[0.06]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            </div>
+                            <p class="text-white/20 text-sm font-light" data-i18n="addItemsFirst">Prvo dodajte artikle u kosaricu</p>
+                        </div>
+                        <!-- Form: has items -->
+                        <div id="deliveryContent" class="p-5 hidden">
+                            <div class="p-3.5 rounded-xl mb-4" style="background: rgba(201,169,110,0.03); border: 1px solid rgba(201,169,110,0.07);">
+                                <div id="deliverySummary" class="space-y-1 text-[13px] max-h-20 overflow-y-auto custom-scroll"></div>
+                                <div class="mt-2 pt-2 flex justify-between items-center border-t border-gold/[0.07]">
+                                    <span class="text-gold/30 text-xs" data-i18n="total">Ukupno</span>
+                                    <span id="deliveryTotal" class="text-base font-light text-gold"></span>
+                                </div>
+                            </div>
+                            <form id="checkoutForm" onsubmit="handleCheckout(event)">
+                                <div id="deliveryFields" class="space-y-2.5">
+                                    <div class="grid grid-cols-2 gap-2.5">
+                                        <input type="text" id="deliveryFirstName" required class="form-input w-full px-4 py-3 rounded-xl text-sm font-light" placeholder="Ime">
+                                        <input type="text" id="deliveryLastName" required class="form-input w-full px-4 py-3 rounded-xl text-sm font-light" placeholder="Prezime">
+                                    </div>
+                                    <input type="email" id="deliveryEmail" required class="form-input w-full px-4 py-3 rounded-xl text-sm font-light" placeholder="Email">
+                                    <input type="tel" id="deliveryPhone" required class="form-input w-full px-4 py-3 rounded-xl text-sm font-light" placeholder="Telefon">
+                                    <input type="text" id="deliveryAddress" required class="form-input w-full px-4 py-3 rounded-xl text-sm font-light" placeholder="Adresa za dostavu">
+                                    <textarea id="deliveryNotes" rows="2" class="form-input w-full px-4 py-3 rounded-xl text-sm font-light resize-none" placeholder="Napomena (opcionalno)"></textarea>
+                                </div>
+                                <div id="checkoutError" class="mt-3 p-3 bg-red-900/30 text-red-400 text-sm rounded-xl border border-red-500/20 hidden"></div>
+                                <button type="submit" class="w-full bg-gradient-to-r from-gold to-gold-light text-black py-3.5 rounded-xl font-semibold tracking-wider uppercase text-[12px] mt-5 transition-all hover:shadow-[0_0_25px_rgba(201,169,110,0.2)] active:scale-[0.98]" data-i18n="confirmOrder">
+                                    Naruci
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
-                <div id="checkoutError" class="mt-4 p-3 bg-red-50 text-red-600 text-sm rounded-xl hidden"></div>
-
-                <button type="submit" class="w-full bg-stone-900 text-white py-4 rounded-2xl font-medium tracking-wider uppercase text-sm mt-6 hover:bg-stone-800 transition" data-i18n="confirmOrder">
-                    Potvrdi narudžbu
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Success Modal -->
     <div id="successModal" class="modal-overlay">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content modal-enter bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-            <div class="p-8 text-center">
-                <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        <div class="modal-backdrop" onclick="closeSuccessModal()"></div>
+        <div class="modal-content modal-enter rounded-2xl w-full max-w-xs mx-4 overflow-hidden" style="background: rgba(10,10,10,0.98); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 60px rgba(16,185,129,0.04);">
+            <div class="relative pt-10 pb-2">
+                <div class="absolute top-6 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full" style="background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%); animation: glowPulse 0.8s ease 0.2s both;"></div>
+                <div class="relative w-12 h-12 mx-auto">
+                    <svg class="w-12 h-12 absolute inset-0" viewBox="0 0 48 48">
+                        <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(16,185,129,0.12)" stroke-width="1.5" stroke-dasharray="138" stroke-dashoffset="138" style="animation: ringDraw 0.7s cubic-bezier(0.16,1,0.3,1) 0.15s forwards;"/>
                     </svg>
+                    <div class="absolute inset-0 flex items-center justify-center" style="animation: successPop 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="stroke-dasharray:30;stroke-dashoffset:30;animation:checkDraw 0.35s ease 0.55s forwards;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
                 </div>
-                <h3 class="text-xl tracking-[0.2em] uppercase text-stone-800 font-medium mb-3" data-i18n="orderSuccess">Hvala vam!</h3>
-                <p class="text-stone-400 text-sm mb-8" data-i18n="orderSuccessMsg">Vaša narudžba je uspješno zaprimljena.<br>Uskoro ćemo vas kontaktirati.</p>
-                <button onclick="closeSuccessModal()" class="w-full bg-stone-900 text-white py-4 rounded-2xl font-medium tracking-wider uppercase text-sm hover:bg-stone-800 transition" data-i18n="ok">
+            </div>
+            <div class="px-8 pb-8 pt-4 text-center">
+                <h3 class="text-sm tracking-[0.3em] uppercase text-white/90 font-light mb-1.5" style="animation:fadeUp .4s cubic-bezier(.16,1,.3,1) .45s both;" data-i18n="orderSuccess">Hvala vam!</h3>
+                <p class="text-white/25 text-[13px] mb-6 leading-relaxed font-light" style="animation:fadeUp .4s cubic-bezier(.16,1,.3,1) .55s both;" data-i18n="orderSuccessMsg">Vasa narudzba je uspjesno zaprimljena.<br>Uskoro cemo vas kontaktirati.</p>
+                <button onclick="closeSuccessModal()" class="px-10 py-2.5 border border-gold/25 text-gold text-[11px] uppercase tracking-[0.2em] rounded-full hover:bg-gold/10 hover:border-gold/40 transition-all active:scale-95" style="animation:fadeUp .4s cubic-bezier(.16,1,.3,1) .65s both;" data-i18n="ok">
                     U redu
                 </button>
             </div>
         </div>
     </div>
 
-    <main class="pt-24 sm:pt-32 pb-20">
+    <main class="pt-32 sm:pt-40 pb-20">
         <!-- Hero Section -->
-        <header class="text-center mb-12 sm:mb-20 px-4 sm:px-8 fade-in">
-            <p class="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-4" data-i18n="season2026">Sezona 2026</p>
-            <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif italic mb-6" data-i18n="menuTitle">Degustacijski Menu</h1>
-            <div class="w-20 h-[1px] bg-gradient-to-r from-transparent via-stone-300 to-transparent mx-auto"></div>
-            <p class="text-stone-500 text-sm mt-8 max-w-lg mx-auto leading-relaxed" data-i18n="menuSubtitle">
+        <header class="text-center mb-16 sm:mb-24 px-4 sm:px-8">
+            <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                <p class="text-[10px] uppercase tracking-[0.5em] text-gold/70" data-i18n="season2026">Sezona 2026</p>
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+            </div>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif italic font-light mb-6 reveal-up delay-1" data-i18n="menuTitle">Degustacijski Menu</h1>
+            <div class="w-20 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent mx-auto reveal-up delay-2"></div>
+            <p class="text-white/30 text-sm mt-8 max-w-lg mx-auto leading-relaxed font-light reveal-up delay-3" data-i18n="menuSubtitle">
                 Sedam sljedova koji slave lokalnu zemlju, more i tradiciju.
-                Svaki tanjur priča svoju priču kroz pažljivo odabrane namirnice.
+                Svaki tanjur prica svoju pricu kroz pazljivo odabrane namirnice.
             </p>
         </header>
 
         <!-- Featured Image -->
-        <div class="max-w-5xl mx-auto px-4 sm:px-8 mb-16 sm:mb-24 scroll-reveal">
-            <div class="relative h-[220px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl">
+        <div class="max-w-5xl mx-auto px-4 sm:px-8 mb-20 sm:mb-28 scroll-reveal">
+            <div class="relative h-[220px] sm:h-[300px] md:h-[400px] rounded-2xl sm:rounded-3xl overflow-hidden glow-gold img-zoom">
                 <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
-                     class="w-full h-full object-cover" alt="Fine Dining Experience">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                     class="w-full h-full object-cover" alt="Fine Dining Experience" onload="this.classList.add('loaded')">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 text-white">
-                    <p class="text-[10px] uppercase tracking-[0.3em] opacity-80 mb-2" data-i18n="deliveryAvailable">Dostava dostupna</p>
-                    <p class="text-2xl font-serif italic" data-i18n="orderFavorites">Naručite svoja omiljena jela</p>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-1.5 h-1.5 bg-gold/60 rotate-45"></div>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-gold/70" data-i18n="deliveryAvailable">Dostava dostupna</p>
+                    </div>
+                    <p class="text-2xl font-serif italic font-light" data-i18n="orderFavorites">Narucite svoja omiljena jela</p>
                 </div>
             </div>
         </div>
 
         <!-- Menu Items - Dynamic -->
         <div id="menuContainer" class="max-w-4xl mx-auto px-4 sm:px-8">
-            <div class="text-center py-12 text-stone-400" data-i18n="loadingMenu">Učitavanje menija...</div>
+            <div class="text-center py-12 text-white/30" data-i18n="loadingMenu">
+                <div class="inline-block w-6 h-6 border-2 border-white/10 border-t-gold rounded-full animate-spin mb-3"></div>
+                <p>Ucitavanje menija...</p>
+            </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-16 text-center border-t border-stone-100 scroll-reveal">
-        <p class="text-xl font-serif tracking-[0.3em] text-stone-300 mb-4">AURA</p>
-        <p class="text-stone-400 text-sm" data-i18n="address">Trg Kralja Tomislava 1, Zagreb</p>
-        <p class="text-stone-400 text-sm mt-1" data-i18n="hours">Utorak - Subota, 18:00 - 00:00</p>
+    <footer class="bg-[#050505] pt-16 pb-10 relative">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-10">
+                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white/80">Aura</span>
+                <div class="flex items-center gap-8">
+                    <a href="index.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="home">Pocetna</a>
+                    <a href="reservation.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+                    <a href="contact.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="contact">Kontakt</a>
+                </div>
+            </div>
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="hours">Svaki dan, 12:00 - 21:00</p>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -358,13 +374,17 @@
                 if (!grouped[category] || grouped[category].length === 0) return;
 
                 html += `
-                    <section class="mb-16">
+                    <section class="mb-20">
                         <div class="flex items-center gap-4 mb-10 scroll-reveal">
-                            <div class="h-[1px] flex-1 bg-stone-200"></div>
-                            <h2 class="text-[11px] uppercase tracking-[0.4em] text-stone-400">${getCategoryName(category)}</h2>
-                            <div class="h-[1px] flex-1 bg-stone-200"></div>
+                            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/10"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-1.5 h-1.5 bg-gold/30 rotate-45"></div>
+                                <h2 class="text-[11px] uppercase tracking-[0.4em] text-gold/70">${getCategoryName(category)}</h2>
+                                <div class="w-1.5 h-1.5 bg-gold/30 rotate-45"></div>
+                            </div>
+                            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/10"></div>
                         </div>
-                        <div class="space-y-8">
+                        <div class="space-y-6">
                 `;
 
                 grouped[category].forEach(item => {
@@ -374,36 +394,38 @@
                     const displayDesc = i18n.tDesc(item.name, item.description || '');
 
                     html += `
-                        <div class="menu-item scroll-reveal grid md:grid-cols-[1fr,140px] gap-6 pb-8 border-b border-stone-100 ${hasDiscount ? 'bg-green-50/50 -mx-4 px-4 py-4 rounded-xl' : ''}" data-id="${item.id}" data-name="${item.name}" data-price="${effectivePrice}">
-                            <div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <div class="flex items-center gap-2">
-                                        <h3 class="text-lg font-serif">${displayName}</h3>
-                                        ${hasDiscount ? `<span class="px-2 py-1 text-xs bg-green-500 text-white rounded-full font-medium">-${item.discountPercent}%</span>` : ''}
+                        <div class="menu-item scroll-reveal glass rounded-2xl p-6 hover-card ${hasDiscount ? 'border-emerald-500/20' : ''}" data-id="${item.id}" data-name="${item.name}" data-price="${effectivePrice}">
+                            <div class="grid md:grid-cols-[1fr,140px] gap-6">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <h3 class="text-lg font-serif text-white/90">${displayName}</h3>
+                                            ${hasDiscount ? `<span class="px-2.5 py-1 text-[10px] bg-emerald-500/20 text-emerald-400 rounded-full font-medium border border-emerald-500/20">-${item.discountPercent}%</span>` : ''}
+                                        </div>
+                                        <div class="text-right ml-4">
+                                            ${hasDiscount ? `
+                                                <span class="text-sm text-white/20 line-through">${item.price.toFixed(2)} \u20AC</span>
+                                                <span class="text-lg text-emerald-400 font-light block">${effectivePrice.toFixed(2)} \u20AC</span>
+                                            ` : `
+                                                <span class="text-lg text-gold font-light">${item.price.toFixed(2)} \u20AC</span>
+                                            `}
+                                        </div>
                                     </div>
-                                    <div class="text-right">
-                                        ${hasDiscount ? `
-                                            <span class="text-sm text-stone-400 line-through">${item.price.toFixed(2)} €</span>
-                                            <span class="text-lg text-green-600 font-medium block">${effectivePrice.toFixed(2)} €</span>
-                                        ` : `
-                                            <span class="text-lg text-gold font-medium">${item.price.toFixed(2)} €</span>
-                                        `}
-                                    </div>
+                                    <p class="text-white/30 text-sm leading-relaxed font-light mb-4">${displayDesc}</p>
+                                    <button onclick="addToCart(this)" class="add-btn group flex items-center gap-2 px-5 py-2.5 border ${hasDiscount ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'border-white/10 text-white/50 hover:border-gold/30 hover:text-gold'} text-sm rounded-full transition-all duration-300">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                        ${i18n.t('addToCart')}
+                                    </button>
                                 </div>
-                                <p class="text-stone-400 text-sm leading-relaxed mb-4">${displayDesc}</p>
-                                <button onclick="addToCart(this)" class="add-btn group flex items-center gap-2 px-4 py-2 border ${hasDiscount ? 'border-green-400 text-green-600 hover:bg-green-500 hover:text-white' : 'border-stone-200 text-stone-600 hover:border-gold hover:text-gold'} text-sm rounded-full transition">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                    ${i18n.t('addToCart')}
-                                </button>
+                                ${item.imageUrl ? `
+                                <div class="h-40 w-full md:h-[120px] md:w-[140px] rounded-xl overflow-hidden relative flex-shrink-0 img-zoom">
+                                    <img src="${item.imageUrl}" class="menu-image w-full h-full object-cover transition-transform duration-500" alt="${item.name}" onload="this.classList.add('loaded')">
+                                    ${hasDiscount ? '<div class="absolute top-2 right-2 w-10 h-10 bg-emerald-500/90 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">-' + item.discountPercent + '%</div>' : ''}
+                                </div>
+                                ` : ''}
                             </div>
-                            ${item.imageUrl ? `
-                            <div class="h-40 w-full md:h-[110px] md:w-[140px] rounded-xl overflow-hidden relative flex-shrink-0">
-                                <img src="${item.imageUrl}" class="menu-image w-full h-full object-cover transition-transform duration-500" alt="${item.name}">
-                                ${hasDiscount ? '<div class="absolute top-2 right-2 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">-' + item.discountPercent + '%</div>' : ''}
-                            </div>
-                            ` : ''}
                         </div>
                     `;
                 });
@@ -412,7 +434,6 @@
             });
 
             container.innerHTML = html;
-            // Observe new scroll-reveal elements after dynamic render
             container.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
         }
 
@@ -423,7 +444,6 @@
             const name = menuItem.dataset.name;
             const price = parseFloat(menuItem.dataset.price);
 
-            // Add to cart data
             const existingItem = cart.find(item => item.id === id);
             if (existingItem) {
                 existingItem.quantity++;
@@ -432,7 +452,6 @@
             }
             localStorage.setItem('auraCart', JSON.stringify(cart));
 
-            // Create flying element
             const btnRect = btn.getBoundingClientRect();
             const cartBtn = document.getElementById('cartButton');
             const cartRect = cartBtn.getBoundingClientRect();
@@ -444,54 +463,44 @@
             flyingEl.style.top = (btnRect.top - 10) + 'px';
             document.body.appendChild(flyingEl);
 
-            // Calculate positions
             const startX = btnRect.left + btnRect.width / 2 - 18;
             const startY = btnRect.top - 10;
             const endX = cartRect.left + cartRect.width / 2 - 18;
             const endY = cartRect.top + cartRect.height / 2 - 18;
 
-            // Arc animation - jump up first, then curve to cart
             let startTime = null;
-            const duration = 1200; // Slower animation (1.2 seconds)
+            const duration = 1200;
 
             function animate(currentTime) {
                 if (!startTime) startTime = currentTime;
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // Easing function for smooth movement
                 const easeOutCubic = 1 - Math.pow(1 - progress, 3);
 
-                // Calculate position along arc
-                // First phase (0-0.3): jump up
-                // Second phase (0.3-1): curve to cart
                 let x, y, scale, opacity;
 
                 if (progress < 0.3) {
-                    // Jump UP phase
                     const jumpProgress = progress / 0.3;
                     const jumpEase = 1 - Math.pow(1 - jumpProgress, 2);
                     x = startX;
-                    y = startY - (80 * jumpEase); // Jump 80px up
-                    scale = 1 + (0.1 * jumpEase); // Slight scale up
+                    y = startY - (80 * jumpEase);
+                    scale = 1 + (0.1 * jumpEase);
                     opacity = 1;
                 } else {
-                    // Arc to cart phase
                     const arcProgress = (progress - 0.3) / 0.7;
                     const arcEase = 1 - Math.pow(1 - arcProgress, 2);
 
-                    const peakY = startY - 80; // Starting from top of jump
+                    const peakY = startY - 80;
 
-                    // Bezier curve calculation
                     const controlX = startX + (endX - startX) * 0.5;
-                    const controlY = Math.min(peakY, endY) - 100; // Arc peak above both points
+                    const controlY = Math.min(peakY, endY) - 100;
 
-                    // Quadratic bezier
                     const t = arcEase;
                     x = Math.pow(1-t, 2) * startX + 2 * (1-t) * t * controlX + Math.pow(t, 2) * endX;
                     y = Math.pow(1-t, 2) * peakY + 2 * (1-t) * t * controlY + Math.pow(t, 2) * endY;
 
-                    scale = 1.1 - (0.7 * arcEase); // Scale down as it approaches
+                    scale = 1.1 - (0.7 * arcEase);
                     opacity = 1 - (0.3 * arcEase);
                 }
 
@@ -503,7 +512,6 @@
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // Animation complete
                     cartBtn.classList.add('cart-pulse');
                     setTimeout(() => cartBtn.classList.remove('cart-pulse'), 300);
                     flyingEl.remove();
@@ -513,20 +521,19 @@
 
             requestAnimationFrame(animate);
 
-            // Button feedback
             btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ${i18n.t('added')}`;
-            btn.classList.add('border-green-500', 'text-green-600');
+            btn.classList.add('border-emerald-500/30', 'text-emerald-400');
             setTimeout(() => {
                 btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> ${i18n.t('addToCart')}`;
-                btn.classList.remove('border-green-500', 'text-green-600');
+                btn.classList.remove('border-emerald-500/30', 'text-emerald-400');
             }, 1500);
         }
 
         function updateCartUI() {
             const countEl = document.getElementById('cartCount');
             const emptyEl = document.getElementById('cartEmpty');
+            const contentEl = document.getElementById('cartContent');
             const itemsEl = document.getElementById('cartItems');
-            const footerEl = document.getElementById('cartFooter');
             const totalEl = document.getElementById('cartTotal');
             const itemCountEl = document.getElementById('cartItemCount');
 
@@ -544,33 +551,31 @@
 
             if (cart.length === 0) {
                 emptyEl.classList.remove('hidden');
-                itemsEl.classList.add('hidden');
-                footerEl.classList.add('hidden');
+                contentEl.classList.add('hidden');
             } else {
                 emptyEl.classList.add('hidden');
-                itemsEl.classList.remove('hidden');
-                footerEl.classList.remove('hidden');
+                contentEl.classList.remove('hidden');
 
                 itemsEl.innerHTML = cart.map((item, index) => `
-                    <div class="flex items-center gap-3 p-4 bg-stone-100 rounded-2xl">
+                    <div class="flex items-center gap-3 p-3 bg-white/[0.02] rounded-xl border border-white/5">
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-medium text-stone-700 text-sm truncate">${i18n.tName(item.name)}</h4>
-                            <p class="text-stone-400 text-sm">${item.price.toFixed(2)} €</p>
+                            <h4 class="font-light text-white/80 text-sm truncate">${i18n.tName(item.name)}</h4>
+                            <p class="text-gold/60 text-xs">${item.price.toFixed(2)} \u20AC</p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="updateQuantity(${index}, -1)" class="w-8 h-8 rounded-full bg-white hover:bg-stone-200 transition flex items-center justify-center text-stone-600 text-lg">−</button>
-                            <span class="w-6 text-center font-medium text-stone-700">${item.quantity}</span>
-                            <button onclick="updateQuantity(${index}, 1)" class="w-8 h-8 rounded-full bg-white hover:bg-stone-200 transition flex items-center justify-center text-stone-600 text-lg">+</button>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="updateQuantity(${index}, -1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-white/50 text-sm">\u2212</button>
+                            <span class="w-5 text-center font-light text-white/80 text-sm">${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-white/50 text-sm">+</button>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="w-8 h-8 rounded-full hover:bg-red-100 transition flex items-center justify-center text-stone-400 hover:text-red-500">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button onclick="removeFromCart(${index})" class="w-7 h-7 rounded-full hover:bg-red-500/10 transition flex items-center justify-center text-white/20 hover:text-red-400">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
                 `).join('');
 
-                totalEl.textContent = `${totalPrice.toFixed(2)} €`;
+                totalEl.textContent = `${totalPrice.toFixed(2)} \u20AC`;
             }
         }
 
@@ -587,45 +592,64 @@
             updateCartUI();
         }
 
+        let currentTab = 'cart';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const track = document.getElementById('panelsTrack');
+            const indicator = document.getElementById('tabIndicator');
+            const sC = document.getElementById('stepCart');
+            const lC = document.getElementById('labelCart');
+            const sD = document.getElementById('stepDelivery');
+            const lD = document.getElementById('labelDelivery');
+
+            if (tab === 'cart') {
+                track.classList.remove('show-delivery');
+                indicator.classList.remove('right');
+                sC.style.background = 'rgba(201,169,110,0.2)'; sC.style.color = '#c9a96e';
+                lC.style.color = '#c9a96e';
+                sD.style.background = 'rgba(255,255,255,0.05)'; sD.style.color = 'rgba(255,255,255,0.2)';
+                lD.style.color = 'rgba(255,255,255,0.2)';
+            } else {
+                track.classList.add('show-delivery');
+                indicator.classList.add('right');
+                sD.style.background = 'rgba(201,169,110,0.2)'; sD.style.color = '#c9a96e';
+                lD.style.color = '#c9a96e';
+                sC.style.background = 'rgba(16,185,129,0.12)'; sC.style.color = '#34d399';
+                lC.style.color = 'rgba(255,255,255,0.3)';
+                // Show form or empty based on cart
+                if (cart.length === 0) {
+                    document.getElementById('deliveryEmpty').classList.remove('hidden');
+                    document.getElementById('deliveryContent').classList.add('hidden');
+                } else {
+                    document.getElementById('deliveryEmpty').classList.add('hidden');
+                    document.getElementById('deliveryContent').classList.remove('hidden');
+                    updateDeliverySummary();
+                    var f = document.getElementById('deliveryFields');
+                    f.classList.remove('stagger-in');
+                    void f.offsetWidth;
+                    f.classList.add('stagger-in');
+                }
+            }
+        }
+
+        function updateDeliverySummary() {
+            const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            document.getElementById('deliverySummary').innerHTML = cart.map(i =>
+                `<div class="flex justify-between"><span class="text-white/30">${i.quantity}\u00D7 ${i18n.tName(i.name)}</span><span class="text-gold/35">${(i.price*i.quantity).toFixed(2)} \u20AC</span></div>`
+            ).join('');
+            document.getElementById('deliveryTotal').textContent = total.toFixed(2) + ' \u20AC';
+        }
+
         function openCart() {
+            switchTab('cart');
             document.getElementById('cartModal').classList.add('active');
-            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeCart() {
             document.getElementById('cartModal').classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
-
-        function proceedToCheckout() {
-            if (cart.length === 0) return;
-            closeCart();
-            setTimeout(() => openCheckoutModal(), 200);
-        }
-
-        function openCheckoutModal() {
-            const modal = document.getElementById('checkoutModal');
-            document.body.classList.add('modal-open');
-
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-            document.getElementById('checkoutItems').innerHTML = cart.map(item => `
-                <div class="flex justify-between">
-                    <span class="text-stone-600">${item.quantity}× ${i18n.tName(item.name)}</span>
-                    <span class="text-stone-500">${(item.price * item.quantity).toFixed(2)} €</span>
-                </div>
-            `).join('');
-
-            document.getElementById('checkoutTotal').textContent = `${totalPrice.toFixed(2)} €`;
-            document.getElementById('checkoutItemCount').textContent = `${totalItems} ${i18n.t('items')}`;
-
-            modal.classList.add('active');
-        }
-
-        function closeCheckoutModal() {
-            document.getElementById('checkoutModal').classList.remove('active');
-            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
         }
 
         async function handleCheckout(event) {
@@ -639,44 +663,33 @@
                 deliveryAddress: document.getElementById('deliveryAddress').value,
                 phone: document.getElementById('deliveryPhone').value,
                 notes: document.getElementById('deliveryNotes').value,
-                items: cart.map(item => ({
-                    menuItemId: item.id,
-                    quantity: item.quantity,
-                    notes: ''
-                }))
+                items: cart.map(item => ({ menuItemId: item.id, quantity: item.quantity, notes: '' }))
             };
 
             try {
-                const response = await fetch('/api/orders/guest', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
-                });
-                const data = await response.json();
-                if (!response.ok) {
-                    errorEl.textContent = data.error || 'Greška pri narudžbi';
-                    errorEl.classList.remove('hidden');
-                    return;
-                }
+                const res = await fetch('/api/orders/guest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+                const data = await res.json();
+                if (!res.ok) { errorEl.textContent = data.error || 'Greska pri narudzbi'; errorEl.classList.remove('hidden'); return; }
                 cart = [];
                 localStorage.setItem('auraCart', JSON.stringify(cart));
                 updateCartUI();
-                closeCheckoutModal();
-                setTimeout(() => openSuccessModal(), 200);
-            } catch (error) {
-                errorEl.textContent = 'Greška pri povezivanju';
+                closeCart();
+                document.getElementById('checkoutForm').reset();
+                setTimeout(openSuccessModal, 200);
+            } catch (e) {
+                errorEl.textContent = 'Greska pri povezivanju';
                 errorEl.classList.remove('hidden');
             }
         }
 
         function openSuccessModal() {
             document.getElementById('successModal').classList.add('active');
-            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeSuccessModal() {
             document.getElementById('successModal').classList.remove('active');
-            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
         }
 
         // Re-render dynamic content when language changes
@@ -684,6 +697,24 @@
             if (menuItems.length > 0) renderMenu();
             updateCartUI();
         });
+
+        // Mobile menu
+        var menuOpen = false;
+        function toggleMobileMenu() {
+            menuOpen = !menuOpen;
+            var menu = document.getElementById('mobileMenu');
+            var lines = document.querySelectorAll('.menu-line');
+            if (menuOpen) {
+                menu.style.opacity = '1'; menu.style.pointerEvents = 'all';
+                lines[0].style.transform = 'rotate(45deg) translateY(4px)';
+                lines[1].style.transform = 'rotate(-45deg) translateY(-4px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.style.opacity = '0'; menu.style.pointerEvents = 'none';
+                lines[0].style.transform = ''; lines[1].style.transform = '';
+                document.body.style.overflow = '';
+            }
+        }
     </script>
     <script>
         const scrollObserver = new IntersectionObserver((entries) => {
@@ -691,7 +722,12 @@
                 if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
-        document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+        document.querySelectorAll('.scroll-reveal, .reveal-up, .reveal-scale').forEach(el => scrollObserver.observe(el));
+
+        // Images
+        document.querySelectorAll('img:not([loading])').forEach(function(img) {
+            if (img.complete) img.classList.add('loaded');
+        });
     </script>
     <script src="/js/smooth-scroll.js"></script>
     <script src="/js/i18n.js?v=3"></script>

@@ -5,164 +5,700 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura | Fine Dining Zagreb</title>
     <script>
-        // Detekcija mobilnog uređaja - preusmjeri na Angular app
         (function() {
             var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (isMobile) {
-                window.location.href = '/mobile-angular/';
-            }
+            if (isMobile) { window.location.href = '/mobile-angular/'; }
         })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
-    <!-- SEO Meta Tags -->
     <meta name="description" content="Aura Fine Dining - Ekskluzivno gastronomsko iskustvo u srcu Zagreba. Sezonski degustacijski menu s lokalnim namirnicama.">
     <meta name="keywords" content="fine dining, Zagreb, restoran, degustacijski menu, hrvatska kuhinja, luksuzni restoran">
     <meta name="author" content="Aura Fine Dining">
-
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://aura-dining.hr/">
     <meta property="og:title" content="Aura | Fine Dining Zagreb">
     <meta property="og:description" content="Ekskluzivno gastronomsko iskustvo u srcu Zagreba. Rezervirajte svoj stol.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
-
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Aura | Fine Dining Zagreb">
     <meta property="twitter:description" content="Ekskluzivno gastronomsko iskustvo u srcu Zagreba.">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] },
+                    colors: { gold: { DEFAULT: '#c9a96e', light: '#dfc598', dark: '#a88a4e' } },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'marquee': 'marquee 40s linear infinite',
+                        'spin-slow': 'spin 25s linear infinite',
+                        'spin-reverse': 'spinReverse 30s linear infinite',
+                        'gradient-shift': 'gradientShift 8s ease infinite',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
+                        marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-50%)' } },
+                        spinReverse: { from: { transform: 'rotate(360deg)' }, to: { transform: 'rotate(0deg)' } },
+                        gradientShift: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hero-gradient { background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%); }
-        .reveal { animation: reveal 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
-        @keyframes reveal {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .scroll-reveal.delay-1 { transition-delay: 0.25s; }
-        .scroll-reveal.delay-2 { transition-delay: 0.5s; }
-        .scroll-reveal.delay-3 { transition-delay: 0.75s; }
+        * { margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; }
+        ::selection { background: #c9a96e; color: #0a0a0a; }
+
+        .noise { position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.025; }
+        .noise::after { content: ''; position: absolute; inset: -200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); animation: noise 0.5s steps(3) infinite; }
+        @keyframes noise { to { transform: translate3d(-7%, -2%, 0); } }
+
+        .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #c9a96e, #dfc598, #c9a96e); background-size: 200% 100%; animation: gradientShift 3s ease infinite; z-index: 200; transform-origin: left; }
+
+        .hero-gradient { background: linear-gradient(180deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.2) 25%, rgba(10,10,10,0.05) 45%, rgba(10,10,10,0.3) 65%, rgba(10,10,10,1) 100%); }
+        .hero-image { animation: heroZoom 25s ease-in-out infinite alternate; }
+        @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+
+        .reveal-up { opacity: 0; transform: translateY(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-up.visible { opacity: 1; transform: translateY(0); }
+        .reveal-left { opacity: 0; transform: translateX(-60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-left.visible { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-right.visible { opacity: 1; transform: translateX(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-scale.visible { opacity: 1; transform: scale(1); }
+        .delay-1 { transition-delay: 0.15s !important; }
+        .delay-2 { transition-delay: 0.3s !important; }
+        .delay-3 { transition-delay: 0.45s !important; }
+        .delay-4 { transition-delay: 0.6s !important; }
+        .delay-5 { transition-delay: 0.75s !important; }
+
+        .char { display: inline-block; opacity: 0; transform: translateY(100%); }
+        .char.visible { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        .marquee-track { display: flex; width: max-content; }
+
+        .img-zoom { overflow: hidden; }
+        .img-zoom img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .img-zoom:hover img { transform: scale(1.08); }
+
+        .magnetic-btn { position: relative; transition: transform 0.3s ease; }
+
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
+        .glass-strong { background: rgba(255,255,255,0.05); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); }
+
+        .gold-line { background: linear-gradient(90deg, transparent, #c9a96e, transparent); }
+        .counter-value { font-variant-numeric: tabular-nums; }
+
+        img { opacity: 0; transition: opacity 0.6s ease; }
+        img.loaded { opacity: 1; }
+
+        .gallery-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .gallery-scroll::-webkit-scrollbar { display: none; }
+        .gallery-scroll > * { scroll-snap-align: start; flex-shrink: 0; }
+
+        .hover-card { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-card:hover { transform: translateY(-8px); border-color: rgba(201,169,110,0.2); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 40px rgba(201,169,110,0.05); }
+
+        .glow-gold { box-shadow: 0 0 40px rgba(201,169,110,0.15), 0 0 80px rgba(201,169,110,0.05); }
+
+        .footer-link { transition: all 0.3s ease; position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #c9a96e; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
     </style>
 </head>
-<body class="bg-black text-stone-800 antialiased">
+<body class="text-white antialiased">
+    <div class="noise"></div>
+    <div class="scroll-progress" id="scrollProgress"></div>
 
-    <nav class="fixed w-full z-50 flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 mix-blend-difference text-white">
-        <span class="text-xl tracking-[0.5em] uppercase font-light">Aura</span>
-        <div class="space-x-8 text-[10px] uppercase tracking-[0.2em] hidden md:block">
-            <a href="menu.html" class="hover:opacity-50 transition" data-i18n="menu">Menu</a>
-            <a href="reservation.html" class="hover:opacity-50 transition" data-i18n="reservation">Rezervacija</a>
-            <a href="contact.html" class="hover:opacity-50 transition" data-i18n="contact">Kontakt</a>
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="mainNav" class="fixed w-full z-50 transition-all duration-500" style="padding: 1.5rem 2rem;">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="relative z-10 group">
+                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white group-hover:text-gold transition-colors duration-500">Aura</span>
+            </a>
+            <div class="hidden md:flex items-center gap-12">
+                <a href="menu.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="menu">Menu</a>
+                <a href="reservation.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="reservation">Rezervacija</a>
+                <a href="contact.html" class="nav-link text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="contact">Kontakt</a>
+                <a href="reservation.html" class="magnetic-btn ml-4 px-6 py-2.5 border border-gold/40 text-gold text-[10px] uppercase tracking-[0.3em] hover:bg-gold hover:text-black transition-all duration-500 rounded-full">
+                    <span data-i18n="ctaButton">Rezervirajte</span>
+                </a>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden relative z-10 w-10 h-10 flex flex-col items-center justify-center gap-1.5" id="menuToggle">
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+            </button>
         </div>
-        <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="md:hidden w-8 h-8 flex flex-col items-center justify-center gap-1.5">
-            <span class="block w-5 h-[1px] bg-white"></span>
-            <span class="block w-5 h-[1px] bg-white"></span>
-        </button>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden fixed inset-0 z-40 bg-black/95 flex flex-col items-center justify-center gap-8 md:hidden">
-        <button onclick="document.getElementById('mobileMenu').classList.add('hidden')" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-        <a href="menu.html" class="text-white text-sm uppercase tracking-[0.3em] hover:opacity-50 transition" data-i18n="menu">Menu</a>
-        <a href="reservation.html" class="text-white text-sm uppercase tracking-[0.3em] hover:opacity-50 transition" data-i18n="reservation">Rezervacija</a>
-        <a href="contact.html" class="text-white text-sm uppercase tracking-[0.3em] hover:opacity-50 transition" data-i18n="contact">Kontakt</a>
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500">
+        <a href="menu.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="menu">Menu</a>
+        <a href="reservation.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+        <a href="contact.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="contact">Kontakt</a>
+        <div class="w-12 h-[1px] bg-gold/30 my-4"></div>
+        <a href="reservation.html" class="px-8 py-3 border border-gold/40 text-gold text-[11px] uppercase tracking-[0.3em] rounded-full" data-i18n="ctaButton">Rezervirajte</a>
     </div>
 
-    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070"
-             class="absolute inset-0 w-full h-full object-cover scale-105" alt="Restaurant Interior">
+    <!-- ========== HERO ========== -->
+    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070"
+                 class="hero-image absolute inset-0 w-full h-full object-cover" alt="Restaurant Interior" onload="this.classList.add('loaded')">
+        </div>
         <div class="absolute inset-0 hero-gradient"></div>
 
-        <div class="relative text-center text-white px-4 reveal">
-            <p class="text-[10px] uppercase tracking-[0.5em] mb-4 opacity-80" data-i18n="season">Zagreb — Sezona 2026</p>
-            <h1 class="text-4xl sm:text-5xl md:text-7xl font-light tracking-tighter mb-6 sm:mb-8 italic" data-i18n="heroTitle">Okusi tišine.</h1>
-            <a href="reservation.html" class="inline-block border border-white px-8 sm:px-10 py-3 sm:py-4 text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all duration-500" data-i18n="ctaButton">
-                Rezervirajte svoj stol
-            </a>
+        <!-- Side decorations -->
+        <div class="absolute top-1/2 left-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent to-white/20"></div>
+            <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
+            <span class="text-[9px] tracking-[0.4em] uppercase text-white/30" style="writing-mode: vertical-rl;">Fine Dining Zagreb</span>
+            <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
+            <div class="w-[1px] h-24 bg-gradient-to-b from-white/20 to-transparent"></div>
         </div>
-    </section>
+        <div class="absolute top-1/2 right-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent to-white/20"></div>
+            <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
+            <span class="text-[9px] tracking-[0.4em] uppercase text-white/30" style="writing-mode: vertical-rl;">Est. 2026</span>
+            <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
+            <div class="w-[1px] h-24 bg-gradient-to-b from-white/20 to-transparent"></div>
+        </div>
 
-    <div class="bg-[#fafaf9]">
-    <section class="max-w-6xl mx-auto px-4 sm:px-8 py-16 sm:py-32 grid md:grid-cols-2 gap-10 sm:gap-20 items-center">
-        <div class="space-y-8 scroll-reveal">
-            <h2 class="text-[10px] uppercase tracking-[0.4em] text-stone-400" data-i18n="philosophy">Filozofija</h2>
-            <h3 class="text-3xl font-light leading-snug" data-i18n="philosophyTitle">Minimalizam na tanjuru, <br>maksimalizam u okusu.</h3>
-            <p class="text-stone-500 font-light leading-relaxed text-sm" data-i18n="philosophyText">
-                Aura nije samo restoran, već putovanje kroz osjetila. Svaka namirnica u sezoni 2026. pažljivo je odabrana s lokalnih OPG-ova, tretirana s poštovanjem i pretvorena u umjetnost.
+        <!-- Corner ornaments -->
+        <div class="absolute top-24 left-12 hidden lg:block">
+            <div class="w-16 h-[1px] bg-gold/20"></div>
+            <div class="w-[1px] h-16 bg-gold/20"></div>
+        </div>
+        <div class="absolute top-24 right-12 hidden lg:block">
+            <div class="w-16 h-[1px] bg-gold/20 ml-auto"></div>
+            <div class="w-[1px] h-16 bg-gold/20 ml-auto"></div>
+        </div>
+
+        <div class="relative text-center px-4 max-w-5xl mx-auto">
+            <div class="mb-8 flex items-center justify-center gap-6">
+                <div class="w-16 h-[1px] bg-gradient-to-r from-transparent to-gold/50"></div>
+                <div class="flex items-center gap-3">
+                    <div class="w-1.5 h-1.5 bg-gold/40 rotate-45"></div>
+                    <p class="text-[10px] uppercase tracking-[0.6em] text-gold/80" data-i18n="season">Zagreb &#8212; Sezona 2026</p>
+                    <div class="w-1.5 h-1.5 bg-gold/40 rotate-45"></div>
+                </div>
+                <div class="w-16 h-[1px] bg-gradient-to-l from-transparent to-gold/50"></div>
+            </div>
+            <h1 id="heroTitle" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif italic font-light tracking-tight leading-[0.9] mb-8">
+                <span class="block overflow-hidden"><span class="char" style="transition-delay:0.1s" data-i18n="heroTitle">Okusi</span></span>
+                <span class="block overflow-hidden mt-2"><span class="char" style="transition-delay:0.3s">ti&#353;ine.</span></span>
+            </h1>
+            <div class="w-12 h-[1px] gold-line mx-auto mb-8 opacity-0" id="heroLine"></div>
+            <p class="text-white/40 text-sm max-w-lg mx-auto mb-12 font-light leading-relaxed reveal-up" data-i18n="philosophyText">
+                Aura nije samo restoran, ve&#263; putovanje kroz osjetila. Svaki detalj osmi&#353;ljen da probudi emocije.
             </p>
-            <div class="pt-4 text-[10px] uppercase tracking-[0.2em] font-medium border-b border-stone-200 inline-block pb-1 cursor-pointer hover:border-stone-800 transition" data-i18n="exploreStory">
-                Istražite našu priču
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal-up delay-2">
+                <a href="reservation.html" class="magnetic-btn group relative px-10 py-4 bg-gold text-black text-[10px] uppercase tracking-[0.4em] font-medium rounded-full overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(201,169,110,0.3)]">
+                    <span class="relative z-10" data-i18n="ctaButton">Rezervirajte svoj stol</span>
+                </a>
+                <a href="menu.html" class="magnetic-btn px-10 py-4 border border-white/20 text-white text-[10px] uppercase tracking-[0.4em] rounded-full hover:border-gold/50 hover:text-gold transition-all duration-500">
+                    <span data-i18n="menu">Menu</span>
+                </a>
             </div>
         </div>
-        <div class="relative h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-sm shadow-2xl scroll-reveal delay-1">
-            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1974"
-                 class="w-full h-full object-cover" alt="Fine Dining Plate">
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 animate-float">
+            <span class="text-[8px] uppercase tracking-[0.4em] text-white/30">Scroll</span>
+            <div class="w-[1px] h-8 bg-gradient-to-b from-white/30 to-transparent"></div>
         </div>
     </section>
 
-    <section class="bg-stone-100 py-16 sm:py-32 px-4 sm:px-8">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
-            <div class="h-80 overflow-hidden group scroll-reveal">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1887"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Detail">
-            </div>
-            <div class="h-80 overflow-hidden flex items-center justify-center p-8 bg-white text-center italic font-light text-xl scroll-reveal delay-1" data-i18n="quote">
-                "Hrana koja priča priču o zemlji, moru i ljudima."
-            </div>
-            <div class="h-80 overflow-hidden group scroll-reveal delay-2">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700" alt="Detail">
-            </div>
+    <!-- ========== MARQUEE ========== -->
+    <div class="py-6 border-y border-white/5 overflow-hidden bg-black">
+        <div class="marquee-track animate-marquee">
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Fine Dining</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Zagreb</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Sezona 2026</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Degustacijski Menu</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Lokalne Namirnice</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Fine Dining</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Zagreb</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Sezona 2026</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Degustacijski Menu</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
+            <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8">Lokalne Namirnice</span>
+            <span class="text-gold/20 mx-4">&#10022;</span>
         </div>
-    </section>
-
-    <footer class="py-16 sm:py-32 text-center px-4 scroll-reveal">
-        <h4 class="text-xl sm:text-2xl font-light mb-8 sm:mb-10 tracking-widest uppercase" data-i18n="joinUs">Pridružite nam se</h4>
-        <a href="reservation.html" class="bg-stone-900 text-white px-8 sm:px-12 py-4 sm:py-5 rounded-full text-[10px] uppercase tracking-[0.3em] hover:bg-stone-700 transition shadow-xl shadow-stone-200" data-i18n="secureSpot">
-            Osigurajte termin
-        </a>
-
-        <!-- Social Links -->
-        <div class="flex justify-center space-x-6 mt-16">
-            <a href="https://instagram.com" target="_blank" class="text-stone-400 hover:text-stone-800 transition">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="https://facebook.com" target="_blank" class="text-stone-400 hover:text-stone-800 transition">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            </a>
-        </div>
-
-        <div class="mt-12 text-[9px] text-stone-400 uppercase tracking-widest space-y-2">
-            <p>Trg Kralja Tomislava 1, Zagreb</p>
-            <p class="mt-4" data-i18n="hours">Radno vrijeme: Svaki dan, 12:00 - 21:00</p>
-            <p class="mt-4" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
-        </div>
-    </footer>
     </div>
 
+    <!-- ========== PHILOSOPHY ========== -->
+    <section class="relative py-32 md:py-48 bg-[#0a0a0a]">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-gold/[0.02] rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-gold/[0.015] rounded-full blur-[100px]"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <div class="space-y-8">
+                    <div class="reveal-up">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                            <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70" data-i18n="philosophy">Filozofija</span>
+                        </div>
+                        <div class="w-16 h-[1px] bg-gradient-to-r from-gold/40 to-transparent"></div>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-serif italic font-light leading-[1.15] reveal-up delay-1" data-i18n="philosophyTitle">
+                        Minimalizam na tanjuru, <br>maksimalizam u okusu.
+                    </h2>
+                    <p class="text-white/40 font-light leading-[1.9] text-[15px] max-w-lg reveal-up delay-2" data-i18n="philosophyText">
+                        Aura nije samo restoran, ve&#263; putovanje kroz osjetila. Svaka namirnica u sezoni 2026. pa&#382;ljivo je odabrana s lokalnih OPG-ova, tretirana s po&#353;tovanjem i pretvorena u umjetnost.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 pt-4 reveal-up delay-3">
+                        <div class="glass rounded-xl p-5 hover-card">
+                            <p class="text-gold text-2xl font-serif italic mb-1">100%</p>
+                            <p class="text-white/40 text-[10px] uppercase tracking-[0.2em]">Lokalni sastojci</p>
+                        </div>
+                        <div class="glass rounded-xl p-5 hover-card">
+                            <p class="text-gold text-2xl font-serif italic mb-1">7</p>
+                            <p class="text-white/40 text-[10px] uppercase tracking-[0.2em]">Sljedova u sezoni</p>
+                        </div>
+                    </div>
+                    <div class="pt-4 reveal-up delay-4">
+                        <a href="menu.html" class="group inline-flex items-center gap-3 text-gold text-[11px] uppercase tracking-[0.3em] hover:gap-5 transition-all duration-500">
+                            <span data-i18n="exploreStory">Istra&#382;ite na&#353;u pri&#269;u</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative reveal-scale delay-2">
+                    <div class="img-zoom rounded-2xl overflow-hidden shadow-2xl shadow-black/50 glow-gold">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1974"
+                             class="w-full h-[500px] md:h-[600px] object-cover" alt="Fine Dining Plate" onload="this.classList.add('loaded')">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-6 max-w-[220px] reveal-up delay-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-gold">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        </div>
+                        <p class="text-white/60 text-xs font-light italic">"Jedinstven gustativan do&#382;ivljaj koji se ne zaboravlja."</p>
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 border border-gold/10 rounded-full animate-spin-slow"></div>
+                    <div class="absolute -top-8 -right-8 w-32 h-32 border border-gold/5 rounded-full animate-spin-reverse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS ========== -->
+    <section class="py-24 border-y border-white/5 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.03)_0%,transparent_70%)]"></div>
+        <div class="max-w-6xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                <div class="text-center reveal-up group">
+                    <div class="w-16 h-16 mx-auto mb-4 border border-white/5 rounded-full flex items-center justify-center group-hover:border-gold/20 transition-colors duration-500">
+                        <p class="text-3xl md:text-4xl font-serif text-gold counter-value" data-target="7">0</p>
+                    </div>
+                    <p class="text-white/30 text-[10px] uppercase tracking-[0.3em]">Sljedova</p>
+                </div>
+                <div class="text-center reveal-up delay-1 group">
+                    <div class="w-16 h-16 mx-auto mb-4 border border-white/5 rounded-full flex items-center justify-center group-hover:border-gold/20 transition-colors duration-500">
+                        <p class="text-3xl md:text-4xl font-serif text-gold counter-value" data-target="12">0</p>
+                    </div>
+                    <p class="text-white/30 text-[10px] uppercase tracking-[0.3em]">Lokalnih OPG-ova</p>
+                </div>
+                <div class="text-center reveal-up delay-2 group">
+                    <div class="w-16 h-16 mx-auto mb-4 border border-white/5 rounded-full flex items-center justify-center group-hover:border-gold/20 transition-colors duration-500">
+                        <p class="text-3xl md:text-4xl font-serif text-gold counter-value" data-target="95">0</p>
+                    </div>
+                    <p class="text-white/30 text-[10px] uppercase tracking-[0.3em]">&#8364; po osobi</p>
+                </div>
+                <div class="text-center reveal-up delay-3 group">
+                    <div class="w-16 h-16 mx-auto mb-4 border border-white/5 rounded-full flex items-center justify-center group-hover:border-gold/20 transition-colors duration-500">
+                        <p class="text-3xl md:text-4xl font-serif text-gold counter-value" data-target="2026">0</p>
+                    </div>
+                    <p class="text-white/30 text-[10px] uppercase tracking-[0.3em]">Sezona</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== EXPERIENCE ========== -->
+    <section class="py-32 md:py-48 bg-[#0a0a0a] relative">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/[0.01] rounded-full blur-[150px]"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+            <div class="text-center mb-20">
+                <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
+                    <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                    <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70">Iskustvo</span>
+                    <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-serif italic font-light reveal-up delay-1">Svaki detalj<br>pri&#269;a pri&#269;u.</h2>
+                <p class="text-white/30 text-sm max-w-lg mx-auto mt-6 font-light reveal-up delay-2">Od prvog koraka u prostor do zadnjeg zalogaja, svaki trenutak osmi&#353;ljen je da bude nezaboravan.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass rounded-2xl p-8 md:p-10 group hover-card reveal-up">
+                    <div class="w-14 h-14 rounded-2xl border border-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-500">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </div>
+                    <span class="text-gold/30 text-[10px] uppercase tracking-[0.3em]">01</span>
+                    <h3 class="text-lg font-serif mb-3 mt-2 text-white/90">Sezonske namirnice</h3>
+                    <p class="text-white/35 text-sm leading-relaxed font-light">Svaki sastojak dolazi iz provjerenih lokalnih izvora, pa&#382;ljivo odabran u skladu sa sezonom.</p>
+                    <div class="w-full h-[1px] bg-gradient-to-r from-gold/10 to-transparent mt-6"></div>
+                </div>
+                <div class="glass rounded-2xl p-8 md:p-10 group hover-card reveal-up delay-1">
+                    <div class="w-14 h-14 rounded-2xl border border-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-500">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    </div>
+                    <span class="text-gold/30 text-[10px] uppercase tracking-[0.3em]">02</span>
+                    <h3 class="text-lg font-serif mb-3 mt-2 text-white/90">Umjetnost prezentacije</h3>
+                    <p class="text-white/35 text-sm leading-relaxed font-light">Svaki tanjur je platno na kojem se spajaju boje, teksture i okusi u harmoni&#269;nu kompoziciju.</p>
+                    <div class="w-full h-[1px] bg-gradient-to-r from-gold/10 to-transparent mt-6"></div>
+                </div>
+                <div class="glass rounded-2xl p-8 md:p-10 group hover-card reveal-up delay-2">
+                    <div class="w-14 h-14 rounded-2xl border border-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-500">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    </div>
+                    <span class="text-gold/30 text-[10px] uppercase tracking-[0.3em]">03</span>
+                    <h3 class="text-lg font-serif mb-3 mt-2 text-white/90">Atmosfera & Intimnost</h3>
+                    <p class="text-white/35 text-sm leading-relaxed font-light">Prostor dizajniran za opu&#353;tenu eleganciju, gdje svaki gost do&#382;ivljava personaliziranu uslugu.</p>
+                    <div class="w-full h-[1px] bg-gradient-to-r from-gold/10 to-transparent mt-6"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== GALLERY ========== -->
+    <section class="py-32 bg-black overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+                <div>
+                    <div class="flex items-center gap-4 mb-6 reveal-up">
+                        <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                        <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70">Galerija</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-serif italic font-light reveal-up delay-1" data-i18n="quote">"Hrana koja pri&#269;a pri&#269;u o zemlji, moru i ljudima."</h2>
+                </div>
+            </div>
+
+            <div class="gallery-scroll pb-4 reveal-up delay-2">
+                <div class="img-zoom w-[300px] md:w-[400px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 1" onload="this.classList.add('loaded')">
+                </div>
+                <div class="img-zoom w-[250px] md:w-[350px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 2" onload="this.classList.add('loaded')">
+                </div>
+                <div class="img-zoom w-[300px] md:w-[400px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 3" onload="this.classList.add('loaded')">
+                </div>
+                <div class="img-zoom w-[250px] md:w-[350px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 4" onload="this.classList.add('loaded')">
+                </div>
+                <div class="img-zoom w-[300px] md:w-[400px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 5" onload="this.classList.add('loaded')">
+                </div>
+                <div class="img-zoom w-[250px] md:w-[350px] h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 6" onload="this.classList.add('loaded')">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CHEF'S TABLE ========== -->
+    <section class="relative py-32 md:py-48 bg-[#0a0a0a]">
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-gold/[0.015] rounded-full blur-[120px]"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <div class="order-2 lg:order-1 relative reveal-scale">
+                    <div class="img-zoom rounded-2xl overflow-hidden glow-gold">
+                        <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80&w=1000"
+                             class="w-full h-[450px] md:h-[550px] object-cover" alt="Chef at work" onload="this.classList.add('loaded')">
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 border border-gold/10 rounded-full animate-spin-slow"></div>
+                    <div class="absolute -bottom-4 -left-4 w-20 h-20 border border-gold/10 rounded-full animate-spin-reverse"></div>
+                    <div class="absolute -bottom-8 -right-4 md:-right-8 glass-strong rounded-2xl p-5 reveal-up delay-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-white/80 text-xs font-medium">15+ godina</p>
+                                <p class="text-white/40 text-[10px]">Europska iskustva</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 space-y-8">
+                    <div class="reveal-up">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                            <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70">Chef's Table</span>
+                        </div>
+                        <div class="w-16 h-[1px] bg-gradient-to-r from-gold/40 to-transparent"></div>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-serif italic font-light leading-[1.15] reveal-up delay-1">
+                        Tradicija susre&#263;e inovaciju.
+                    </h2>
+                    <p class="text-white/40 font-light leading-[1.9] text-[15px] reveal-up delay-2">
+                        Na&#353; kuhar donosi desetlje&#263;a iskustva iz najboljih europskih kuhinja. Svaki tanjur je fuzija dalmatinske tradicije i suvremenih tehnika, stvaraju&#263;i jedinstven gastronomski potpis.
+                    </p>
+                    <div class="space-y-4 reveal-up delay-3">
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-[1px] bg-gold/30"></div>
+                            <span class="text-white/50 text-sm font-light">Noma, Kopenhagen</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-[1px] bg-gold/30"></div>
+                            <span class="text-white/50 text-sm font-light">El Celler de Can Roca, Girona</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-[1px] bg-gold/30"></div>
+                            <span class="text-white/50 text-sm font-light">Pelegrini, &#352;ibenik</span>
+                        </div>
+                    </div>
+                    <blockquote class="border-l-2 border-gold/30 pl-6 reveal-up delay-4">
+                        <p class="text-white/50 font-serif italic text-lg leading-relaxed">"Kuhanje je razgovor izme&#273;u zemlje i onoga tko slu&#353;a."</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENU PREVIEW ========== -->
+    <section class="py-32 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center bg-fixed opacity-[0.03]"></div>
+        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
+            <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70" data-i18n="menu">Menu</span>
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-serif italic font-light mb-16 reveal-up delay-1" data-i18n="menuTitle">Degustacijski Menu</h2>
+
+            <div class="space-y-6 mb-16">
+                <div class="group flex items-center gap-4 reveal-up delay-1 py-2">
+                    <span class="text-gold/40 font-serif text-sm">I</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="text-white/60 text-sm font-light">Amuse-bouche &mdash; Tartare od tune</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+                <div class="group flex items-center gap-4 reveal-up delay-2 py-2">
+                    <span class="text-gold/40 font-serif text-sm">II</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="text-white/60 text-sm font-light">Carpaccio od hobotnice</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+                <div class="group flex items-center gap-4 reveal-up delay-3 py-2">
+                    <span class="text-gold/40 font-serif text-sm">III</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="text-white/60 text-sm font-light">Crni ri&#382;ot s jadranskim sipama</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+                <div class="group flex items-center gap-4 reveal-up delay-4 py-2">
+                    <span class="text-gold/40 font-serif text-sm">IV</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="text-white/60 text-sm font-light">Brancin u solnoj kori</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+                <div class="group flex items-center gap-4 reveal-up delay-5 py-2">
+                    <span class="text-gold/40 font-serif text-sm">V</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                    <span class="text-white/60 text-sm font-light">Dry-aged biftek s tartufom</span>
+                    <div class="flex-1 h-[1px] bg-white/5"></div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 reveal-up">
+                <a href="menu.html" class="magnetic-btn inline-flex items-center gap-3 px-10 py-4 border border-gold/30 text-gold text-[10px] uppercase tracking-[0.4em] rounded-full hover:bg-gold hover:text-black transition-all duration-500">
+                    <span>Pogledajte cijeli menu</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+                <span class="text-white/20 text-sm font-light">95 &#8364; / po osobi s vinskom pratnjom</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIAL ========== -->
+    <section class="py-32 md:py-40 bg-[#0a0a0a]">
+        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center">
+            <div class="text-gold/30 text-6xl font-serif mb-8 reveal-up">"</div>
+            <blockquote class="text-2xl md:text-4xl font-serif italic font-light leading-[1.4] text-white/70 reveal-up delay-1">
+                Aura redefini&#353;e pojam fine dininga u Zagrebu. Svaki posjet je novo iskustvo koje pamtite zauvijek.
+            </blockquote>
+            <div class="mt-10 reveal-up delay-2">
+                <p class="text-white/40 text-sm">&#8212; Gourmet Hrvatska Magazine</p>
+                <div class="flex items-center justify-center gap-1 mt-3">
+                    <span class="text-gold">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== GRAND CTA ========== -->
+    <section class="relative py-40 md:py-56 overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
+                 class="w-full h-full object-cover" alt="Fine Dining" onload="this.classList.add('loaded')">
+            <div class="absolute inset-0 bg-black/75"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.05)_0%,transparent_70%)]"></div>
+        </div>
+        <div class="relative z-10 text-center px-6">
+            <div class="flex items-center justify-center gap-4 mb-8 reveal-up">
+                <div class="w-12 h-[1px] bg-gradient-to-r from-transparent to-gold/50"></div>
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                <div class="w-12 h-[1px] bg-gradient-to-l from-transparent to-gold/50"></div>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.6em] text-gold/60 mb-6 reveal-up" data-i18n="joinUs">Pridru&#382;ite nam se</p>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-serif italic font-light mb-4 reveal-up delay-1">Va&#353; stol &#269;eka.</h2>
+            <p class="text-white/30 text-sm max-w-md mx-auto mb-10 font-light reveal-up delay-2">Rezervirajte svoje mjesto i prepustite se nezaboravnom gastronomskom putovanju.</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal-up delay-3">
+                <a href="reservation.html" class="magnetic-btn inline-block px-14 py-5 bg-gold text-black text-[11px] uppercase tracking-[0.4em] font-medium rounded-full hover:shadow-[0_0_60px_rgba(201,169,110,0.4)] transition-all duration-500" data-i18n="secureSpot">
+                    Osigurajte termin
+                </a>
+                <a href="contact.html" class="magnetic-btn inline-block px-10 py-4 border border-white/20 text-white text-[10px] uppercase tracking-[0.4em] rounded-full hover:border-gold/50 hover:text-gold transition-all duration-500">
+                    Kontaktirajte nas
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-[#050505] pt-20 pb-10 relative">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid md:grid-cols-3 gap-12 md:gap-8 mb-16">
+                <div>
+                    <span class="text-2xl tracking-[0.6em] uppercase font-light text-white/80">Aura</span>
+                    <p class="text-white/25 text-sm font-light mt-4 leading-relaxed max-w-xs">Ekskluzivno gastronomsko iskustvo u srcu Zagreba.</p>
+                    <div class="flex gap-3 mt-6">
+                        <a href="https://instagram.com" target="_blank" class="w-9 h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="w-9 h-9 rounded-lg border border-white/5 flex items-center justify-center text-white/20 hover:text-gold hover:border-gold/20 transition-all duration-300">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gold/50 mb-4">Navigacija</p>
+                    <a href="menu.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="menu">Menu</a>
+                    <a href="reservation.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="reservation">Rezervacija</a>
+                    <a href="contact.html" class="footer-link block text-white/30 text-sm hover:text-gold transition" data-i18n="contact">Kontakt</a>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gold/50 mb-4" data-i18n="contactLabel">Kontakt</p>
+                    <p class="text-white/30 text-sm">Trg Kralja Tomislava 1, Zagreb</p>
+                    <p class="text-white/30 text-sm">+385 1 234 5678</p>
+                    <p class="text-white/30 text-sm">info@aura-dining.hr</p>
+                </div>
+            </div>
+
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="hours">Svaki dan, 12:00 - 21:00</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+        // ===== Scroll Progress =====
+        var progressBar = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', function() {
+            var scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            if (progressBar) progressBar.style.transform = 'scaleX(' + scrolled + ')';
+        });
+
+        // ===== Nav =====
+        var nav = document.getElementById('mainNav');
+        var lastScroll = 0;
+        window.addEventListener('scroll', function() {
+            var s = window.scrollY;
+            if (s > 100) {
+                nav.style.background = 'rgba(10,10,10,0.92)';
+                nav.style.backdropFilter = 'blur(20px)';
+                nav.style.padding = '0.75rem 2rem';
+                nav.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+            } else {
+                nav.style.background = 'transparent';
+                nav.style.backdropFilter = 'none';
+                nav.style.padding = '1.5rem 2rem';
+                nav.style.borderBottom = 'none';
+            }
+            if (s > lastScroll && s > 500) {
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                nav.style.transform = 'translateY(0)';
+            }
+            lastScroll = s;
+        });
+
+        // ===== Mobile Menu =====
+        var menuOpen = false;
+        function toggleMobileMenu() {
+            menuOpen = !menuOpen;
+            var menu = document.getElementById('mobileMenu');
+            var lines = document.querySelectorAll('.menu-line');
+            if (menuOpen) {
+                menu.style.opacity = '1'; menu.style.pointerEvents = 'all';
+                lines[0].style.transform = 'rotate(45deg) translateY(4px)';
+                lines[1].style.transform = 'rotate(-45deg) translateY(-4px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.style.opacity = '0'; menu.style.pointerEvents = 'none';
+                lines[0].style.transform = ''; lines[1].style.transform = '';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // ===== Hero text =====
+        setTimeout(function() {
+            document.querySelectorAll('.char').forEach(function(c) { c.classList.add('visible'); });
+            var heroLine = document.getElementById('heroLine');
+            if (heroLine) { heroLine.style.opacity = '1'; heroLine.style.transition = 'opacity 1s ease 0.8s'; }
+        }, 500);
+
+        // ===== Scroll Reveal =====
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
-        document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        // ===== Counter =====
+        var counterObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var el = entry.target;
+                    var target = parseInt(el.dataset.target);
+                    var current = 0;
+                    var increment = target / 60;
+                    var timer = setInterval(function() {
+                        current += increment;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = Math.round(current);
+                    }, 30);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.counter-value').forEach(function(el) { counterObserver.observe(el); });
+
+        // ===== Image lazy load =====
+        document.querySelectorAll('img:not([loading])').forEach(function(img) {
+            if (img.complete) img.classList.add('loaded');
+        });
     </script>
     <script src="/js/smooth-scroll.js"></script>
-    <!-- i18n Script -->
     <script src="/js/i18n.js?v=3"></script>
 </body>
 </html>

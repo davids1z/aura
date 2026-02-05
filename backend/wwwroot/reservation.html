@@ -9,27 +9,66 @@
     <meta property="og:title" content="Aura | Rezervacija">
     <meta property="og:description" content="Rezervirajte stol za nezaboravno gastronomsko iskustvo.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] },
+                    colors: { gold: { DEFAULT: '#c9a96e', light: '#dfc598', dark: '#a88a4e' } },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; letter-spacing: 0.02em; }
+        * { margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; }
+        ::selection { background: #c9a96e; color: #0a0a0a; }
+
+        .noise { position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.025; }
+        .noise::after { content: ''; position: absolute; inset: -200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); animation: noise 0.5s steps(3) infinite; }
+        @keyframes noise { to { transform: translate3d(-7%, -2%, 0); } }
+
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
+        .glass-strong { background: rgba(255,255,255,0.05); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); }
+
+        .reveal-up { opacity: 0; transform: translateY(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-up.visible { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-scale.visible { opacity: 1; transform: scale(1); }
+        .delay-1 { transition-delay: 0.15s !important; }
+        .delay-2 { transition-delay: 0.3s !important; }
+        .delay-3 { transition-delay: 0.45s !important; }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .footer-link { transition: all 0.3s ease; position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #c9a96e; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
+
+        .form-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: white; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: rgba(201,169,110,0.4); box-shadow: 0 0 20px rgba(201,169,110,0.05); }
+        .form-input::placeholder { color: rgba(255,255,255,0.2); }
+
+        .modal-overlay {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+
         .fade-in { animation: fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .modal-overlay {
-            background: rgba(250, 250, 249, 0.97);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            overflow: hidden;
-        }
-        .modal-overlay .fade-in {
-            animation: modalSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+
         /* Hide reservation form until authenticated */
         .content-hidden { opacity: 0; pointer-events: none; }
         .content-visible { animation: contentReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -37,29 +76,32 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Slot buttons */
         .slot-btn { transition: all 0.15s ease; }
         .slot-btn:hover:not(:disabled):not(.slot-full) { transform: scale(1.02); }
         .slot-btn.selected {
-            background: #1C1917 !important;
-            border-color: #1C1917 !important;
-            box-shadow: 0 4px 12px rgba(28, 25, 23, 0.3);
+            background: #c9a96e !important;
+            border-color: #c9a96e !important;
+            box-shadow: 0 4px 20px rgba(201,169,110,0.3);
         }
-        .slot-btn.selected span { color: white !important; text-decoration: none !important; }
+        .slot-btn.selected span { color: #0a0a0a !important; text-decoration: none !important; }
         .slot-btn.slot-full {
-            background: #fee2e2;
+            background: rgba(239,68,68,0.1);
+            border-color: rgba(239,68,68,0.2);
             cursor: not-allowed;
         }
         .slot-btn.slot-full .slot-time {
             text-decoration: line-through;
-            color: #b91c1c;
+            color: #ef4444;
         }
         .slot-btn.slot-full .slot-status {
             text-decoration: none;
-            color: #dc2626;
+            color: #ef4444;
             font-weight: 500;
         }
 
-        /* Calendar styles - kao Flutter verzija */
+        /* Calendar */
         .cal-day {
             transition: all 0.2s ease;
             aspect-ratio: 1;
@@ -70,66 +112,82 @@
             transform: scale(1.05);
         }
         .cal-day.cal-selected {
-            background: #1C1917 !important;
-            color: white !important;
+            background: #c9a96e !important;
+            color: #0a0a0a !important;
             font-weight: 700;
         }
         .cal-day.cal-available {
-            background: #D1FAE5;
-            color: #065F46;
+            background: rgba(16,185,129,0.15);
+            color: #6ee7b7;
             cursor: pointer;
         }
         .cal-day.cal-limited {
-            background: #FEF3C7;
-            color: #92400E;
+            background: rgba(245,158,11,0.15);
+            color: #fbbf24;
             cursor: pointer;
         }
         .cal-day.cal-full {
-            background: #FEE2E2;
-            color: #991B1B;
+            background: rgba(239,68,68,0.15);
+            color: #fca5a5;
             cursor: not-allowed;
         }
         .cal-day.cal-closed {
-            background: #E5E5E5;
-            color: #737373;
+            background: rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.2);
             cursor: not-allowed;
             text-decoration: line-through;
         }
         .cal-day.cal-past {
-            background: #F5F5F5;
-            color: #A3A3A3;
+            background: rgba(255,255,255,0.02);
+            color: rgba(255,255,255,0.15);
             cursor: not-allowed;
         }
         .cal-day.cal-disabled {
             visibility: hidden;
         }
         .cal-day.cal-today:not(.cal-selected) {
-            outline: 2px solid #1C1917;
+            outline: 2px solid #c9a96e;
             outline-offset: -2px;
         }
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .scroll-reveal.delay-1 { transition-delay: 0.25s; }
-        .scroll-reveal.delay-2 { transition-delay: 0.5s; }
-        .scroll-reveal.delay-3 { transition-delay: 0.75s; }
     </style>
 </head>
-<body class="bg-[#fafaf9] text-stone-800 flex items-center justify-center min-h-screen p-2 sm:p-4">
+<body class="text-white antialiased">
+    <div class="noise"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-500 bg-[#0a0a0a]/90 backdrop-blur-lg border-b border-white/[0.03]" style="padding: 1rem 2rem;">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="group">
+                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white group-hover:text-gold transition-colors duration-500">Aura</span>
+            </a>
+            <div class="hidden md:flex items-center gap-12">
+                <a href="index.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="home">Pocetna</a>
+                <a href="menu.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="menu">Menu</a>
+                <a href="reservation.html" class="text-[11px] uppercase tracking-[0.25em] text-gold border-b border-gold/30 pb-1" data-i18n="reservation">Rezervacija</a>
+                <a href="contact.html" class="text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-gold transition-colors duration-300" data-i18n="contact">Kontakt</a>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5">
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+                <span class="menu-line block w-6 h-[1px] bg-white transition-all duration-300"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-all duration-500 md:hidden">
+        <a href="index.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="home">Pocetna</a>
+        <a href="menu.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="menu">Menu</a>
+        <a href="reservation.html" class="text-gold text-lg tracking-[0.4em] uppercase font-light" data-i18n="reservation">Rezervacija</a>
+        <a href="contact.html" class="text-white text-lg tracking-[0.4em] uppercase font-light hover:text-gold transition" data-i18n="contact">Kontakt</a>
+    </div>
 
     <!-- AUTH MODAL -->
     <div id="auth-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0"></div>
 
-        <div class="bg-white w-full max-w-[400px] p-8 rounded-[2rem] shadow-2xl relative fade-in">
-            <a href="javascript:void(0)" onclick="history.back()" class="absolute top-5 left-5 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="glass-strong w-full max-w-[400px] p-8 rounded-[2rem] shadow-2xl relative fade-in" style="background: rgba(15,15,15,0.95); border: 1px solid rgba(255,255,255,0.08);">
+            <a href="javascript:void(0)" onclick="history.back()" class="absolute top-5 left-5 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
             </a>
@@ -137,30 +195,30 @@
             <!-- Register Form -->
             <div id="register-form-container">
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-light tracking-[0.3em] uppercase" data-i18n="register">Registracija</h2>
-                    <p class="text-xs text-stone-400 mt-2" data-i18n="registerSubtitle">Kreirajte račun za rezervacije</p>
+                    <h2 class="text-xl font-light tracking-[0.3em] uppercase text-white" data-i18n="register">Registracija</h2>
+                    <p class="text-xs text-white/30 mt-2" data-i18n="registerSubtitle">Kreirajte racun za rezervacije</p>
                 </div>
 
                 <form id="register-form" class="space-y-4">
                     <input type="text" id="reg-name" data-i18n="fullName" required
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Puno ime">
                     <input type="email" id="reg-email" data-i18n="email" required
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Email">
                     <input type="tel" id="reg-phone" data-i18n="phone" required
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Telefon">
                     <input type="password" id="reg-password" data-i18n="passwordHint" required minlength="6"
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Lozinka (min. 6 znakova)">
 
-                    <div id="register-error" class="text-red-500 text-xs text-center hidden"></div>
+                    <div id="register-error" class="text-red-400 text-xs text-center hidden"></div>
 
-                    <button type="submit" class="w-full bg-stone-900 text-white py-4 rounded-xl hover:bg-stone-800 transition-all text-[10px] uppercase tracking-[0.3em]" data-i18n="registerBtn">
+                    <button type="submit" class="w-full bg-gold text-black py-4 rounded-xl hover:shadow-[0_0_30px_rgba(201,169,110,0.3)] transition-all text-[10px] uppercase tracking-[0.3em] font-medium" data-i18n="registerBtn">
                         Registriraj se
                     </button>
                 </form>
 
-                <div class="text-center mt-6 pt-4 border-t border-stone-100">
-                    <p class="text-xs text-stone-400" data-i18n="hasAccount">Imate račun?</p>
-                    <button onclick="showLogin()" class="text-xs text-stone-700 hover:text-stone-900 font-medium mt-1" data-i18n="loginLink">
+                <div class="text-center mt-6 pt-4 border-t border-white/5">
+                    <p class="text-xs text-white/30" data-i18n="hasAccount">Imate racun?</p>
+                    <button onclick="showLogin()" class="text-xs text-gold hover:text-gold-light font-medium mt-1" data-i18n="loginLink">
                         Prijavite se
                     </button>
                 </div>
@@ -169,26 +227,26 @@
             <!-- Login Form -->
             <div id="login-form-container" class="hidden">
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-light tracking-[0.3em] uppercase" data-i18n="login">Prijava</h2>
-                    <p class="text-xs text-stone-400 mt-2" data-i18n="loginSubtitle">Prijavite se za nastavak</p>
+                    <h2 class="text-xl font-light tracking-[0.3em] uppercase text-white" data-i18n="login">Prijava</h2>
+                    <p class="text-xs text-white/30 mt-2" data-i18n="loginSubtitle">Prijavite se za nastavak</p>
                 </div>
 
                 <form id="login-form" class="space-y-4">
                     <input type="email" id="login-email" data-i18n="email" required
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Email">
                     <input type="password" id="login-password" data-i18n="password" required
-                        class="w-full bg-stone-50 border-none rounded-xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none">
+                        class="form-input w-full rounded-xl p-4 text-sm font-light" placeholder="Lozinka">
 
-                    <div id="login-error" class="text-red-500 text-xs text-center hidden"></div>
+                    <div id="login-error" class="text-red-400 text-xs text-center hidden"></div>
 
-                    <button type="submit" class="w-full bg-stone-900 text-white py-4 rounded-xl hover:bg-stone-800 transition-all text-[10px] uppercase tracking-[0.3em]" data-i18n="loginBtn">
+                    <button type="submit" class="w-full bg-gold text-black py-4 rounded-xl hover:shadow-[0_0_30px_rgba(201,169,110,0.3)] transition-all text-[10px] uppercase tracking-[0.3em] font-medium" data-i18n="loginBtn">
                         Prijavi se
                     </button>
                 </form>
 
-                <div class="text-center mt-6 pt-4 border-t border-stone-100">
-                    <p class="text-xs text-stone-400" data-i18n="noAccount">Nemate račun?</p>
-                    <button onclick="showRegister()" class="text-xs text-stone-700 hover:text-stone-900 font-medium mt-1" data-i18n="registerLink">
+                <div class="text-center mt-6 pt-4 border-t border-white/5">
+                    <p class="text-xs text-white/30" data-i18n="noAccount">Nemate racun?</p>
+                    <button onclick="showRegister()" class="text-xs text-gold hover:text-gold-light font-medium mt-1" data-i18n="registerLink">
                         Registrirajte se
                     </button>
                 </div>
@@ -196,163 +254,199 @@
         </div>
     </div>
 
+    <!-- Hero -->
+    <section class="relative pt-32 pb-12 md:pt-44 md:pb-16 overflow-hidden">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/[0.02] rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gold/[0.015] rounded-full blur-[100px]"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12 text-center">
+            <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+                <span class="text-[10px] uppercase tracking-[0.5em] text-gold/70" data-i18n="season2026">Sezona 2026</span>
+                <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
+            </div>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-serif italic font-light mb-6 reveal-up delay-1" data-i18n="reservationTitle">Rezervirajte iskustvo.</h1>
+            <p class="text-white/30 text-sm max-w-lg mx-auto font-light leading-relaxed reveal-up delay-2" data-i18n="reservationSubtitle">
+                Odaberite datum, termin i broj gostiju. Prepustite se nezaboravnom gastronomskom putovanju.
+            </p>
+        </div>
+    </section>
+
     <!-- MAIN RESERVATION FORM -->
-    <div id="reservationCard" class="bg-white w-full max-w-[500px] p-5 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[3rem] shadow-xl shadow-stone-200/50 border border-stone-100 relative content-hidden">
+    <section class="pb-32 md:pb-40">
+        <div class="max-w-[560px] mx-auto px-4 sm:px-6">
+            <div id="reservationCard" class="glass rounded-[2rem] p-6 sm:p-8 md:p-10 relative content-hidden reveal-scale" style="background: rgba(15,15,15,0.6); border: 1px solid rgba(255,255,255,0.06);">
 
-        <!-- User Info Bar -->
-        <div id="user-bar" class="hidden absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-2 bg-stone-50 rounded-full pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 max-w-[60%] sm:max-w-none">
-            <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-stone-200 flex items-center justify-center">
-                    <span id="user-initial" class="text-[10px] font-medium text-stone-600"></span>
+                <!-- User Info Bar -->
+                <div id="user-bar" class="hidden absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-2 bg-white/5 rounded-full pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 max-w-[60%] sm:max-w-none border border-white/5">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center">
+                            <span id="user-initial" class="text-[10px] font-medium text-gold"></span>
+                        </div>
+                        <span id="user-name-display" class="text-xs text-white/60 font-light truncate max-w-[100px] sm:max-w-none"></span>
+                    </div>
+                    <button onclick="logout()" class="ml-1 w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors text-white/30 hover:text-white/60">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
                 </div>
-                <span id="user-name-display" class="text-xs text-stone-600 font-medium truncate max-w-[100px] sm:max-w-none"></span>
-            </div>
-            <button onclick="logout()" class="ml-1 w-6 h-6 flex items-center justify-center rounded-full hover:bg-stone-200 transition-colors text-stone-400 hover:text-stone-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-            </button>
-        </div>
 
-        <div id="booking-container">
-            <header class="text-center mb-8">
-                <a href="javascript:void(0)" onclick="history.back()" class="absolute top-6 left-6 text-stone-400 hover:text-stone-800 transition-colors text-sm" data-i18n="backHome">
-                    ← Natrag
-                </a>
-                <h1 class="text-2xl sm:text-3xl font-light tracking-[0.3em] sm:tracking-[0.4em] uppercase">Aura</h1>
-                <div class="w-12 h-[1px] bg-stone-300 mx-auto mt-4"></div>
-                <p class="text-[10px] text-stone-400 uppercase tracking-[0.2em] mt-4 italic" data-i18n="season2026">Sezona 2026.</p>
-            </header>
+                <div id="booking-container">
+                    <form id="res-form" class="space-y-6">
+                        <!-- Calendar Section -->
+                        <div class="space-y-3">
+                            <label class="block text-[9px] uppercase tracking-[0.2em] text-gold/50" data-i18n="selectDate">Odaberite datum</label>
 
-            <form id="res-form" class="space-y-6">
-                <!-- Calendar Section -->
-                <div class="space-y-3">
-                    <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="selectDate">Odaberite datum</label>
+                            <!-- Calendar Header -->
+                            <div class="flex items-center justify-between mb-2">
+                                <button type="button" id="prev-month" class="p-2 text-white/30 hover:text-gold transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                    </svg>
+                                </button>
+                                <h3 id="calendar-month" class="text-sm font-light text-white/70"></h3>
+                                <button type="button" id="next-month" class="p-2 text-white/30 hover:text-gold transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </div>
 
-                    <!-- Calendar Header -->
-                    <div class="flex items-center justify-between mb-2">
-                        <button type="button" id="prev-month" class="p-2 text-stone-400 hover:text-stone-800 transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                            </svg>
+                            <!-- Calendar Grid -->
+                            <div class="bg-white/[0.02] rounded-2xl p-4 border border-white/5">
+                                <div class="grid grid-cols-7 gap-1 mb-2">
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Pon</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Uto</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Sri</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Cet</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Pet</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Sub</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Ned</div>
+                                </div>
+                                <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+                                <div id="calendar-loading" class="hidden text-center py-4">
+                                    <div class="inline-block w-5 h-5 border-2 border-white/10 border-t-gold rounded-full animate-spin"></div>
+                                </div>
+                            </div>
+
+                            <!-- Legend -->
+                            <div class="flex flex-wrap justify-center gap-3 mt-3">
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 rounded" style="background: rgba(16,185,129,0.15);"></div>
+                                    <span class="text-[9px] text-white/30" data-i18n="available">Dostupno</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 rounded" style="background: rgba(245,158,11,0.15);"></div>
+                                    <span class="text-[9px] text-white/30" data-i18n="limited">Ograniceno</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 rounded" style="background: rgba(239,68,68,0.15);"></div>
+                                    <span class="text-[9px] text-white/30" data-i18n="full">Popunjeno</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 rounded bg-white/[0.03]"></div>
+                                    <span class="text-[9px] text-white/30" data-i18n="closed">Zatvoreno</span>
+                                </div>
+                            </div>
+
+                            <!-- Selected date display -->
+                            <div id="selected-date-display" class="hidden text-center py-3 bg-gold text-black rounded-xl mt-3">
+                                <p class="text-xs font-medium" id="selected-date-text"></p>
+                            </div>
+
+                            <input type="hidden" id="res-date" required>
+                        </div>
+
+                        <!-- Slot selection -->
+                        <div class="space-y-3 scroll-reveal" id="slot-container">
+                            <label class="block text-[9px] uppercase tracking-[0.2em] text-gold/50" data-i18n="availableSlots">Dostupni termini</label>
+                            <div id="slots-loading" class="hidden text-center py-6">
+                                <div class="inline-block w-6 h-6 border-2 border-white/10 border-t-gold rounded-full animate-spin"></div>
+                                <p class="text-xs text-white/30 mt-2" data-i18n="loadingSlots">Ucitavam termine...</p>
+                            </div>
+                            <div id="slots-closed" class="hidden text-center py-6 bg-red-500/10 rounded-2xl border border-red-500/20">
+                                <p class="text-red-400 text-sm font-medium" data-i18n="closed">Zatvoreno</p>
+                                <p id="closed-reason" class="text-red-400/60 text-xs mt-1"></p>
+                            </div>
+                            <div id="slots-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <p class="col-span-2 sm:col-span-3 text-center text-white/30 text-xs py-4" data-i18n="noSlots">Nema dostupnih termina</p>
+                            </div>
+                            <input type="hidden" id="res-slot" required>
+                        </div>
+
+                        <!-- Broj gostiju -->
+                        <div class="space-y-3 scroll-reveal">
+                            <label class="block text-[9px] uppercase tracking-[0.2em] text-gold/50" data-i18n="guests">Broj gostiju</label>
+                            <div class="flex items-center justify-between glass rounded-2xl p-2">
+                                <button type="button" onclick="updateGuests(-1)" class="w-12 h-12 flex items-center justify-center text-white/20 hover:text-gold transition-colors text-xl font-light">&#8212;</button>
+                                <span id="guest-count" class="text-base font-light text-white/80">2</span>
+                                <button type="button" onclick="updateGuests(1)" class="w-12 h-12 flex items-center justify-center text-white/20 hover:text-gold transition-colors text-xl font-light">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Posebni zahtjevi -->
+                        <div class="space-y-3 scroll-reveal">
+                            <label class="block text-[9px] uppercase tracking-[0.2em] text-gold/50" data-i18n="specialRequests">Posebni zahtjevi (opcionalno)</label>
+                            <textarea id="res-notes" data-i18n="specialRequestsHint" rows="2" class="form-input w-full rounded-2xl p-4 text-sm font-light resize-none" placeholder="Alergije, posebni zahtjevi..."></textarea>
+                        </div>
+
+                        <!-- Cijena -->
+                        <div class="pt-4 border-t border-white/5 flex justify-between items-end scroll-reveal">
+                            <div>
+                                <p class="text-[9px] uppercase tracking-widest text-gold/40 mb-1" data-i18n="pricePerPerson">Cijena po osobi</p>
+                                <p class="text-sm font-light text-white/40">95,00 &#8364;</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] uppercase tracking-widest text-gold/40 mb-1" data-i18n="totalPrice">Ukupno</p>
+                                <p id="total-price" class="text-2xl font-light text-gold tracking-tight">190,00 &#8364;</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submit-btn" disabled class="w-full bg-white/10 text-white/30 py-5 rounded-2xl transition-all text-[10px] uppercase tracking-[0.4em] font-medium cursor-not-allowed" data-i18n="selectSlot">
+                            Odaberite termin
                         </button>
-                        <h3 id="calendar-month" class="text-sm font-medium text-stone-700"></h3>
-                        <button type="button" id="next-month" class="p-2 text-stone-400 hover:text-stone-800 transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Calendar Grid -->
-                    <div class="bg-stone-50 rounded-2xl p-4">
-                        <div class="grid grid-cols-7 gap-1 mb-2">
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Pon</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Uto</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Sri</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Čet</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Pet</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Sub</div>
-                            <div class="text-center text-[10px] text-stone-400 font-medium py-1">Ned</div>
-                        </div>
-                        <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
-                        <div id="calendar-loading" class="hidden text-center py-4">
-                            <div class="inline-block w-5 h-5 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin"></div>
-                        </div>
-                    </div>
-
-                    <!-- Legend -->
-                    <div class="flex flex-wrap justify-center gap-3 mt-3">
-                        <div class="flex items-center gap-1">
-                            <div class="w-3 h-3 rounded bg-emerald-100"></div>
-                            <span class="text-[9px] text-stone-500" data-i18n="available">Dostupno</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <div class="w-3 h-3 rounded bg-amber-100"></div>
-                            <span class="text-[9px] text-stone-500" data-i18n="limited">Ograničeno</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <div class="w-3 h-3 rounded bg-red-100"></div>
-                            <span class="text-[9px] text-stone-500" data-i18n="full">Popunjeno</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <div class="w-3 h-3 rounded bg-stone-200"></div>
-                            <span class="text-[9px] text-stone-500" data-i18n="closed">Zatvoreno</span>
-                        </div>
-                    </div>
-
-                    <!-- Selected date display -->
-                    <div id="selected-date-display" class="hidden text-center py-3 bg-stone-900 text-white rounded-xl mt-3">
-                        <p class="text-xs font-medium" id="selected-date-text"></p>
-                    </div>
-
-                    <input type="hidden" id="res-date" required>
+                    </form>
                 </div>
 
-                <!-- Slot selection -->
-                <div class="space-y-3 scroll-reveal" id="slot-container">
-                    <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="availableSlots">Dostupni termini</label>
-                    <div id="slots-loading" class="hidden text-center py-6">
-                        <div class="inline-block w-6 h-6 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin"></div>
-                        <p class="text-xs text-stone-400 mt-2" data-i18n="loadingSlots">Učitavam termine...</p>
+                <!-- Success screen -->
+                <div id="success-screen" class="hidden text-center py-10 fade-in">
+                    <div class="w-16 h-16 mx-auto mb-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
                     </div>
-                    <div id="slots-closed" class="hidden text-center py-6 bg-red-50 rounded-2xl">
-                        <p class="text-red-600 text-sm font-medium" data-i18n="closed">Zatvoreno</p>
-                        <p id="closed-reason" class="text-red-400 text-xs mt-1"></p>
-                    </div>
-                    <div id="slots-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        <p class="col-span-2 sm:col-span-3 text-center text-stone-400 text-xs py-4" data-i18n="noSlots">Nema dostupnih termina</p>
-                    </div>
-                    <input type="hidden" id="res-slot" required>
-                </div>
-
-                <!-- Broj gostiju -->
-                <div class="space-y-3 scroll-reveal">
-                    <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="guests">Broj gostiju</label>
-                    <div class="flex items-center justify-between border border-stone-100 rounded-2xl p-2">
-                        <button type="button" onclick="updateGuests(-1)" class="w-12 h-12 flex items-center justify-center text-stone-300 hover:text-stone-800 transition-colors text-xl font-light">—</button>
-                        <span id="guest-count" class="text-base font-medium">2</span>
-                        <button type="button" onclick="updateGuests(1)" class="w-12 h-12 flex items-center justify-center text-stone-300 hover:text-stone-800 transition-colors text-xl font-light">+</button>
+                    <h2 class="text-xl font-light uppercase tracking-[0.3em] text-white" data-i18n="reservationSuccess">Uspjesno</h2>
+                    <p id="summary-text" class="text-white/40 text-xs mt-6 leading-relaxed px-6 font-light"></p>
+                    <div class="mt-12">
+                        <a href="/" class="text-[9px] uppercase tracking-[0.2em] text-gold/50 hover:text-gold border-b border-transparent hover:border-gold/30 transition-all pb-1" data-i18n="backToHome">
+                            Natrag na pocetnu
+                        </a>
                     </div>
                 </div>
 
-                <!-- Posebni zahtjevi -->
-                <div class="space-y-3 scroll-reveal">
-                    <label class="block text-[9px] uppercase tracking-[0.2em] text-stone-400" data-i18n="specialRequests">Posebni zahtjevi (opcionalno)</label>
-                    <textarea id="res-notes" data-i18n="specialRequestsHint" rows="2" class="w-full bg-stone-50 border-none rounded-2xl p-4 text-sm focus:ring-1 focus:ring-stone-200 outline-none text-stone-600 resize-none"></textarea>
-                </div>
-
-                <!-- Cijena -->
-                <div class="pt-4 border-t border-stone-50 flex justify-between items-end scroll-reveal">
-                    <div>
-                        <p class="text-[9px] uppercase tracking-widest text-stone-400 mb-1" data-i18n="pricePerPerson">Cijena po osobi</p>
-                        <p class="text-sm font-medium text-stone-500">95,00 €</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[9px] uppercase tracking-widest text-stone-400 mb-1" data-i18n="totalPrice">Ukupno</p>
-                        <p id="total-price" class="text-2xl font-light text-stone-800 tracking-tight">190,00 €</p>
-                    </div>
-                </div>
-
-                <button type="submit" id="submit-btn" disabled class="w-full bg-stone-400 text-white py-5 rounded-2xl transition-all text-[10px] uppercase tracking-[0.4em] font-medium shadow-xl shadow-stone-200 cursor-not-allowed" data-i18n="selectSlot">
-                    Odaberite termin
-                </button>
-            </form>
-        </div>
-
-        <!-- Success screen -->
-        <div id="success-screen" class="hidden text-center py-10 fade-in">
-            <div class="w-12 h-[1px] bg-stone-800 mx-auto mb-10"></div>
-            <h2 class="text-xl font-light uppercase tracking-[0.3em] text-stone-800" data-i18n="reservationSuccess">Uspješno</h2>
-            <p id="summary-text" class="text-stone-500 text-xs mt-6 leading-relaxed px-6 font-light"></p>
-            <div class="mt-12">
-                <button onclick="window.location.href='/'" class="text-[9px] uppercase tracking-[0.2em] text-stone-300 hover:text-stone-800 border-b border-transparent hover:border-stone-800 transition-all pb-1" data-i18n="backToHome">
-                    Natrag na početnu
-                </button>
             </div>
         </div>
+    </section>
 
-    </div>
+    <!-- Footer -->
+    <footer class="bg-[#050505] pt-16 pb-10 relative">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-10">
+                <span class="text-2xl tracking-[0.6em] uppercase font-light text-white/80">Aura</span>
+                <div class="flex items-center gap-8">
+                    <a href="index.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="home">Pocetna</a>
+                    <a href="menu.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="menu">Menu</a>
+                    <a href="contact.html" class="footer-link text-white/30 text-sm hover:text-gold transition" data-i18n="contact">Kontakt</a>
+                </div>
+            </div>
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="copyright">&copy; 2026 Aura Fine Dining</p>
+                <p class="text-white/15 text-[10px] uppercase tracking-[0.2em]" data-i18n="hours">Svaki dan, 12:00 - 21:00</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         let guests = 2;
@@ -362,10 +456,10 @@
         let currentUser = null;
         let authToken = null;
 
-        const dayNames = ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
-        const monthNames = ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj',
+        const dayNames = ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Cetvrtak', 'Petak', 'Subota'];
+        const monthNames = ['Sijecanj', 'Veljaca', 'Ozujak', 'Travanj', 'Svibanj', 'Lipanj',
                            'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
-        const monthNamesGenitive = ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja',
+        const monthNamesGenitive = ['Sijecnja', 'Veljace', 'Ozujka', 'Travnja', 'Svibnja', 'Lipnja',
                            'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
 
         // Calendar state
@@ -377,8 +471,7 @@
         today.setHours(0, 0, 0, 0);
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
-        // Dozvoljavamo rezervacije do kraja 2026. godine
-        const maxDate = new Date(2026, 11, 31); // 31.12.2026
+        const maxDate = new Date(2026, 11, 31);
 
         // ==================== AUTH ====================
         document.addEventListener('DOMContentLoaded', async () => {
@@ -386,17 +479,15 @@
             const savedUser = localStorage.getItem('authUser');
 
             if (savedToken && savedUser) {
-                // Imamo spremljene podatke - odmah prikaži korisnika
                 authToken = savedToken;
                 try {
                     currentUser = JSON.parse(savedUser);
                     hideAuthModal();
                     showUserBar();
                 } catch {
-                    // Ako parse ne uspije, pokušaj verify
+                    // parse fail
                 }
 
-                // U pozadini verificiraj token (ali ne blokiraj UI)
                 try {
                     const response = await fetch('/api/auth/verify', {
                         headers: { 'Authorization': `Bearer ${savedToken}` }
@@ -404,10 +495,8 @@
                     if (response.ok) {
                         const data = await response.json();
                         currentUser = data.user;
-                        // Ažuriraj spremljene podatke
                         localStorage.setItem('authUser', JSON.stringify(data.user));
                     } else if (response.status === 401) {
-                        // Token je istekao ili nevažeći - tek tada odlogiraj
                         localStorage.removeItem('authToken');
                         localStorage.removeItem('authUser');
                         authToken = null;
@@ -415,13 +504,10 @@
                         document.getElementById('user-bar').classList.add('hidden');
                         showAuthModal();
                     }
-                    // Ako je neka druga greška (500, network error) - ostavi korisnika prijavljenog
                 } catch (e) {
-                    // Server nije dostupan - ostavi korisnika prijavljenog s lokalnim podacima
                     console.log('Server nedostupan, koristim lokalne podatke');
                 }
             } else if (savedToken) {
-                // Imamo token ali ne i usera - pokušaj verify
                 try {
                     const response = await fetch('/api/auth/verify', {
                         headers: { 'Authorization': `Bearer ${savedToken}` }
@@ -444,17 +530,14 @@
                 showAuthModal();
             }
 
-            // Initialize calendar
             renderCalendar();
             loadMonthAvailability();
             updateCalendarNavButtons();
 
-            // Auto-select today and load its slots
             const todayStr = formatDate(today);
             selectedDate = todayStr;
             document.getElementById('res-date').value = todayStr;
 
-            // Show selected date display
             const todayDate = new Date(todayStr);
             const dayName = dayNames[todayDate.getDay()];
             const dayNum = todayDate.getDate();
@@ -462,7 +545,6 @@
             document.getElementById('selected-date-display').classList.remove('hidden');
             document.getElementById('selected-date-text').textContent = `${dayName}, ${dayNum}. ${monthName} ${todayDate.getFullYear()}`;
 
-            // Load today's slots
             loadAvailableSlots(todayStr);
         });
 
@@ -504,9 +586,7 @@
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${authToken}` }
                     });
-                } catch (e) {
-                    // Ignoriraj ako server nije dostupan
-                }
+                } catch (e) {}
             }
             localStorage.removeItem('authToken');
             localStorage.removeItem('authUser');
@@ -542,11 +622,11 @@
                     hideAuthModal();
                     showUserBar();
                 } else {
-                    errorEl.textContent = data.error || 'Greška pri prijavi';
+                    errorEl.textContent = data.error || 'Greska pri prijavi';
                     errorEl.classList.remove('hidden');
                 }
             } catch {
-                errorEl.textContent = 'Greška pri povezivanju sa serverom';
+                errorEl.textContent = 'Greska pri povezivanju sa serverom';
                 errorEl.classList.remove('hidden');
             }
         });
@@ -578,29 +658,26 @@
                     hideAuthModal();
                     showUserBar();
                 } else {
-                    errorEl.textContent = data.error || 'Greška pri registraciji';
+                    errorEl.textContent = data.error || 'Greska pri registraciji';
                     errorEl.classList.remove('hidden');
                 }
             } catch {
-                errorEl.textContent = 'Greška pri povezivanju sa serverom';
+                errorEl.textContent = 'Greska pri povezivanju sa serverom';
                 errorEl.classList.remove('hidden');
             }
         });
 
         // ==================== CALENDAR ====================
-        // Ograničenja navigacije
         const minMonth = new Date().getMonth();
         const minYear = new Date().getFullYear();
-        const maxMonth = 11; // Prosinac
+        const maxMonth = 11;
         const maxYear = 2026;
 
         function updateCalendarNavButtons() {
             const prevBtn = document.getElementById('prev-month');
             const nextBtn = document.getElementById('next-month');
 
-            // Ne dozvoli navigaciju prije trenutnog mjeseca
             const canGoPrev = currentYear > minYear || (currentYear === minYear && currentMonth > minMonth);
-            // Ne dozvoli navigaciju nakon prosinca 2026
             const canGoNext = currentYear < maxYear || (currentYear === maxYear && currentMonth < maxMonth);
 
             prevBtn.disabled = !canGoPrev;
@@ -670,7 +747,6 @@
                 dayCell.textContent = day;
                 dayCell.dataset.date = dateStr;
 
-                // Compare dates using date strings to avoid timezone issues
                 const todayStr = formatDate(today);
                 const isPast = dateStr < todayStr;
                 const isFuture = date > maxDate;
@@ -707,14 +783,12 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(currentYear, currentMonth, day);
                 const dateStr = formatDate(date);
-                // Include today and future dates up to maxDate
                 if (dateStr >= todayStr && date <= maxDate) {
                     dates.push(dateStr);
                 }
             }
 
             try {
-                // Clear cache to get fresh data
                 calendarData = {};
 
                 const promises = dates.map(async (dateStr) => {
@@ -736,9 +810,8 @@
                         cell.classList.add('cal-closed');
                         cell.title = result.reason || 'Zatvoreno';
                     } else {
-                        // Count slots with any availability vs total slots
                         const allSlots = result.allSlots || result.slots || [];
-                        const totalSlots = allSlots.length || 12; // default 12 time slots per day
+                        const totalSlots = allSlots.length || 12;
                         const availableSlots = allSlots.filter(s => s.available > 0).length;
                         const takenSlots = totalSlots - availableSlots;
 
@@ -746,9 +819,8 @@
                             cell.classList.add('cal-full');
                             cell.title = 'Popunjeno';
                         } else if (takenSlots > totalSlots / 2) {
-                            // Više od pola termina zauzeto = žuto (ograničeno)
                             cell.classList.add('cal-limited');
-                            cell.title = `Ograničena dostupnost (${availableSlots} slobodnih termina)`;
+                            cell.title = `Ogranicena dostupnost (${availableSlots} slobodnih termina)`;
                         } else {
                             cell.classList.add('cal-available');
                             cell.title = `${availableSlots} termina dostupno`;
@@ -809,15 +881,14 @@
             selectedSlot = null;
             document.getElementById('res-slot').value = '';
             submitBtn.disabled = true;
-            submitBtn.classList.add('bg-stone-400', 'cursor-not-allowed');
-            submitBtn.classList.remove('bg-stone-900', 'hover:bg-stone-800', 'cursor-pointer');
+            submitBtn.classList.add('bg-white/10', 'text-white/30', 'cursor-not-allowed');
+            submitBtn.classList.remove('bg-gold', 'text-black', 'hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]', 'cursor-pointer');
             submitBtn.textContent = 'Odaberite termin';
 
             try {
-                // Always fetch fresh data for slots (don't use cache)
                 const response = await fetch(`/api/schedule/available/${dateStr}?_=${Date.now()}`);
                 const data = await response.json();
-                calendarData[dateStr] = data; // Update cache
+                calendarData[dateStr] = data;
 
                 slotsLoading.classList.add('hidden');
 
@@ -827,15 +898,13 @@
                     return;
                 }
 
-                // Get all time slots for the day (including full ones)
-                // Try multiple property names for compatibility
                 const allTimeSlots = data.allSlots || data.AllSlots || data.slots || data.Slots || [];
 
                 console.log('Loaded slots for', dateStr, ':', allTimeSlots.length, 'slots');
 
                 if (allTimeSlots.length === 0) {
                     console.log('No slots found. Full data:', JSON.stringify(data));
-                    slotsList.innerHTML = '<p class="col-span-3 text-center text-stone-400 text-xs py-4">Nema dostupnih termina</p>';
+                    slotsList.innerHTML = '<p class="col-span-3 text-center text-white/30 text-xs py-4">Nema dostupnih termina</p>';
                     return;
                 }
 
@@ -846,17 +915,18 @@
                     const isFull = slot.available <= 0;
 
                     if (isFull) {
-                        btn.className = 'slot-btn slot-full rounded-xl py-3 px-2 text-sm';
+                        btn.className = 'slot-btn slot-full rounded-xl py-3 px-2 text-sm border border-red-500/20';
                         btn.disabled = true;
                         btn.innerHTML = `
                             <span class="slot-time block font-medium">${slot.time}</span>
                             <span class="slot-status block text-[10px]">Popunjeno</span>
                         `;
                     } else {
-                        btn.className = 'slot-btn bg-emerald-50 rounded-xl py-3 px-2 text-sm text-stone-600 hover:bg-emerald-100';
+                        btn.className = 'slot-btn rounded-xl py-3 px-2 text-sm border border-emerald-500/20 hover:border-emerald-500/40 transition-all';
+                        btn.style.background = 'rgba(16,185,129,0.08)';
                         btn.innerHTML = `
-                            <span class="block font-medium text-emerald-700">${slot.time}</span>
-                            <span class="block text-[10px] text-emerald-600">Slobodno</span>
+                            <span class="block font-medium text-emerald-400">${slot.time}</span>
+                            <span class="block text-[10px] text-emerald-400/60">Slobodno</span>
                         `;
                         btn.onclick = () => selectSlot(slot.time, btn);
                     }
@@ -866,7 +936,7 @@
 
                 if (data.openTime && data.closeTime) {
                     const hoursInfo = document.createElement('p');
-                    hoursInfo.className = 'col-span-3 text-center text-stone-400 text-[10px] mt-2';
+                    hoursInfo.className = 'col-span-3 text-center text-white/20 text-[10px] mt-2';
                     hoursInfo.textContent = `Radno vrijeme: ${data.openTime} - ${data.closeTime}`;
                     slotsList.appendChild(hoursInfo);
                 }
@@ -874,7 +944,7 @@
             } catch (error) {
                 console.error('Error loading slots:', error);
                 slotsLoading.classList.add('hidden');
-                slotsList.innerHTML = '<p class="col-span-3 text-center text-red-400 text-xs py-4">Greška pri učitavanju termina</p>';
+                slotsList.innerHTML = '<p class="col-span-3 text-center text-red-400 text-xs py-4">Greska pri ucitavanju termina</p>';
             }
         }
 
@@ -886,8 +956,8 @@
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = false;
-            submitBtn.classList.remove('bg-stone-400', 'cursor-not-allowed');
-            submitBtn.classList.add('bg-stone-900', 'hover:bg-stone-800', 'cursor-pointer');
+            submitBtn.classList.remove('bg-white/10', 'text-white/30', 'cursor-not-allowed');
+            submitBtn.classList.add('bg-gold', 'text-black', 'hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]', 'cursor-pointer');
             submitBtn.textContent = 'Potvrdi rezervaciju';
         }
 
@@ -897,7 +967,7 @@
             if (guests > 8) guests = 8;
 
             document.getElementById('guest-count').innerText = guests;
-            document.getElementById('total-price').innerText = (guests * pricePerPerson).toLocaleString('hr-HR', {minimumFractionDigits: 2}) + ' €';
+            document.getElementById('total-price').innerText = (guests * pricePerPerson).toLocaleString('hr-HR', {minimumFractionDigits: 2}) + ' \u20AC';
         }
 
         // ==================== FORM SUBMIT ====================
@@ -915,7 +985,7 @@
             }
 
             const submitBtn = document.getElementById('submit-btn');
-            submitBtn.textContent = 'Šaljem...';
+            submitBtn.textContent = 'Saljem...';
             submitBtn.disabled = true;
 
             const dateObj = new Date(selectedDate + 'T12:00:00');
@@ -924,7 +994,6 @@
             const monthName = monthNamesGenitive[dateObj.getMonth()];
             const year = dateObj.getFullYear();
 
-            // Format date as YYYY-MM-DD for ASP.NET
             const reservation = {
                 date: selectedDate,
                 time: selectedSlot,
@@ -955,11 +1024,11 @@
                     success.classList.remove('hidden');
 
                     document.getElementById('summary-text').innerHTML =
-                        `Vaša rezervacija za <b>${guests} ${guests === 1 ? 'osobu' : guests < 5 ? 'osobe' : 'osoba'}</b> je zaprimljena.<br><br>` +
-                        `<span class="text-stone-400 uppercase tracking-widest text-[10px]">Datum:</span><br><b>${dayName}, ${dayNum}. ${monthName} ${year}</b><br><br>` +
-                        `<span class="text-stone-400 uppercase tracking-widest text-[10px]">Termin:</span><br><b>${selectedSlot}</b><br><br>` +
-                        `<span class="text-stone-400 uppercase tracking-widest text-[10px]">Ukupni iznos:</span><br><span class="text-stone-800 text-base">${totalPrice} €</span><br><br>` +
-                        `<span class="text-stone-400 text-[9px]">Potvrda je poslana na ${currentUser.email}</span>`;
+                        `Vasa rezervacija za <b class="text-white/80">${guests} ${guests === 1 ? 'osobu' : guests < 5 ? 'osobe' : 'osoba'}</b> je zaprimljena.<br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Datum:</span><br><b class="text-white/80">${dayName}, ${dayNum}. ${monthName} ${year}</b><br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Termin:</span><br><b class="text-white/80">${selectedSlot}</b><br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Ukupni iznos:</span><br><span class="text-gold text-base">${totalPrice} \u20AC</span><br><br>` +
+                        `<span class="text-white/20 text-[9px]">Potvrda je poslana na ${currentUser.email}</span>`;
                 } else if (response.status === 401) {
                     localStorage.removeItem('authToken');
                     authToken = null;
@@ -970,22 +1039,40 @@
                 } else {
                     const errorText = await response.text();
                     console.error('Error response:', errorText);
-                    let errorMessage = 'Greška prilikom slanja';
+                    let errorMessage = 'Greska prilikom slanja';
                     try {
                         const errorJson = JSON.parse(errorText);
                         errorMessage = errorJson.error || errorJson.title || errorText;
                     } catch (e) {
-                        errorMessage = errorText || 'Greška prilikom slanja';
+                        errorMessage = errorText || 'Greska prilikom slanja';
                     }
                     throw new Error(errorMessage);
                 }
             } catch (error) {
                 console.error('Reservation error:', error);
-                alert(error.message || 'Greška prilikom spremanja rezervacije. Pokušajte ponovo.');
+                alert(error.message || 'Greska prilikom spremanja rezervacije. Pokusajte ponovo.');
                 submitBtn.textContent = 'Potvrdi rezervaciju';
                 submitBtn.disabled = false;
             }
         });
+
+        // Mobile menu
+        var menuOpen = false;
+        function toggleMobileMenu() {
+            menuOpen = !menuOpen;
+            var menu = document.getElementById('mobileMenu');
+            var lines = document.querySelectorAll('.menu-line');
+            if (menuOpen) {
+                menu.style.opacity = '1'; menu.style.pointerEvents = 'all';
+                lines[0].style.transform = 'rotate(45deg) translateY(4px)';
+                lines[1].style.transform = 'rotate(-45deg) translateY(-4px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.style.opacity = '0'; menu.style.pointerEvents = 'none';
+                lines[0].style.transform = ''; lines[1].style.transform = '';
+                document.body.style.overflow = '';
+            }
+        }
     </script>
     <script>
         const scrollObserver = new IntersectionObserver((entries) => {
@@ -993,7 +1080,7 @@
                 if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
-        document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+        document.querySelectorAll('.scroll-reveal, .reveal-up, .reveal-scale').forEach(el => scrollObserver.observe(el));
     </script>
     <script src="/js/smooth-scroll.js"></script>
     <script src="/js/i18n.js?v=3"></script>
