@@ -54,6 +54,14 @@
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; }
         ::selection { background: #c9a96e; color: #0a0a0a; }
 
+        /* Custom Scrollbar - All Browsers */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 10, 10, 0.9); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #c9a96e, #a88a4e); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #dfc598, #c9a96e); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
+        /* Firefox */
+        * { scrollbar-width: thin; scrollbar-color: #c9a96e rgba(10, 10, 10, 0.9); }
+
         .noise { display: none; }
 
         .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #c9a96e, #dfc598, #c9a96e); background-size: 200% 100%; animation: gradientShift 3s ease infinite; z-index: 200; transform-origin: left; }
