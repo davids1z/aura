@@ -694,10 +694,6 @@ const i18n = {
   },
 
   createLanguageSelector() {
-    const path = window.location.pathname;
-    const isHomepage = path === '/' || path === '/index.html' || path.endsWith('/index.html');
-    if (!isHomepage) return;
-
     // Find or create language selector container
     let selector = document.getElementById('language-selector');
     if (!selector) {
