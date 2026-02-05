@@ -54,9 +54,7 @@
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; }
         ::selection { background: #c9a96e; color: #0a0a0a; }
 
-        .noise { position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.025; }
-        .noise::after { content: ''; position: absolute; inset: -200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); animation: noise 0.5s steps(3) infinite; }
-        @keyframes noise { to { transform: translate3d(-7%, -2%, 0); } }
+        .noise { position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.02; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
 
         .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #c9a96e, #dfc598, #c9a96e); background-size: 200% 100%; animation: gradientShift 3s ease infinite; z-index: 200; transform-origin: left; }
 
