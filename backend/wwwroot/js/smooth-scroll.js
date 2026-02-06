@@ -1,5 +1,14 @@
 // Smooth Scroll with Glide Effect
 (function() {
+    // Debug: show alert to confirm script is running
+    document.addEventListener('DOMContentLoaded', function() {
+        var debug = document.createElement('div');
+        debug.style.cssText = 'position:fixed;top:10px;left:10px;background:red;color:white;padding:10px;z-index:99999;font-size:14px;';
+        debug.textContent = 'SMOOTH SCROLL ACTIVE';
+        document.body.appendChild(debug);
+        setTimeout(function() { debug.remove(); }, 3000);
+    });
+
     // Scroll to top on page load
     window.scrollTo(0, 0);
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -42,6 +51,7 @@
     // Handle wheel event
     function onWheel(e) {
         e.preventDefault();
+        console.log('WHEEL EVENT', e.deltaY);
 
         // Calculate new target position
         const delta = e.deltaY * 1.2; // Scroll speed multiplier
