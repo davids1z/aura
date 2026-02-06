@@ -95,8 +95,12 @@ export class AuthService {
         localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
       }),
       map(() => true),
-      catchError(() => {
-        this.clearSession();
+      catchError((error) => {
+        // Only clear session on 401 Unauthorized (invalid/expired token)
+        // Don't clear on network errors - keep user logged in offline
+        if (error.status === 401) {
+          this.clearSession();
+        }
         return of(false);
       })
     );
