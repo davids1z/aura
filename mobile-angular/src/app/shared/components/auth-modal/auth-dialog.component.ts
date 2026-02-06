@@ -35,11 +35,9 @@ import { I18nService } from '../../../core/services/i18n.service';
             <div class="password-field">
               <input [type]="showLoginPassword ? 'text' : 'password'" [(ngModel)]="loginPassword" name="password"
                      [placeholder]="i18n.t().auth.password" required class="form-input">
-              @if (loginPassword) {
-                <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showLoginPassword = !showLoginPassword">
-                  <mat-icon>{{ showLoginPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              }
+              <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showLoginPassword = !showLoginPassword">
+                <mat-icon>{{ showLoginPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+              </button>
             </div>
 
             @if (error) {
@@ -76,11 +74,9 @@ import { I18nService } from '../../../core/services/i18n.service';
             <div class="password-field">
               <input [type]="showRegPassword ? 'text' : 'password'" [(ngModel)]="regPassword" name="password"
                      [placeholder]="i18n.t().auth.passwordHint" required minlength="6" class="form-input">
-              @if (regPassword) {
-                <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showRegPassword = !showRegPassword">
-                  <mat-icon>{{ showRegPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              }
+              <button type="button" class="eye-btn" (mousedown)="$event.preventDefault()" (click)="showRegPassword = !showRegPassword">
+                <mat-icon>{{ showRegPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+              </button>
             </div>
 
             @if (error) {
