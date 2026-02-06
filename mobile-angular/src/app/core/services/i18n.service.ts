@@ -92,6 +92,7 @@ export interface Translations {
     backToHome: string;
     slotAvailable: string;
     slotFull: string;
+    workingHours: string;
     successTitle: string;
     pricePerPersonLabel: string;
     sending: string;
@@ -253,6 +254,7 @@ const translations: Record<Language, Translations> = {
       backToHome: 'Natrag na početnu',
       slotAvailable: 'Slobodno',
       slotFull: 'Popunjeno',
+      workingHours: 'Radno vrijeme',
       successTitle: 'Uspješno',
       pricePerPersonLabel: 'Cijena po osobi',
       sending: 'Šaljem...',
@@ -410,6 +412,7 @@ const translations: Record<Language, Translations> = {
       backToHome: 'Back to home',
       slotAvailable: 'Available',
       slotFull: 'Full',
+      workingHours: 'Working hours',
       successTitle: 'Success',
       pricePerPersonLabel: 'Price per person',
       sending: 'Sending...',
@@ -567,6 +570,7 @@ const translations: Record<Language, Translations> = {
       backToHome: 'Zurück zur Startseite',
       slotAvailable: 'Verfügbar',
       slotFull: 'Voll',
+      workingHours: 'Arbeitszeit',
       successTitle: 'Erfolgreich',
       pricePerPersonLabel: 'Preis pro Person',
       sending: 'Sende...',

@@ -27,9 +27,9 @@ services:
     container_name: aura-backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://aura:${POSTGRES_PASSWORD:-aura_secure_password_2024}@postgres:5432/auradb?sslmode=disable
+      DATABASE_URL: ${DATABASE_URL:-postgresql://aura:aura_secure_password_2024@postgres:5432/auradb?sslmode=disable}
       RESEND_API_KEY: ${RESEND_API_KEY}
-      FROM_EMAIL: ${FROM_EMAIL:-noreply@aura.xyler.io}
+      FROM_EMAIL: ${FROM_EMAIL:-noreply@xyler.ai}
       ASPNETCORE_ENVIRONMENT: Production
     ports:
       - "127.0.0.1:8080:8080"

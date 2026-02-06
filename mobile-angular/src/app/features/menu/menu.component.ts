@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, NgZone, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Overlay } from '@angular/cdk/overlay';
@@ -696,6 +696,14 @@ export class MenuComponent implements OnInit {
   categories = CATEGORY_ORDER;
   loading = true;
   error = false;
+
+  constructor() {
+    // Force re-render when language changes
+    effect(() => {
+      this.i18n.language();
+      this.cdr.detectChanges();
+    });
+  }
 
   ngOnInit() {
     this.loadMenu();

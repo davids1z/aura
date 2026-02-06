@@ -110,6 +110,7 @@ const translations = {
 
     // Reservation page
     reservationTitle: 'Rezervacija',
+    reservationSubtitle: 'Odaberite datum, termin i broj gostiju. Prepustite se nezaboravnom gastronomskom putovanju.',
     selectDate: 'Odaberite datum',
     availableSlots: 'Dostupni termini',
     loadingSlots: 'Učitavam termine...',
@@ -292,6 +293,7 @@ const translations = {
 
     // Reservation page
     reservationTitle: 'Reservation',
+    reservationSubtitle: 'Select your date, time slot and number of guests. Surrender to an unforgettable gastronomic journey.',
     selectDate: 'Select date',
     availableSlots: 'Available time slots',
     loadingSlots: 'Loading time slots...',
@@ -474,6 +476,7 @@ const translations = {
 
     // Reservation page
     reservationTitle: 'Reservierung',
+    reservationSubtitle: 'Wählen Sie Ihr Datum, Zeitfenster und Anzahl der Gäste. Geben Sie sich einer unvergesslichen gastronomischen Reise hin.',
     selectDate: 'Datum wählen',
     availableSlots: 'Verfügbare Termine',
     loadingSlots: 'Termine werden geladen...',

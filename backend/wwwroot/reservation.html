@@ -318,14 +318,14 @@
 
                             <!-- Calendar Grid -->
                             <div class="bg-white/[0.02] rounded-2xl p-4 border border-white/5">
-                                <div class="grid grid-cols-7 gap-1 mb-2">
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Pon</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Uto</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Sri</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Cet</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Pet</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Sub</div>
-                                    <div class="text-center text-[10px] text-white/25 font-medium py-1">Ned</div>
+                                <div id="weekday-header" class="grid grid-cols-7 gap-1 mb-2">
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="mon">Pon</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="tue">Uto</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="wed">Sri</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="thu">Cet</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="fri">Pet</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="sat">Sub</div>
+                                    <div class="text-center text-[10px] text-white/25 font-medium py-1" data-i18n="sun">Ned</div>
                                 </div>
                                 <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
                                 <div id="calendar-loading" class="hidden text-center py-4">
@@ -460,11 +460,40 @@
         let currentUser = null;
         let authToken = null;
 
-        const dayNames = ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Cetvrtak', 'Petak', 'Subota'];
-        const monthNames = ['Sijecanj', 'Veljaca', 'Ozujak', 'Travanj', 'Svibanj', 'Lipanj',
-                           'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
-        const monthNamesGenitive = ['Sijecnja', 'Veljace', 'Ozujka', 'Travnja', 'Svibnja', 'Lipnja',
-                           'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
+        // Use i18n for day/month names
+        function getDayNames() {
+            if (typeof i18n !== 'undefined') {
+                const t = i18n.t.bind(i18n);
+                // Full day names for display
+                const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                return {
+                    hr: ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'],
+                    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    de: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
+                }[i18n.currentLang] || ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
+            }
+            return ['Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota'];
+        }
+        function getMonthNames() {
+            if (typeof i18n !== 'undefined') {
+                return {
+                    hr: ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'],
+                    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+                }[i18n.currentLang] || ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
+            }
+            return ['Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac'];
+        }
+        function getMonthNamesGenitive() {
+            if (typeof i18n !== 'undefined') {
+                return {
+                    hr: ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'],
+                    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    de: ['Januars', 'Februars', 'März', 'Aprils', 'Mais', 'Junis', 'Julis', 'Augusts', 'Septembers', 'Oktobers', 'Novembers', 'Dezembers']
+                }[i18n.currentLang] || ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
+            }
+            return ['Siječnja', 'Veljače', 'Ožujka', 'Travnja', 'Svibnja', 'Lipnja', 'Srpnja', 'Kolovoza', 'Rujna', 'Listopada', 'Studenog', 'Prosinca'];
+        }
 
         // Calendar state
         let currentMonth = new Date().getMonth();
@@ -543,13 +572,27 @@
             document.getElementById('res-date').value = todayStr;
 
             const todayDate = new Date(todayStr);
-            const dayName = dayNames[todayDate.getDay()];
+            const dayName = getDayNames()[todayDate.getDay()];
             const dayNum = todayDate.getDate();
-            const monthName = monthNamesGenitive[todayDate.getMonth()];
+            const monthName = getMonthNamesGenitive()[todayDate.getMonth()];
             document.getElementById('selected-date-display').classList.remove('hidden');
             document.getElementById('selected-date-text').textContent = `${dayName}, ${dayNum}. ${monthName} ${todayDate.getFullYear()}`;
 
             loadAvailableSlots(todayStr);
+
+            // Listen for language changes to re-render dynamic content
+            window.addEventListener('languageChanged', () => {
+                renderCalendar();
+                if (selectedDate) {
+                    loadAvailableSlots(selectedDate);
+                    // Update selected date display
+                    const date = new Date(selectedDate);
+                    const dayName = getDayNames()[date.getDay()];
+                    const dayNum = date.getDate();
+                    const monthName = getMonthNamesGenitive()[date.getMonth()];
+                    document.getElementById('selected-date-text').textContent = `${dayName}, ${dayNum}. ${monthName} ${date.getFullYear()}`;
+                }
+            });
         });
 
         function showAuthModal() {
@@ -725,7 +768,7 @@
             const grid = document.getElementById('calendar-grid');
             const monthLabel = document.getElementById('calendar-month');
 
-            monthLabel.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            monthLabel.textContent = `${getMonthNames()[currentMonth]} ${currentYear}`;
             grid.innerHTML = '';
 
             const firstDay = new Date(currentYear, currentMonth, 1);
@@ -862,9 +905,9 @@
             document.getElementById('res-date').value = dateStr;
 
             const date = new Date(dateStr);
-            const dayName = dayNames[date.getDay()];
+            const dayName = getDayNames()[date.getDay()];
             const dayNum = date.getDate();
-            const monthName = monthNamesGenitive[date.getMonth()];
+            const monthName = getMonthNamesGenitive()[date.getMonth()];
 
             document.getElementById('selected-date-display').classList.remove('hidden');
             document.getElementById('selected-date-text').textContent = `${dayName}, ${dayNum}. ${monthName} ${date.getFullYear()}`;
@@ -887,7 +930,7 @@
             submitBtn.disabled = true;
             submitBtn.classList.add('bg-white/10', 'text-white/30', 'cursor-not-allowed');
             submitBtn.classList.remove('bg-gold', 'text-black', 'hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]', 'cursor-pointer');
-            submitBtn.textContent = 'Odaberite termin';
+            submitBtn.textContent = typeof i18n !== 'undefined' ? i18n.t('selectSlot') : 'Odaberite termin';
 
             try {
                 const response = await fetch(`/api/schedule/available/${dateStr}?_=${Date.now()}`);
@@ -898,7 +941,8 @@
 
                 if (data.isClosed) {
                     slotsClosed.classList.remove('hidden');
-                    document.getElementById('closed-reason').textContent = data.reason || 'Restoran ne radi ovaj dan';
+                    const defaultReason = typeof i18n !== 'undefined' ? i18n.t('closedReason') : 'Restoran ne radi ovaj dan';
+                    document.getElementById('closed-reason').textContent = data.reason || defaultReason;
                     return;
                 }
 
@@ -917,20 +961,22 @@
                     btn.type = 'button';
 
                     const isFull = slot.available <= 0;
+                    const fullText = typeof i18n !== 'undefined' ? i18n.t('full') : 'Popunjeno';
+                    const freeText = typeof i18n !== 'undefined' ? i18n.t('free') : 'Slobodno';
 
                     if (isFull) {
                         btn.className = 'slot-btn slot-full rounded-xl py-3 px-2 text-sm border border-red-500/20';
                         btn.disabled = true;
                         btn.innerHTML = `
                             <span class="slot-time block font-medium">${slot.time}</span>
-                            <span class="slot-status block text-[10px]">Popunjeno</span>
+                            <span class="slot-status block text-[10px]">${fullText}</span>
                         `;
                     } else {
                         btn.className = 'slot-btn rounded-xl py-3 px-2 text-sm border border-emerald-500/20 hover:border-emerald-500/40 transition-all';
                         btn.style.background = 'rgba(16,185,129,0.08)';
                         btn.innerHTML = `
                             <span class="block font-medium text-emerald-400">${slot.time}</span>
-                            <span class="block text-[10px] text-emerald-400/60">Slobodno</span>
+                            <span class="block text-[10px] text-emerald-400/60">${freeText}</span>
                         `;
                         btn.onclick = () => selectSlot(slot.time, btn);
                     }
@@ -962,7 +1008,7 @@
             submitBtn.disabled = false;
             submitBtn.classList.remove('bg-white/10', 'text-white/30', 'cursor-not-allowed');
             submitBtn.classList.add('bg-gold', 'text-black', 'hover:shadow-[0_0_30px_rgba(201,169,110,0.3)]', 'cursor-pointer');
-            submitBtn.textContent = 'Potvrdi rezervaciju';
+            submitBtn.textContent = typeof i18n !== 'undefined' ? i18n.t('confirmReservation') : 'Potvrdi rezervaciju';
         }
 
         function updateGuests(val) {
@@ -989,13 +1035,13 @@
             }
 
             const submitBtn = document.getElementById('submit-btn');
-            submitBtn.textContent = 'Saljem...';
+            submitBtn.textContent = typeof i18n !== 'undefined' ? i18n.t('sending') : 'Šaljem...';
             submitBtn.disabled = true;
 
             const dateObj = new Date(selectedDate + 'T12:00:00');
-            const dayName = dayNames[dateObj.getDay()];
+            const dayName = getDayNames()[dateObj.getDay()];
             const dayNum = dateObj.getDate();
-            const monthName = monthNamesGenitive[dateObj.getMonth()];
+            const monthName = getMonthNamesGenitive()[dateObj.getMonth()];
             const year = dateObj.getFullYear();
 
             const reservation = {
@@ -1027,12 +1073,26 @@
                     const success = document.getElementById('success-screen');
                     success.classList.remove('hidden');
 
+                    const lang = typeof i18n !== 'undefined' ? i18n.currentLang : 'hr';
+                    const personWord = guests === 1
+                        ? (typeof i18n !== 'undefined' ? i18n.t('person') : 'osobu')
+                        : guests < 5
+                            ? (typeof i18n !== 'undefined' ? i18n.t('persons234') : 'osobe')
+                            : (typeof i18n !== 'undefined' ? i18n.t('persons5plus') : 'osoba');
+                    const dateLabel = typeof i18n !== 'undefined' ? i18n.t('date') : 'Datum';
+                    const timeLabel = typeof i18n !== 'undefined' ? i18n.t('time') : 'Termin';
+                    const totalLabel = typeof i18n !== 'undefined' ? i18n.t('totalPrice') : 'Ukupni iznos';
+                    const confirmSent = typeof i18n !== 'undefined' ? i18n.t('confirmationSent') : 'Potvrda je poslana na';
+
+                    const resForText = { hr: 'Vaša rezervacija za', en: 'Your reservation for', de: 'Ihre Reservierung für' }[lang] || 'Vaša rezervacija za';
+                    const receivedText = { hr: 'je zaprimljena', en: 'has been received', de: 'wurde empfangen' }[lang] || 'je zaprimljena';
+
                     document.getElementById('summary-text').innerHTML =
-                        `Vasa rezervacija za <b class="text-white/80">${guests} ${guests === 1 ? 'osobu' : guests < 5 ? 'osobe' : 'osoba'}</b> je zaprimljena.<br><br>` +
-                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Datum:</span><br><b class="text-white/80">${dayName}, ${dayNum}. ${monthName} ${year}</b><br><br>` +
-                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Termin:</span><br><b class="text-white/80">${selectedSlot}</b><br><br>` +
-                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">Ukupni iznos:</span><br><span class="text-gold text-base">${totalPrice} \u20AC</span><br><br>` +
-                        `<span class="text-white/20 text-[9px]">Potvrda je poslana na ${currentUser.email}</span>`;
+                        `${resForText} <b class="text-white/80">${guests} ${personWord}</b> ${receivedText}.<br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">${dateLabel}:</span><br><b class="text-white/80">${dayName}, ${dayNum}. ${monthName} ${year}</b><br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">${timeLabel}:</span><br><b class="text-white/80">${selectedSlot}</b><br><br>` +
+                        `<span class="text-gold/40 uppercase tracking-widest text-[10px]">${totalLabel}:</span><br><span class="text-gold text-base">${totalPrice} \u20AC</span><br><br>` +
+                        `<span class="text-white/20 text-[9px]">${confirmSent} ${currentUser.email}</span>`;
                 } else if (response.status === 401) {
                     localStorage.removeItem('authToken');
                     authToken = null;
@@ -1087,6 +1147,6 @@
         document.querySelectorAll('.scroll-reveal, .reveal-up, .reveal-scale').forEach(el => scrollObserver.observe(el));
     </script>
     <script src="/js/smooth-scroll.js?v=1770336477"></script>
-    <script src="/js/i18n.js?v=4"></script>
+    <script src="/js/i18n.js?v=5"></script>
 </body>
 </html>

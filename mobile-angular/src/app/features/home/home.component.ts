@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -730,6 +730,15 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 export class HomeComponent implements OnInit, OnDestroy {
   readonly i18n = inject(I18nService);
   private meta = document.querySelector('meta[name="theme-color"]');
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    // Force re-render when language changes
+    effect(() => {
+      this.i18n.language();
+      this.cdr.detectChanges();
+    });
+  }
 
   ngOnInit() {
     this.meta?.setAttribute('content', '#0a0a0a');

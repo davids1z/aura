@@ -1,4 +1,4 @@
-import { Component, inject, ElementRef, AfterViewInit, OnDestroy, ViewChild, NgZone } from '@angular/core';
+import { Component, inject, ElementRef, AfterViewInit, OnDestroy, ViewChild, NgZone, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -329,6 +329,14 @@ export class CartSheetComponent {
   readonly i18n = inject(I18nService);
   private bottomSheetRef = inject(MatBottomSheetRef<CartSheetComponent>);
   private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    effect(() => {
+      this.i18n.language();
+      this.cdr.detectChanges();
+    });
+  }
 
   dragOffset = 0;
   dragging = false;

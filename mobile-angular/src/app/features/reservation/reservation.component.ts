@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, NgZone, effect } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { ScheduleResponse, TimeSlot, ReservationRequest } from '../../core/models/reservation.model';
+import { RouterModule } from '@angular/router';
 import { AuthDialogComponent } from '../../shared/components/auth-modal/auth-dialog.component';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
@@ -26,7 +27,7 @@ interface CalendarDay {
   standalone: true,
   imports: [
     CommonModule, FormsModule, MatButtonModule, MatIconModule,
-    MatDialogModule, MatSnackBarModule, ScrollRevealDirective
+    MatDialogModule, MatSnackBarModule, ScrollRevealDirective, RouterModule
   ],
   template: `
     <div class="reservation-page">
@@ -150,6 +151,9 @@ interface CalendarDay {
                 </button>
               }
             </div>
+            @if (schedule) {
+              <p class="working-hours">{{ i18n.t().reservation.workingHours }}: {{ schedule.openTime }} - {{ schedule.closeTime }}</p>
+            }
           }
         </section>
 
@@ -213,11 +217,12 @@ interface CalendarDay {
       background: rgba(15, 15, 15, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.06);
       min-height: 100vh;
-      padding: clamp(20px, 6vw, 32px) clamp(12px, 4vw, 24px) 120px;
+      padding: clamp(20px, 6vw, 32px) clamp(16px, 5vw, 24px) 120px;
       border-radius: clamp(20px, 6vw, 32px);
       margin: clamp(8px, 2.5vw, 16px);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
     }
 
     .res-header {
@@ -556,48 +561,60 @@ interface CalendarDay {
 
     .slots-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(80px, 30%), 1fr));
-      gap: clamp(4px, 1.5vw, 8px);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
     .slot-btn {
-      padding: clamp(8px, 2.5vw, 12px) clamp(4px, 1.5vw, 8px);
+      padding: 14px 8px;
       border-radius: 12px;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
+      background: rgba(255, 255, 255, 0.02);
 
       .slot-time {
         display: block;
-        font-size: clamp(12px, 3.5vw, 14px);
-        font-weight: 500;
-        margin-bottom: 2px;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 4px;
       }
 
       .slot-status {
         display: block;
         font-size: 10px;
+        font-weight: 400;
       }
 
       &.available {
-        background: rgba(16, 185, 129, 0.1);
+        background: rgba(16, 185, 129, 0.06);
+        border-color: rgba(16, 185, 129, 0.2);
         .slot-time { color: #6ee7b7; }
-        .slot-status { color: rgba(110, 231, 183, 0.6); }
+        .slot-status { color: rgba(110, 231, 183, 0.5); }
       }
 
       &.full {
-        background: rgba(239, 68, 68, 0.1);
+        background: rgba(239, 68, 68, 0.06);
+        border-color: rgba(239, 68, 68, 0.15);
         .slot-time { color: #fca5a5; text-decoration: line-through; }
-        .slot-status { color: rgba(252, 165, 165, 0.6); }
+        .slot-status { color: rgba(252, 165, 165, 0.5); }
         cursor: not-allowed;
       }
 
       &.selected {
         background: #c9a96e;
-        box-shadow: 0 4px 12px rgba(201, 169, 110, 0.3);
+        border-color: #c9a96e;
+        box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
         .slot-time, .slot-status { color: #0a0a0a; text-decoration: none; }
       }
+    }
+
+    .working-hours {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.25);
+      margin-top: 12px;
     }
 
     .guest-counter {
@@ -636,6 +653,7 @@ interface CalendarDay {
 
     textarea {
       width: 100%;
+      box-sizing: border-box;
       padding: clamp(12px, 3vw, 16px);
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
@@ -822,10 +840,10 @@ interface CalendarDay {
       }
 
       .slot-btn {
-        padding: 8px 6px;
+        padding: 10px 6px;
 
         .slot-time {
-          font-size: 12px;
+          font-size: 13px;
         }
 
         .slot-status {
@@ -947,6 +965,18 @@ export class ReservationComponent implements OnInit {
   private location = inject(Location);
   readonly i18n = inject(I18nService);
 
+  constructor() {
+    // Force re-render when language changes
+    effect(() => {
+      this.i18n.language(); // Track language signal
+      // Rebuild success message if we're in success state
+      if (this.success && this.selectedDate && this.selectedSlot) {
+        this.buildSuccessMessage();
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
   // Calendar
   currentMonth = new Date().getMonth();
   currentYear = new Date().getFullYear();
@@ -963,6 +993,7 @@ export class ReservationComponent implements OnInit {
   slotsError = false;
   isClosed = false;
   closedReason = '';
+  schedule: ScheduleResponse | null = null;
   guests = 2;
   notes = '';
   loading = false;
@@ -1143,6 +1174,7 @@ export class ReservationComponent implements OnInit {
         this.ngZone.run(() => {
           this.loadingSlots = false;
           this.slotsError = false;
+          this.schedule = data;
           if (data.isClosed) {
             this.isClosed = true;
             this.closedReason = data.reason || '';
@@ -1227,31 +1259,55 @@ export class ReservationComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.success = true;
-
-        const t = this.i18n.t().reservation;
-        const date = new Date(this.selectedDate + 'T12:00:00');
-        const dayName = t.dayNames[date.getDay()];
-        const day = date.getDate();
-        const month = t.monthNamesGenitive[date.getMonth()];
-        const year = date.getFullYear();
-        const total = (this.guests * 95).toFixed(2).replace('.', ',');
-        const personWord = this.guests === 1 ? t.person1 : this.guests < 5 ? t.person24 : t.person5plus;
-
-        this.successMessage = `
-          ${t.successFor} <b>${this.guests} ${personWord}</b> ${t.successReceived}<br><br>
-          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.dateLabel}</span><br>
-          <b>${dayName}, ${day}. ${month} ${year}</b><br><br>
-          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.timeLabel}</span><br>
-          <b>${this.selectedSlot}</b><br><br>
-          <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.totalAmountLabel}</span><br>
-          <span style="font-size:16px;color:#c9a96e">${total} €</span><br><br>
-          <span style="color:rgba(255,255,255,0.3);font-size:9px">${t.confirmSentTo} ${this.authService.currentUser?.email}</span>
-        `;
+        this.buildSuccessMessage();
       },
       error: (err) => {
         this.loading = false;
         this.snackBar.open(err.error?.error || this.i18n.t().reservation.reservationError, 'OK', { duration: 3000 });
       }
     });
+  }
+
+  private buildSuccessMessage() {
+    if (!this.selectedDate || !this.selectedSlot) return;
+
+    const t = this.i18n.t().reservation;
+    const date = new Date(this.selectedDate + 'T12:00:00');
+    const dayName = t.dayNames[date.getDay()];
+    const day = date.getDate();
+    const month = t.monthNamesGenitive[date.getMonth()];
+    const year = date.getFullYear();
+    const total = (this.guests * 95).toFixed(2).replace('.', ',');
+    const personWord = this.guests === 1 ? t.person1 : this.guests < 5 ? t.person24 : t.person5plus;
+    const formattedTime = this.formatTime(this.selectedSlot);
+
+    this.successMessage = `
+      ${t.successFor} <b>${this.guests} ${personWord}</b> ${t.successReceived}<br><br>
+      <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.dateLabel}</span><br>
+      <b>${dayName}, ${day}. ${month} ${year}</b><br><br>
+      <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.timeLabel}</span><br>
+      <b>${formattedTime}</b><br><br>
+      <span style="color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.2em;font-size:10px">${t.totalAmountLabel}</span><br>
+      <span style="font-size:16px;color:#c9a96e">${total} €</span><br><br>
+      <span style="color:rgba(255,255,255,0.3);font-size:9px">${t.confirmSentTo} ${this.authService.currentUser?.email}</span>
+    `;
+  }
+
+  private formatTime(time: string): string {
+    // Only use AM/PM format for English, keep 24-hour for Croatian and German
+    if (this.i18n.language() !== 'en') {
+      return time;
+    }
+    const [hourStr, minute] = time.split(':');
+    const hour = parseInt(hourStr, 10);
+    if (hour === 0) {
+      return `12:${minute} AM`;
+    } else if (hour < 12) {
+      return `${hour}:${minute} AM`;
+    } else if (hour === 12) {
+      return `12:${minute} PM`;
+    } else {
+      return `${hour - 12}:${minute} PM`;
+    }
   }
 }

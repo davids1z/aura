@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewInit, DestroyRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, AfterViewInit, DestroyRef, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -150,8 +150,17 @@ export class BottomNavComponent implements AfterViewInit {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private revealState = inject(ScrollRevealState);
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLElement>;
+
+  constructor() {
+    // Force re-render when language changes
+    effect(() => {
+      this.i18n.language();
+      this.cdr.detectChanges();
+    });
+  }
 
   private scrollPositions = new Map<string, number>();
   private isPopstate = false;

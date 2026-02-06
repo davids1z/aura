@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, NgZone, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -300,6 +300,13 @@ export class AuthDialogComponent {
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
   readonly i18n = inject(I18nService);
+
+  constructor() {
+    effect(() => {
+      this.i18n.language();
+      this.cdr.detectChanges();
+    });
+  }
 
   mode: 'login' | 'register' = 'register';
   error = '';
