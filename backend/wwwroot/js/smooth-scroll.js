@@ -102,14 +102,9 @@
     // Initialize and attach events
     init();
 
-    // Only apply smooth scroll on desktop (not touch devices)
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-    if (!isTouchDevice) {
-        window.addEventListener('wheel', onWheel, { passive: false });
-        window.addEventListener('keydown', onKeydown);
-    }
-
+    // Apply smooth scroll (wheel event)
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKeydown);
     window.addEventListener('scroll', onScroll, { passive: true });
 
     // Handle resize
