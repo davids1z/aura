@@ -175,6 +175,8 @@ const translations = {
     catAppetizer: 'Predjela', catSoup: 'Juhe', catSalad: 'Salate', catPasta: 'Tjestenine',
     catFish: 'Riba', catMeat: 'Meso', catDessert: 'Deserti', catBeverage: 'Pića', catSpecial: 'Specijalitet',
 
+    backToTop: 'VRH',
+
     // Days
     mon: 'Pon', tue: 'Uto', wed: 'Sri', thu: 'Čet', fri: 'Pet', sat: 'Sub', sun: 'Ned',
 
@@ -357,6 +359,8 @@ const translations = {
     // Categories
     catAppetizer: 'Starters', catSoup: 'Soups', catSalad: 'Salads', catPasta: 'Pasta',
     catFish: 'Fish', catMeat: 'Meat', catDessert: 'Desserts', catBeverage: 'Beverages', catSpecial: 'Specials',
+
+    backToTop: 'TOP',
 
     // Days
     mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun',
@@ -541,6 +545,8 @@ const translations = {
     catAppetizer: 'Vorspeisen', catSoup: 'Suppen', catSalad: 'Salate', catPasta: 'Pasta',
     catFish: 'Fisch', catMeat: 'Fleisch', catDessert: 'Desserts', catBeverage: 'Getränke', catSpecial: 'Spezialitäten',
 
+    backToTop: 'OBEN',
+
     // Days
     mon: 'Mo', tue: 'Di', wed: 'Mi', thu: 'Do', fri: 'Fr', sat: 'Sa', sun: 'So',
 
@@ -696,6 +702,8 @@ const i18n = {
       btn.classList.toggle('bg-stone-900', isActive);
       btn.classList.toggle('scale-110', isActive);
     });
+
+    // Back-to-top is icon-only, no text update needed
   },
 
   createLanguageSelector() {
@@ -704,20 +712,72 @@ const i18n = {
     const isHomepage = path === '/' || path === '/index.html' || path.endsWith('/index.html');
     if (!isHomepage) return;
 
-    // Find or create language selector container
+    // Language selector — bottom left
     let selector = document.getElementById('language-selector');
     if (!selector) {
       selector = document.createElement('div');
       selector.id = 'language-selector';
-      selector.className = 'fixed bottom-6 right-6 z-[100] flex gap-2 bg-white/90 backdrop-blur-md p-1.5 rounded-full shadow-lg';
       document.body.appendChild(selector);
     }
-
+    selector.className = 'fixed bottom-6 left-6 z-[100] flex gap-2 bg-white/90 backdrop-blur-md p-1.5 rounded-full shadow-lg';
     selector.innerHTML = `
       <button class="lang-btn w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all" data-lang="hr" onclick="i18n.setLanguage('hr')">🇭🇷</button>
       <button class="lang-btn w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all" data-lang="en" onclick="i18n.setLanguage('en')">🇬🇧</button>
       <button class="lang-btn w-8 h-8 rounded-full flex items-center justify-center text-lg transition-all" data-lang="de" onclick="i18n.setLanguage('de')">🇩🇪</button>
     `;
+
+    // Back to top button — bottom right
+    let topBtn = document.getElementById('back-to-top');
+    if (!topBtn) {
+      topBtn = document.createElement('button');
+      topBtn.id = 'back-to-top';
+      topBtn.onclick = function() {
+        if (window.goToPanel) window.goToPanel(-1); else window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      document.body.appendChild(topBtn);
+    }
+    topBtn.className = 'fixed bottom-7 right-7 z-[100] flex items-center justify-center w-12 h-12 rounded-full cursor-pointer';
+    topBtn.style.cssText = 'opacity:0;pointer-events:none;background:rgba(201,169,110,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(201,169,110,0.25);box-shadow:0 0 15px rgba(201,169,110,0.06);transition:all 0.4s ease;';
+    topBtn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="transition:all 0.4s ease;"><path d="M7 14L12 9L17 14" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    // Hover effects
+    if (!topBtn._hoverBound) {
+      topBtn._hoverBound = true;
+      topBtn.addEventListener('mouseenter', function() {
+        this.style.borderColor = 'rgba(201,169,110,0.45)';
+        this.style.boxShadow = '0 0 30px rgba(201,169,110,0.15)';
+        this.style.background = 'rgba(201,169,110,0.1)';
+        var svg = this.querySelector('svg');
+        if (svg) svg.style.transform = 'translateY(-2px)';
+        var path = this.querySelector('path');
+        if (path) path.setAttribute('stroke', '#dfc598');
+      });
+      topBtn.addEventListener('mouseleave', function() {
+        this.style.borderColor = 'rgba(201,169,110,0.25)';
+        this.style.boxShadow = '0 0 15px rgba(201,169,110,0.06)';
+        this.style.background = 'rgba(201,169,110,0.06)';
+        var svg = this.querySelector('svg');
+        if (svg) svg.style.transform = '';
+        var path = this.querySelector('path');
+        if (path) path.setAttribute('stroke', '#c9a96e');
+      });
+    }
+
+    // Show/hide based on scroll position
+    if (!topBtn._scrollBound) {
+      topBtn._scrollBound = true;
+      window.addEventListener('scroll', function() {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+        if (window.scrollY > window.innerHeight * 0.5) {
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        } else {
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+        }
+      }, { passive: true });
+    }
   }
 };
 

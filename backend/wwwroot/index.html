@@ -11,6 +11,10 @@
         })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <meta name="description" content="Aura Fine Dining - Ekskluzivno gastronomsko iskustvo u srcu Zagreba. Sezonski degustacijski menu s lokalnim namirnicama.">
     <meta name="keywords" content="fine dining, Zagreb, restoran, degustacijski menu, hrvatska kuhinja, luksuzni restoran">
     <meta name="author" content="Aura Fine Dining">
@@ -19,6 +23,7 @@
     <meta property="og:title" content="Aura | Fine Dining Zagreb">
     <meta property="og:description" content="Ekskluzivno gastronomsko iskustvo u srcu Zagreba. Rezervirajte svoj stol.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
+    <meta name="theme-color" content="#0a0a0a">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Aura | Fine Dining Zagreb">
     <meta property="twitter:description" content="Ekskluzivno gastronomsko iskustvo u srcu Zagreba.">
@@ -47,45 +52,63 @@
             }
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: auto; }
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #0a0a0a; }
+        #auraLoader { position: fixed; inset: 0; z-index: 99999; background: #0a0a0a; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
+        #auraLoader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+        #auraLoader .loader-text { font-family: 'Inter', system-ui, sans-serif; font-size: 28px; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 200; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
+        #auraLoader .loader-line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, #c9a96e, transparent); animation: loaderPulse 1.5s ease-in-out infinite; }
+        #auraLoader .loader-sub { margin-top: 20px; font-family: 'Inter', system-ui, sans-serif; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(201,169,110,0.35); }
+        @keyframes loaderPulse { 0%,100% { opacity: 0.3; transform: scaleX(0.6); } 50% { opacity: 1; transform: scaleX(1); } }
         ::selection { background: #c9a96e; color: #0a0a0a; }
 
-        /* Custom Scrollbar - All Browsers */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(10, 10, 10, 0.9); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #c9a96e, #a88a4e); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #dfc598, #c9a96e); border-radius: 4px; border: 2px solid transparent; background-clip: padding-box; }
-        /* Firefox */
-        * { scrollbar-width: thin; scrollbar-color: #c9a96e rgba(10, 10, 10, 0.9); }
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
 
-        .noise { display: none; }
+        .noise { position: fixed; inset: 0; z-index: 9000; pointer-events: none; }
+        .noise::after { content: ''; position: absolute; inset: -100%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 256px 256px; opacity: 0.025; animation: grain 0.6s steps(1) infinite; }
+        @keyframes grain { 0%{transform:translate(0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-1%)}60%{transform:translate(-1%,-3%)}80%{transform:translate(3%,1%)} }
 
         .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, #c9a96e, #dfc598, #c9a96e); background-size: 200% 100%; animation: gradientShift 3s ease infinite; z-index: 200; transform-origin: left; }
 
-        .hero-gradient { background: linear-gradient(180deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.2) 25%, rgba(10,10,10,0.05) 45%, rgba(10,10,10,0.3) 65%, rgba(10,10,10,1) 100%); }
-        .hero-image { animation: heroZoom 25s ease-in-out infinite alternate; }
-        @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+        #heroCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 3; display: block; pointer-events: none; }
+        .hero-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(10,10,10,0.6) 100%); pointer-events: none; }
+        #contentWrap { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 5; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #contentWrap.active { opacity: 1; pointer-events: auto; }
+        #sphereOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 4; background: rgba(10,10,10,0.45); pointer-events: none; opacity: 0; transition: opacity 0.5s ease; }
+        #sphereOverlay.active { opacity: 1; }
+        #contentWrap > * { position: absolute; top: 0; left: 0; width: 100%; height: 100%; will-change: transform; display: flex; flex-direction: column; justify-content: center; padding: 5vh 0; background: transparent; border: none; }
+        #contentWrap img { filter: brightness(0.7) saturate(0.85); }
+        #orbitalSpacer { position: relative; z-index: 1; }
+        #contentWrap ~ footer { position: relative; z-index: 5; }
+        #panelNav { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); z-index: 50; display: flex; flex-direction: column; gap: 0.75rem; opacity: 0; transition: opacity 0.5s ease; }
+        #panelNav.visible { opacity: 1; }
+        #panelNav button { width: 3px; height: 20px; border-radius: 2px; background: rgba(255,255,255,0.12); border: none; cursor: pointer; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); padding: 0; outline: none; }
+        #panelNav button.active { background: #c9a96e; height: 40px; box-shadow: 0 0 12px rgba(201,169,110,0.15); }
+        #panelNav button:hover:not(.active) { background: rgba(201,169,110,0.3); height: 28px; }
 
-        .reveal-up { opacity: 0; transform: translateY(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal-up.visible { opacity: 1; transform: translateY(0); }
-        .reveal-left { opacity: 0; transform: translateX(-60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal-left.visible { opacity: 1; transform: translateX(0); }
-        .reveal-right { opacity: 0; transform: translateX(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal-right.visible { opacity: 1; transform: translateX(0); }
-        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal-scale.visible { opacity: 1; transform: scale(1); }
-        .delay-1 { transition-delay: 0.15s !important; }
-        .delay-2 { transition-delay: 0.3s !important; }
-        .delay-3 { transition-delay: 0.45s !important; }
-        .delay-4 { transition-delay: 0.6s !important; }
-        .delay-5 { transition-delay: 0.75s !important; }
+        .reveal-up { opacity: 0; transform: translateY(30px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .reveal-up.visible { opacity: 1; transform: translateY(0); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .reveal-left.visible { opacity: 1; transform: translateX(0); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-right { opacity: 0; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .reveal-right.visible { opacity: 1; transform: translateX(0); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .reveal-scale.visible { opacity: 1; transform: scale(1); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.45s; }
+        .delay-4 { transition-delay: 0.6s; }
+        .delay-5 { transition-delay: 0.75s; }
 
         .char { display: inline-block; opacity: 0; transform: translateY(100%); }
-        .char.visible { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .char.visible { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); background: linear-gradient(120deg, rgba(255,255,255,0.5) 0%, #c9a96e 20%, #dfc598 45%, #c9a96e 70%, rgba(255,255,255,0.5) 100%); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmerText 6s ease-in-out 2s infinite; }
+        @keyframes shimmerText { 0%,100%{background-position:200% 0}50%{background-position:-200% 0} }
 
         .marquee-track { display: flex; width: max-content; }
 
@@ -93,7 +116,7 @@
         .img-zoom img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .img-zoom:hover img { transform: scale(1.08); }
 
-        .magnetic-btn { position: relative; transition: transform 0.3s ease; }
+        .magnetic-btn { position: relative; }
 
         .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
         .glass-strong { background: rgba(255,255,255,0.05); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); }
@@ -103,6 +126,7 @@
 
         img { opacity: 0; transition: opacity 0.6s ease; }
         img.loaded { opacity: 1; }
+        #ctaBgImg { opacity: 0.10 !important; transition: none !important; }
 
         .gallery-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .gallery-scroll::-webkit-scrollbar { display: none; }
@@ -116,11 +140,56 @@
         .footer-link { transition: all 0.3s ease; position: relative; }
         .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #c9a96e; transition: width 0.3s ease; }
         .footer-link:hover::after { width: 100%; }
+
+        /* Menu Preview Hover */
+        #menuPreview .group { transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+        #menuPreview .group:hover { transform: translateX(8px); }
+        #menuPreview .group:hover span:last-of-type { color: rgba(201,169,110,0.9) !important; }
+
+        /* Hero Light Sweep */
+        #heroSection::after { content: ''; position: absolute; top: 0; left: -60%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(201,169,110,0.04), rgba(223,197,152,0.02), transparent); z-index: 5; pointer-events: none; animation: lightSweep 10s ease-in-out 3s infinite; }
+        @keyframes lightSweep { 0%{transform:translateX(0);opacity:0}5%{opacity:1}45%{opacity:1}50%{transform:translateX(400%);opacity:0}100%{transform:translateX(400%);opacity:0} }
+
+        /* Hero Content Glow */
+        #heroSection > div.text-center::before { content: ''; position: absolute; top: 50%; left: 50%; width: 500px; height: 300px; transform: translate(-50%, -50%); background: radial-gradient(ellipse, rgba(201,169,110,0.05) 0%, transparent 70%); animation: heroGlow 5s ease-in-out infinite; pointer-events: none; z-index: -1; }
+        @keyframes heroGlow { 0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }
+
+        /* Gallery Hover */
+        .img-zoom::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(201,169,110,0.08) 100%); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+        .img-zoom:hover::after { opacity: 1; }
+        .img-zoom { position: relative; }
+
+        /* Reduced motion: disable heavy animations for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .noise::after { animation: none !important; }
+            .char.visible { animation: none !important; }
+            #heroSection::after { animation: none !important; display: none; }
+            #heroSection > div.text-center::before { animation: none !important; }
+            .animate-float, [class*="animate-marquee"], .animate-spin-slow, .animate-spin-reverse { animation: none !important; }
+            .marquee-track { animation: none !important; }
+            .reveal-up, .reveal-left, .reveal-right, .reveal-scale { transition-duration: 0.01s !important; }
+            #auraLoader .loader-line { animation: none !important; opacity: 1; }
+            .hover-card:hover { transform: none !important; }
+            .img-zoom img { transition: none !important; }
+            .img-zoom:hover img { transform: none !important; }
+        }
+
+        /* Fallback for browsers without backdrop-filter */
+        @supports not (backdrop-filter: blur(1px)) {
+            .glass { background: rgba(20,20,20,0.85); }
+            .glass-strong { background: rgba(20,20,20,0.9); }
+        }
     </style>
 </head>
 <body class="text-white antialiased">
+    <div id="auraLoader">
+        <div class="loader-text">Aura</div>
+        <div class="loader-line"></div>
+        <div class="loader-sub">Fine Dining Zagreb</div>
+    </div>
     <div class="noise"></div>
     <div class="scroll-progress" id="scrollProgress"></div>
+    <canvas id="heroCanvas"></canvas>
 
     <!-- ========== NAVIGATION ========== -->
     <nav id="mainNav" class="fixed w-full z-50 transition-all duration-500 px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6">
@@ -153,22 +222,18 @@
     </div>
 
     <!-- ========== HERO ========== -->
-    <section class="relative h-screen w-full overflow-hidden flex items-center justify-center">
-        <div class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070"
-                 class="hero-image absolute inset-0 w-full h-full object-cover" alt="Restaurant Interior" onload="this.classList.add('loaded')">
-        </div>
-        <div class="absolute inset-0 hero-gradient"></div>
+    <section id="heroSection" class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 hero-vignette z-[4]"></div>
 
         <!-- Side decorations -->
-        <div class="absolute top-1/2 left-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+        <div class="absolute top-1/2 left-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4 z-10">
             <div class="w-[1px] h-24 bg-gradient-to-b from-transparent to-white/20"></div>
             <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
             <span class="text-[9px] tracking-[0.4em] uppercase text-white/30" style="writing-mode: vertical-rl;" data-i18n="fineDiningZagreb">Fine Dining Zagreb</span>
             <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
             <div class="w-[1px] h-24 bg-gradient-to-b from-white/20 to-transparent"></div>
         </div>
-        <div class="absolute top-1/2 right-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+        <div class="absolute top-1/2 right-8 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4 z-10">
             <div class="w-[1px] h-24 bg-gradient-to-b from-transparent to-white/20"></div>
             <div class="w-2 h-2 border border-gold/40 rotate-45"></div>
             <span class="text-[9px] tracking-[0.4em] uppercase text-white/30" style="writing-mode: vertical-rl;" data-i18n="est2026">Est. 2026</span>
@@ -177,16 +242,17 @@
         </div>
 
         <!-- Corner ornaments -->
-        <div class="absolute top-24 left-12 hidden lg:block">
+        <div class="absolute top-24 left-12 hidden lg:block z-10">
             <div class="w-16 h-[1px] bg-gold/20"></div>
             <div class="w-[1px] h-16 bg-gold/20"></div>
         </div>
-        <div class="absolute top-24 right-12 hidden lg:block">
+        <div class="absolute top-24 right-12 hidden lg:block z-10">
             <div class="w-16 h-[1px] bg-gold/20 ml-auto"></div>
             <div class="w-[1px] h-16 bg-gold/20 ml-auto"></div>
         </div>
 
-        <div class="relative text-center px-4 max-w-5xl mx-auto">
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto" style="user-select:none;-webkit-user-select:none;">
+            <div class="absolute inset-0 -inset-x-16 -inset-y-12" style="background:radial-gradient(ellipse at center, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.4) 50%, transparent 75%);pointer-events:none;z-index:-1;"></div>
             <div class="mb-8 flex items-center justify-center gap-6">
                 <div class="w-16 h-[1px] bg-gradient-to-r from-transparent to-gold/50"></div>
                 <div class="flex items-center gap-3">
@@ -196,11 +262,11 @@
                 </div>
                 <div class="w-16 h-[1px] bg-gradient-to-l from-transparent to-gold/50"></div>
             </div>
-            <h1 id="heroTitle" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif italic font-light tracking-tight leading-[0.9] mb-8">
+            <h1 id="heroTitle" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif italic font-normal tracking-tight leading-[0.9] mb-8 text-white" style="text-decoration:underline;text-decoration-color:rgba(201,169,110,0.5);text-underline-offset:6px;text-decoration-thickness:2px;text-shadow:0 2px 20px rgba(10,10,10,0.95),0 0 50px rgba(10,10,10,1);">
                 <span class="block overflow-hidden"><span class="char" style="transition-delay:0.1s" data-i18n="heroTitle">Okusi tišine.</span></span>
             </h1>
             <div class="w-12 h-[1px] gold-line mx-auto mb-8 opacity-0" id="heroLine"></div>
-            <p class="text-white/40 text-sm max-w-lg mx-auto mb-12 font-light leading-relaxed reveal-up" data-i18n="philosophyText">
+            <p class="text-white/60 text-sm max-w-lg mx-auto mb-12 font-light leading-relaxed reveal-up" style="text-shadow:0 1px 15px rgba(10,10,10,1),0 0 40px rgba(10,10,10,0.9);" data-i18n="philosophyText">
                 Aura nije samo restoran, ve&#263; putovanje kroz osjetila. Svaki detalj osmi&#353;ljen da probudi emocije.
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal-up delay-2">
@@ -213,14 +279,16 @@
             </div>
         </div>
 
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 animate-float">
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 animate-float z-10">
             <span class="text-[8px] uppercase tracking-[0.4em] text-white/30" data-i18n="scroll">Scroll</span>
             <div class="w-[1px] h-8 bg-gradient-to-b from-white/30 to-transparent"></div>
         </div>
     </section>
 
+    <div id="sphereOverlay"></div>
+    <div id="contentWrap">
     <!-- ========== MARQUEE ========== -->
-    <div class="py-6 border-y border-white/5 overflow-hidden bg-black">
+    <div class="py-6 border-y border-white/5 overflow-hidden">
         <div class="marquee-track animate-marquee">
             <span class="text-[11px] tracking-[0.5em] uppercase text-white/15 whitespace-nowrap mx-8" data-i18n="marqueeFineDining">Fine Dining</span>
             <span class="text-gold/20 mx-4">&#10022;</span>
@@ -246,7 +314,7 @@
     </div>
 
     <!-- ========== PHILOSOPHY ========== -->
-    <section class="relative py-24 md:py-40 bg-[#0a0a0a] overflow-hidden">
+    <section class="relative py-24 md:py-40 overflow-hidden">
         <div class="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-gold/[0.02] rounded-full blur-[100px]"></div>
         <div class="absolute bottom-0 left-0 w-48 md:w-64 h-48 md:h-64 bg-gold/[0.015] rounded-full blur-[80px]"></div>
         <div class="max-w-7xl mx-auto px-6 md:px-12">
@@ -301,7 +369,7 @@
     </section>
 
     <!-- ========== STATS ========== -->
-    <section class="py-16 md:py-24 border-y border-white/5 bg-black relative overflow-hidden">
+    <section class="py-16 md:py-24 border-y border-white/5 relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.03)_0%,transparent_70%)]"></div>
         <div class="max-w-6xl mx-auto px-4 md:px-12 relative z-10">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
@@ -334,7 +402,7 @@
     </section>
 
     <!-- ========== EXPERIENCE ========== -->
-    <section class="py-32 md:py-48 bg-[#0a0a0a] relative">
+    <section class="py-32 md:py-48 relative">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/[0.01] rounded-full blur-[150px]"></div>
         <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
             <div class="text-center mb-20">
@@ -380,7 +448,7 @@
     </section>
 
     <!-- ========== GALLERY ========== -->
-    <section class="py-32 bg-black">
+    <section class="py-32">
         <div class="max-w-7xl mx-auto px-6 md:px-12 mb-16">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
@@ -393,28 +461,28 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-6 md:px-12 reveal-up delay-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-6 md:px-12 lg:px-24 xl:px-40 2xl:px-56 reveal-up delay-2">
             <div class="img-zoom h-[300px] sm:h-[360px] md:h-[420px] rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 1" onload="this.classList.add('loaded')">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 1" loading="lazy" onload="this.classList.add('loaded')">
             </div>
             <div class="img-zoom h-[300px] sm:h-[360px] md:h-[420px] rounded-2xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 2" onload="this.classList.add('loaded')">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 2" loading="lazy" onload="this.classList.add('loaded')">
             </div>
             <div class="img-zoom h-[300px] sm:h-[360px] md:h-[420px] rounded-2xl overflow-hidden sm:col-span-2 lg:col-span-1">
-                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 3" onload="this.classList.add('loaded')">
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Dish 3" loading="lazy" onload="this.classList.add('loaded')">
             </div>
         </div>
     </section>
 
     <!-- ========== CHEF'S TABLE ========== -->
-    <section class="relative py-24 md:py-40 bg-[#0a0a0a] overflow-hidden">
+    <section class="relative py-24 md:py-40 overflow-hidden">
         <div class="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-gold/[0.015] rounded-full blur-[100px]"></div>
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                 <div class="order-2 lg:order-1 relative reveal-scale mt-8 lg:mt-0">
                     <div class="img-zoom rounded-2xl overflow-hidden glow-gold">
                         <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80&w=1000"
-                             class="w-full h-[350px] sm:h-[450px] md:h-[520px] object-cover" alt="Chef at work" onload="this.classList.add('loaded')">
+                             class="w-full h-[350px] sm:h-[450px] md:h-[520px] object-cover" alt="Chef at work" loading="lazy" onload="this.classList.add('loaded')">
                     </div>
                     <div class="hidden md:block absolute -top-4 -right-4 w-24 h-24 border border-gold/10 rounded-full animate-spin-slow"></div>
                     <div class="hidden md:block absolute -bottom-4 -left-4 w-20 h-20 border border-gold/10 rounded-full animate-spin-reverse"></div>
@@ -467,13 +535,7 @@
     </section>
 
     <!-- ========== MENU PREVIEW ========== -->
-    <section id="menuPreview" class="py-32 bg-black relative overflow-hidden">
-        <!-- Fixed background that stays in place -->
-        <div class="menu-bg-fixed pointer-events-none" style="position: fixed; inset: 0; z-index: 0; transform: translateZ(0); will-change: transform;">
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=10&w=1200')] bg-cover bg-center opacity-[0.03]"></div>
-        </div>
-        <!-- Black overlay to hide fixed bg outside this section -->
-        <div class="absolute inset-0 bg-black -z-10"></div>
+    <section id="menuPreview" class="py-32 relative overflow-hidden">
         <div class="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
             <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
                 <div class="w-2 h-2 bg-gold/40 rotate-45"></div>
@@ -526,7 +588,7 @@
     </section>
 
     <!-- ========== TESTIMONIAL ========== -->
-    <section class="py-32 md:py-40 bg-[#0a0a0a]">
+    <section class="py-32 md:py-40">
         <div class="max-w-4xl mx-auto px-6 md:px-12 text-center">
             <div class="text-gold/30 text-6xl font-serif mb-8 reveal-up">"</div>
             <blockquote class="text-2xl md:text-4xl font-serif italic font-light leading-[1.4] text-white/70 reveal-up delay-1" data-i18n="testimonialQuote">
@@ -544,10 +606,9 @@
     <!-- ========== GRAND CTA ========== -->
     <section class="relative py-40 md:py-56 overflow-hidden">
         <div class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
-                 class="w-full h-full object-cover" alt="Fine Dining" onload="this.classList.add('loaded')">
-            <div class="absolute inset-0 bg-black/75"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.05)_0%,transparent_70%)]"></div>
+            <img id="ctaBgImg" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=2070"
+                 class="w-full h-full object-cover loaded" alt="Fine Dining" style="opacity:0.10 !important;transition:none !important;">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.03)_0%,transparent_70%)]"></div>
         </div>
         <div class="relative z-10 text-center px-6">
             <div class="flex items-center justify-center gap-4 mb-8 reveal-up">
@@ -569,8 +630,12 @@
         </div>
     </section>
 
+    </div><!-- /contentWrap -->
+
+    <div id="orbitalSpacer"></div>
+
     <!-- ========== FOOTER ========== -->
-    <footer class="bg-[#050505] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 relative">
+    <footer class="pt-12 sm:pt-16 md:pt-20 pb-20 sm:pb-20 relative bg-[#0a0a0a]">
         <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold/10 to-transparent"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
             <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 md:gap-8 mb-10 sm:mb-12 md:mb-16">
@@ -614,7 +679,7 @@
         window.addEventListener('scroll', function() {
             var scrolled = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
             if (progressBar) progressBar.style.transform = 'scaleX(' + scrolled + ')';
-        });
+        }, { passive: true });
 
         // ===== Nav =====
         var nav = document.getElementById('mainNav');
@@ -624,12 +689,14 @@
             if (s > 100) {
                 nav.style.background = 'rgba(10,10,10,0.92)';
                 nav.style.backdropFilter = 'blur(20px)';
+                nav.style.webkitBackdropFilter = 'blur(20px)';
                 nav.classList.add('py-2', 'sm:py-3');
                 nav.classList.remove('py-4', 'sm:py-5', 'md:py-6');
                 nav.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
             } else {
                 nav.style.background = 'transparent';
                 nav.style.backdropFilter = 'none';
+                nav.style.webkitBackdropFilter = 'none';
                 nav.classList.remove('py-2', 'sm:py-3');
                 nav.classList.add('py-4', 'sm:py-5', 'md:py-6');
                 nav.style.borderBottom = 'none';
@@ -640,7 +707,7 @@
                 nav.style.transform = 'translateY(0)';
             }
             lastScroll = s;
-        });
+        }, { passive: true });
 
         // ===== Mobile Menu =====
         var menuOpen = false;
@@ -674,7 +741,7 @@
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
         document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
-            revealObserver.observe(el);
+            if (!el.closest('#contentWrap')) revealObserver.observe(el);
         });
 
         // ===== Counter =====
@@ -694,7 +761,7 @@
                 }
             });
         }, { threshold: 0.5 });
-        document.querySelectorAll('.counter-value').forEach(function(el) { counterObserver.observe(el); });
+        document.querySelectorAll('.counter-value').forEach(function(el) { if (!el.closest('#contentWrap')) counterObserver.observe(el); });
 
         // ===== Image lazy load =====
         document.querySelectorAll('img:not([loading])').forEach(function(img) {
@@ -734,8 +801,347 @@
                 menuBg.style.opacity = '1';
             }
         })();
+
+        // ===== Orbital Scroll Effect =====
+        (function() {
+            var wrap = document.getElementById('contentWrap');
+            var hero = document.getElementById('heroSection');
+            var spacer = document.getElementById('orbitalSpacer');
+            var sphereOvr = document.getElementById('sphereOverlay');
+            if (!wrap || !hero || !spacer) return;
+
+            var panels = [];
+            for (var i = 0; i < wrap.children.length; i++) panels.push(wrap.children[i]);
+            var N = panels.length;
+
+            document.documentElement.style.scrollBehavior = 'auto';
+
+            function resize() {
+                spacer.style.height = ((N + 0.5) * window.innerHeight) + 'px';
+            }
+            resize();
+
+            // ── Navigation UI ──
+            var panelNav = document.createElement('div');
+            panelNav.id = 'panelNav';
+            for (var d = 0; d < N; d++) {
+                var dot = document.createElement('button');
+                dot.dataset.idx = d;
+                dot.setAttribute('aria-label', 'Section ' + (d + 1));
+                dot.addEventListener('click', (function(idx) {
+                    return function() { goToPanel(idx); };
+                })(d));
+                panelNav.appendChild(dot);
+            }
+            document.body.appendChild(panelNav);
+
+            // ── State ──
+            var currentPanel = -1;
+            var isAnimating = false;
+            var lastActivePanel = -2;
+            var countersDone = {};
+            var ctaBgImg = document.getElementById('ctaBgImg');
+
+            // Detect initial scroll position
+            (function() {
+                var heroH = hero.offsetHeight;
+                var scrollY = window.scrollY;
+                var vh = window.innerHeight;
+                var scrollRange = (N - 1) * vh;
+                if (scrollY < heroH * 0.5) { currentPanel = -1; return; }
+                var scrollPast = scrollY - heroH;
+                var frac = scrollRange > 0 ? scrollPast / scrollRange : 0;
+                currentPanel = frac > 1.05 ? N : Math.round(frac * (N - 1));
+            })();
+
+            // ── Scroll Targets ──
+            function getScrollTarget(idx) {
+                var heroH = hero.offsetHeight;
+                var vh = window.innerHeight;
+                var scrollRange = (N - 1) * vh;
+                if (idx < 0) return 0;
+                if (idx >= N) return heroH + scrollRange + vh;
+                return heroH + (idx / Math.max(1, N - 1)) * scrollRange;
+            }
+
+            // ── Per-panel Animation Definitions ──
+            var panelAnims = [
+                function(el, j, n) { return { from: 'translateY(40px) scale(0.97)' }; },
+                function(el, j, n) { return { from: 'translateX(' + (j % 2 === 0 ? -80 : 80) + 'px) rotate(' + (j % 2 === 0 ? -4 : 4) + 'deg)' }; },
+                function(el, j, n) { return { from: 'scale(0.3) rotate(' + (Math.round((j - n/2) * 12)) + 'deg)', blur: 5 }; },
+                function(el, j, n) { return { from: 'perspective(800px) rotateX(-25deg) translateY(60px)' }; },
+                function(el, j, n) { return { from: 'translateY(120px) scale(0.8)', blur: 10 }; },
+                function(el, j, n) { var half = Math.floor(n/2); return { from: 'translateX(' + (j < half ? -70 : 70) + 'px) translateY(' + (j < half ? -25 : 25) + 'px)' }; },
+                function(el, j, n) { return { from: 'scaleY(0.3) scaleX(0.8) translateY(' + (25 + j * 6) + 'px)' }; },
+                function(el, j, n) { return { from: 'scale(1.2)', blur: 18 }; },
+                function(el, j, n) { return { from: 'translateY(-80px) scale(0.85)', blur: 4 }; }
+            ];
+
+            // ── Panel Activation (unique per-panel animations) ──
+            function activatePanel(idx) {
+                if (idx === lastActivePanel) return;
+
+                // Deactivate previous (fast uniform exit)
+                if (lastActivePanel >= 0 && lastActivePanel < N) {
+                    panels[lastActivePanel].querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+                        el.style.transition = 'opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease';
+                        el.style.transitionDelay = '0s';
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(-20px) scale(0.97)';
+                        el.style.filter = '';
+                        el.classList.remove('visible');
+                    });
+                }
+
+                // Activate current (unique entrance per panel)
+                if (idx >= 0 && idx < N) {
+                    var reveals = panels[idx].querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-scale');
+                    var animFn = panelAnims[idx % panelAnims.length];
+
+                    reveals.forEach(function(el, j) {
+                        var a = animFn(el, j, reveals.length);
+                        el.style.transition = 'none';
+                        el.style.opacity = '0';
+                        el.style.transform = a.from;
+                        el.style.filter = a.blur ? 'blur(' + a.blur + 'px)' : '';
+                        el.offsetHeight;
+                        el.style.transition = 'opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1), filter 0.8s ease-out';
+                        el.style.transitionDelay = (j * 0.08) + 's';
+                        el.style.opacity = '1';
+                        el.style.transform = 'none';
+                        el.style.filter = 'blur(0px)';
+                        el.classList.add('visible');
+                    });
+
+                    // Counter animation
+                    panels[idx].querySelectorAll('.counter-value').forEach(function(el) {
+                        var key = el.dataset.target;
+                        if (countersDone[key]) { el.textContent = key; return; }
+                        countersDone[key] = true;
+                        var target = parseInt(key);
+                        var current = 0;
+                        var inc = target / 50;
+                        var timer = setInterval(function() {
+                            current += inc;
+                            if (current >= target) { current = target; clearInterval(timer); }
+                            el.textContent = Math.round(current);
+                        }, 25);
+                    });
+                }
+
+                lastActivePanel = idx;
+
+                // UI
+                var dots = panelNav.children;
+                for (var i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('active', i === idx);
+                }
+                var show = idx >= 0 && idx < N;
+                panelNav.classList.toggle('visible', show);
+            }
+
+            // ── Smooth Animation ──
+            function animateScrollTo(target, duration, cb) {
+                var start = window.scrollY;
+                var diff = target - start;
+                if (Math.abs(diff) < 2) { if (cb) cb(); return; }
+                var t0 = performance.now();
+                function step(now) {
+                    var p = Math.min(1, (now - t0) / duration);
+                    var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+                    window.scrollTo(0, start + diff * e);
+                    if (p < 1) { requestAnimationFrame(step); }
+                    else { window.scrollTo(0, target); if (cb) cb(); }
+                }
+                requestAnimationFrame(step);
+            }
+
+            function goToPanel(idx) {
+                idx = Math.max(-1, Math.min(N, idx));
+                if (idx === currentPanel) return;
+                currentPanel = idx;
+                window._currentPanel = idx;
+                isAnimating = true;
+                activatePanel(idx);
+                animateScrollTo(getScrollTarget(idx), 650, function() {
+                    isAnimating = false;
+                });
+            }
+            window.goToPanel = goToPanel;
+
+            // ── Input: Wheel (full hijack) ──
+            window.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (isAnimating) return;
+                goToPanel(currentPanel + (e.deltaY > 0 ? 1 : -1));
+            }, { passive: false });
+
+            // ── Input: Keyboard ──
+            window.addEventListener('keydown', function(e) {
+                if (isAnimating) return;
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+                    e.preventDefault(); goToPanel(currentPanel + 1);
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault(); goToPanel(currentPanel - 1);
+                }
+            });
+
+            // ── Input: Touch ──
+            var touchY = 0;
+            window.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, { passive: true });
+            window.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+            window.addEventListener('touchend', function(e) {
+                if (isAnimating) return;
+                var diff = touchY - e.changedTouches[0].clientY;
+                if (Math.abs(diff) > 30) goToPanel(currentPanel + (diff > 0 ? 1 : -1));
+            }, { passive: true });
+
+            // ── Panel Positioning (driven by scroll events during animation) ──
+            var ticking = false;
+            function update() {
+                var heroH = hero.offsetHeight;
+                var scrollY = window.scrollY;
+                var vh = window.innerHeight;
+                var vw = window.innerWidth;
+
+                if (scrollY < heroH * 0.7) {
+                    wrap.classList.remove('active');
+                    if (sphereOvr) sphereOvr.classList.remove('active');
+                    ticking = false;
+                    return;
+                }
+
+                var scrollPast = Math.max(0, scrollY - heroH);
+                var scrollRange = (N - 1) * vh;
+                var fraction = scrollRange > 0 ? scrollPast / scrollRange : 0;
+                fraction = Math.max(0, fraction);
+                var activeIdx = Math.min(fraction, 1) * (N - 1);
+
+                if (fraction > 1.08) {
+                    wrap.classList.remove('active');
+                    if (sphereOvr) sphereOvr.classList.remove('active');
+                    ticking = false;
+                    return;
+                } else if (fraction > 1.0) {
+                    wrap.style.transition = 'none';
+                    if (sphereOvr) sphereOvr.style.transition = 'none';
+                    var fadeOp = Math.max(0, (1.08 - fraction) / 0.08);
+                    wrap.style.opacity = fadeOp;
+                    if (sphereOvr) sphereOvr.style.opacity = fadeOp;
+                } else {
+                    wrap.style.transition = '';
+                    if (sphereOvr) sphereOvr.style.transition = '';
+                    wrap.style.opacity = '';
+                    if (sphereOvr) sphereOvr.style.opacity = '';
+                }
+                wrap.classList.add('active');
+                if (sphereOvr) sphereOvr.classList.add('active');
+
+                for (var i = 0; i < N; i++) {
+                    var offset = i - activeIdx;
+                    var absOff = Math.abs(offset);
+                    var tx = offset * vw * 1.1;
+                    var ty = offset * 40;
+                    var ry = offset * -15;
+                    var s = Math.max(0.65, 1 - absOff * 0.1);
+                    var op = Math.max(0, Math.min(1, 1 - absOff * 1.5));
+                    panels[i].style.transform = 'perspective(1200px) translateX(' + tx.toFixed(0) + 'px) translateY(' + ty.toFixed(0) + 'px) rotateY(' + ry.toFixed(1) + 'deg) scale(' + s.toFixed(3) + ')';
+                    // Last panel: very slow fade-in with image zoom+blur animation
+                    if (i === N - 1) {
+                        var prox = Math.max(0, Math.min(1, 1 - absOff));
+                        var finalOp = Math.pow(prox, 5);
+                        panels[i].style.opacity = finalOp.toFixed(3);
+                        if (ctaBgImg) {
+                            var sc = 1.12 - prox * 0.12;
+                            var bl = (1 - prox) * 6;
+                            ctaBgImg.style.transform = 'scale(' + sc.toFixed(3) + ')';
+                            ctaBgImg.style.filter = 'brightness(0.45) saturate(0.7) blur(' + bl.toFixed(1) + 'px)';
+                        }
+                    } else {
+                        panels[i].style.opacity = op.toFixed(2);
+                    }
+                    panels[i].style.zIndex = Math.round(100 - absOff * 100);
+                    panels[i].style.pointerEvents = absOff < 0.6 ? 'auto' : 'none';
+                }
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) { requestAnimationFrame(update); ticking = true; }
+            }, { passive: true });
+
+            window.addEventListener('resize', function() { resize(); update(); });
+
+            update();
+            activatePanel(currentPanel);
+            window._currentPanel = currentPanel;
+
+            // Re-detect panel after browser restores scroll (back/forward navigation)
+            function redetectPanel() {
+                var heroH = hero.offsetHeight;
+                var sy = window.scrollY;
+                var vh = window.innerHeight;
+                var scrollRange = (N - 1) * vh;
+                var dp;
+                if (sy < heroH * 0.5) { dp = -1; }
+                else {
+                    var scrollPast = sy - heroH;
+                    var frac = scrollRange > 0 ? scrollPast / scrollRange : 0;
+                    dp = frac > 1.05 ? N : Math.round(frac * (N - 1));
+                }
+                if (dp !== currentPanel) {
+                    currentPanel = dp;
+                    window._currentPanel = dp;
+                    isAnimating = false;
+                    activatePanel(dp);
+                    update();
+                }
+            }
+            setTimeout(redetectPanel, 50);
+            setTimeout(redetectPanel, 200);
+            setTimeout(redetectPanel, 500);
+            window.addEventListener('pageshow', function(e) {
+                if (e.persisted) setTimeout(redetectPanel, 50);
+            });
+        })();
     </script>
+    <script src="/js/hero-sphere.js?v=20"></script>
     <script src="/js/smooth-scroll.js?v=1770336477"></script>
-    <script src="/js/i18n.js?v=5"></script>
+    <script src="/js/i18n.js?v=21"></script>
+    <script>
+    // ===== Hero Parallax =====
+    (function() {
+        var content = document.querySelector('#heroSection > div.text-center');
+        if (!content) return;
+        var mx = 0, my = 0, smx = 0, smy = 0;
+        document.addEventListener('mousemove', function(e) {
+            mx = (e.clientX / window.innerWidth - 0.5) * 2;
+            my = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+        (function loop() {
+            smx += (mx - smx) * 0.04;
+            smy += (my - smy) * 0.04;
+            content.style.transform = 'translate(' + (smx * -12) + 'px,' + (smy * -8) + 'px)';
+            requestAnimationFrame(loop);
+        })();
+    })();
+
+    // ===== Magnetic Buttons (glow only, no movement) =====
+
+    // ===== Loading Screen Dismiss =====
+    (function() {
+        var loader = document.getElementById('auraLoader');
+        if (!loader) return;
+        function dismiss() {
+            loader.classList.add('done');
+            setTimeout(function() { loader.remove(); }, 1000);
+        }
+        // Dismiss when page fully loaded (images, fonts, scripts)
+        if (document.readyState === 'complete') { setTimeout(dismiss, 300); }
+        else { window.addEventListener('load', function() { setTimeout(dismiss, 300); }); }
+        // Safety timeout — never show loader more than 5 seconds
+        setTimeout(dismiss, 5000);
+    })();
+    </script>
 </body>
 </html>
